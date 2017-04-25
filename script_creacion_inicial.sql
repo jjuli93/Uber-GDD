@@ -193,3 +193,12 @@ where m.Rendicion_Fecha is not null
 and m.Chofer_Dni = c.chofer_dni
 and m.Turno_Hora_Inicio = t.turno_hora_inicio
 order by Rendicion_Nro
+
+
+			/*Autos*/
+insert into DDG.Autos (auto_licencia, auto_marca, auto_modelo, auto_patente, auto_rodado, auto_chofer, auto_turno)
+select distinct m.Auto_Licencia, m.Auto_Marca, m.Auto_Modelo, m.Auto_Patente, m.Auto_Rodado, c.chofer_id, t.turno_id
+from gd_esquema.Maestra m, DDG.Choferes c, DDG.Turnos t
+where m.Auto_Patente is not null
+and m.Chofer_Dni = c.chofer_dni
+and m.Turno_Hora_Inicio = t.turno_hora_inicio
