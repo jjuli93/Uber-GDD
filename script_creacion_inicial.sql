@@ -1,7 +1,7 @@
 use [GD1C2017]
 go
 
-					/* Creacion de tablas*/
+													/* Creacion de tablas*/
 
 create schema [DDG] authorization [gd]
 go
@@ -84,8 +84,8 @@ GO
 
 create table [DDG].Turnos (
 turno_id numeric(10,0) primary key identity,
-turno_hora_inicio time not null,
-turno_hora_fin time not null,
+turno_hora_inicio numeric(18,0) not null,
+turno_hora_fin numeric(18,0) not null,
 turno_descripcion varchar(255),
 turno_valor_km decimal(5,2) not null,
 turno_precio_base decimal(5,2) not null,
@@ -111,6 +111,7 @@ pago_id numeric(10,0) primary key identity,
 pago_chofer numeric(10,0) not null references [DDG].Choferes,
 pago_turno numeric(10,0) not null references [DDG].Turnos,
 pago_importe decimal(7,2) not null default 0,
+pago_numero numeric(18,0) not null,
 pago_fecha datetime
 )
 GO
@@ -130,7 +131,7 @@ viaje_hora_fin time not null
 )
 GO
 
-						/* Carga de datos*/
+												/* Carga de datos*/
 
 			/*Roles*/
 insert into [DDG].Roles (rol_nombre) values
@@ -141,7 +142,6 @@ insert into [DDG].Roles (rol_nombre) values
 			/*Funciones*/
 
 			/*Usuarios*/
-
 /*Usuario pedido*/
 insert into DDG.Usuarios (usuario_username, usuario_password) values
 ('admin',HASHBYTES('SHA2_256','w23e'))
@@ -174,3 +174,22 @@ from gd_esquema.Maestra m, DDG.Usuarios u
 where  cast( m.chofer_Dni as varchar(255)) = u.usuario_username
 order by usuario_ID
 
+			/*Turnos*/
+insert into DDG.Turnos(turno_descripcion, turno_hora_fin, turno_hora_inicio, turno_precio_base, turno_valor_km)
+select distinct Turno_Descripcion, Turno_Hora_Fin, Turno_Hora_Inicio, Turno_Precio_Base, Turno_Valor_Kilometro
+from gd_esquema.Maestra
+order by Turno_Hora_Inicio
+
+/*Sobreescribo descripcion turno mañana porque está mal escrita*/
+update DDG.Turnos
+set turno_descripcion = 'Turno Mañana'
+where turno_descripcion = 'Turno Mañna'
+
+			/*Pagos*/   /*Hay pagos duplicados y pagos con mismo numero y diferente importe)*/ /*Ya hice la consulta en el grupo*/
+insert into DDG.Pagos  ( pago_chofer, pago_fecha, pago_importe, pago_numero, pago_turno)
+select distinct c.chofer_id, m.Rendicion_Fecha, m.Rendicion_Importe, m.Rendicion_Nro, t.turno_id
+from gd_esquema.Maestra m, DDG.Choferes c, DDG.Turnos t
+where m.Rendicion_Fecha is not null
+and m.Chofer_Dni = c.chofer_dni
+and m.Turno_Hora_Inicio = t.turno_hora_inicio
+order by Rendicion_Nro
