@@ -1,6 +1,8 @@
 use [GD1C2017]
 go
 
+					/* Creacion de tablas*/
+
 create schema [DDG] authorization [gd]
 go
 
@@ -41,90 +43,120 @@ usuarioXRol_rol numeric(10,0) not null references [DDG].Roles,
 GO
 
 create table [DDG].Clientes (
-id numeric(10,0) primary key identity,
-id_usuario numeric(10,0) unique not null references [DDG].Usuarios,
-nombre varchar(250) not null,
-apellido varchar(250) not null,
-fecha_nacimiento date not null,
-dni numeric(18,0) unique not null,
-direccion varchar(250) not null,
-codigo_postal numeric not null,
-telefono numeric(18,0) unique not null,
-email varchar(250),
-habilitado numeric(1,0) not null default 1
+cliente_id numeric(10,0) primary key identity,
+cliente_usuario numeric(10,0) unique not null references [DDG].Usuarios,
+cliente_nombre varchar(250) not null,
+cliente_apellido varchar(250) not null,
+cliente_fecha_nacimiento date not null,
+cliente_dni numeric(18,0) unique not null,
+cliente_direccion varchar(250) not null,
+cliente_codigo_postal numeric not null,
+cliente_telefono numeric(18,0) unique not null,
+cliente_email varchar(250),
+cliente_habilitado numeric(1,0) not null default 1
 )
 GO
 
 create table [DDG].Choferes (
-id numeric(10,0) primary key identity,
-id_usuario numeric(10,0) unique not null references [DDG].Usuarios,
-nombre varchar(250) not null,
-apellido varchar(250) not null,
-fecha_nacimiento datetime not null,
-dni numeric(18,0) unique not null,
-direccion varchar(250) not null,
-telefono numeric(18,0) unique not null,
-email varchar(250),
-habilitado numeric(1,0) not null default 1
+chofer_id numeric(10,0) primary key identity,
+chofer_usuario numeric(10,0) unique not null references [DDG].Usuarios,
+chofer_nombre varchar(250) not null,
+chofer_apellido varchar(250) not null,
+chofer_fecha_nacimiento datetime not null,
+chofer_dni numeric(18,0) unique not null,
+chofer_direccion varchar(250) not null,
+chofer_telefono numeric(18,0) unique not null,
+chofer_email varchar(250),
+chofer_habilitado numeric(1,0) not null default 1
 )
 GO
 
 create table [DDG].Facturas (
-id numeric(18,0) primary key identity,
-cliente numeric(10,0) not null references [DDG].Clientes,
-numero numeric(18,0) unique not null,
-fecha_inicio datetime not null,
-fecha_fin datetime not null,
-importe decimal(7,2) not null default 0
+factura_id numeric(18,0) primary key identity,
+factura_cliente numeric(10,0) not null references [DDG].Clientes,
+factura_numero numeric(18,0) unique not null,
+factura_fecha_inicio datetime not null,
+factura_fecha_fin datetime not null,
+factura_importe decimal(7,2) not null default 0
 )
 GO
 
 
 create table [DDG].Turnos (
-id numeric(10,0) primary key identity,
-hora_inicio time not null,
-hora_fin time not null,
-descripcion varchar(255),
-valor_km decimal(5,2) not null,
-precio_base decimal(5,2) not null,
-habilitado numeric(1,0) not null default 1
+turno_id numeric(10,0) primary key identity,
+turno_hora_inicio time not null,
+turno_hora_fin time not null,
+turno_descripcion varchar(255),
+turno_valor_km decimal(5,2) not null,
+turno_precio_base decimal(5,2) not null,
+turno_habilitado numeric(1,0) not null default 1
 )
 GO
 
 create table [DDG].Autos (
-id numeric(10,0) primary key identity,
-turno numeric(10,0) not null references [DDG].Turnos,
-chofer numeric(10,0) not null references [DDG].Choferes,
-marca varchar(255) not null,
-modelo varchar(255) not null,
-patente varchar(10)  not null,
-licencia varchar(26) not null,
-rodado varchar(10) not null,
-habilitado numeric(1,0) not null default 1
+auto_id numeric(10,0) primary key identity,
+auto_turno numeric(10,0) not null references [DDG].Turnos,
+auto_chofer numeric(10,0) not null references [DDG].Choferes,
+auto_marca varchar(255) not null,
+auto_modelo varchar(255) not null,
+auto_patente varchar(10)  not null,
+auto_licencia varchar(26) not null,
+auto_rodado varchar(10) not null,
+auto_habilitado numeric(1,0) not null default 1
 )
 GO
 
 create table [DDG].Pagos (
-id numeric(10,0) primary key identity,
-chofer numeric(10,0) not null references [DDG].Choferes,
-turno numeric(10,0) not null references [DDG].Turnos,
-importe decimal(7,2) not null default 0,
-fecha datetime
+pago_id numeric(10,0) primary key identity,
+pago_chofer numeric(10,0) not null references [DDG].Choferes,
+pago_turno numeric(10,0) not null references [DDG].Turnos,
+pago_importe decimal(7,2) not null default 0,
+pago_fecha datetime
 )
 GO
 
-create table [DDG].Viaje (
-id numeric(18,0) primary key identity,
-chofer numeric(10,0) not null references [DDG].Choferes,
-auto numeric(10,0) not null references [DDG].Autos,
-turno numeric(10,0) not null references [DDG].Turnos,
-cliente numeric(10,0) not null references [DDG].Clientes,
-pago numeric(10,0) references [DDG].Pagos,
-factura numeric(18,0) references [DDG].Facturas,
-cantidad_km numeric(5,0) not null,
-fecha_viaje date not null,
-hora_inicio time not null,
-hora_fin time not null
+create table [DDG].Viajes (
+viaje_id numeric(18,0) primary key identity,
+viaje_chofer numeric(10,0) not null references [DDG].Choferes,
+viaje_auto numeric(10,0) not null references [DDG].Autos,
+viaje_turno numeric(10,0) not null references [DDG].Turnos,
+viaje_cliente numeric(10,0) not null references [DDG].Clientes,
+viaje_pago numeric(10,0) references [DDG].Pagos,
+viaje_factura numeric(18,0) references [DDG].Facturas,
+viaje_cantidad_km numeric(5,0) not null,
+viaje_fecha_viaje date not null,
+viaje_hora_inicio time not null,
+viaje_hora_fin time not null
 )
 GO
+
+				/* Carga de datos*/
+
+	/*Roles*/
+insert into [DDG].Roles (rol_nombre) values
+('Administrativo'), 
+('Chofer'), 
+('Cliente');
+
+	/*Funciones*/
+
+	/*Usuarios*/
+
+/*Usuario pedido*/
+insert into DDG.Usuarios (usuario_username, usuario_password) values
+('admin',HASHBYTES('SHA2_256','w23e'))
+
+/*usuarios clientes*/
+insert into DDG.Usuarios (usuario_username, usuario_password)
+select distinct cast(Cliente_Dni as varchar(255)), HASHBYTES('SHA2_256',cast(Cliente_Dni as varchar(255)))
+from gd_esquema.Maestra
+where Cliente_Dni is not null
+order by cast(Cliente_Dni as varchar(255))
+
+/*Usuarios choferes*/
+insert into DDG.Usuarios (usuario_username, usuario_password)
+select distinct cast(Chofer_Dni as varchar(255)), HASHBYTES('SHA2_256',cast(Chofer_Dni as varchar(255)))
+from gd_esquema.Maestra
+where Chofer_Dni is not null
+order by cast(Chofer_Dni as varchar(255))
 
