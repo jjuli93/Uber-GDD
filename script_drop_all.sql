@@ -15,7 +15,7 @@ drop table [DDG].Usuarios
 drop table [DDG].RolesXFuncionalidades
 drop table [DDG].Roles
 drop table [DDG].Funcionalidades
-
+drop schema DDG
 
 
 

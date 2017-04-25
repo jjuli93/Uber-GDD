@@ -50,7 +50,7 @@ cliente_apellido varchar(250) not null,
 cliente_fecha_nacimiento date not null,
 cliente_dni numeric(18,0) unique not null,
 cliente_direccion varchar(250) not null,
-cliente_codigo_postal numeric not null,
+cliente_codigo_postal numeric /*not null */,		/*saco el not null porque en la base de datos ningun cliente tiene cod postal)*/
 cliente_telefono numeric(18,0) unique not null,
 cliente_email varchar(250),
 cliente_habilitado numeric(1,0) not null default 1
@@ -130,17 +130,17 @@ viaje_hora_fin time not null
 )
 GO
 
-				/* Carga de datos*/
+						/* Carga de datos*/
 
-	/*Roles*/
+			/*Roles*/
 insert into [DDG].Roles (rol_nombre) values
 ('Administrativo'), 
 ('Chofer'), 
 ('Cliente');
 
-	/*Funciones*/
+			/*Funciones*/
 
-	/*Usuarios*/
+			/*Usuarios*/
 
 /*Usuario pedido*/
 insert into DDG.Usuarios (usuario_username, usuario_password) values
@@ -159,4 +159,18 @@ select distinct cast(Chofer_Dni as varchar(255)), HASHBYTES('SHA2_256',cast(Chof
 from gd_esquema.Maestra
 where Chofer_Dni is not null
 order by cast(Chofer_Dni as varchar(255))
+
+			/*Clientes*/
+insert into DDG.Clientes (cliente_nombre, cliente_apellido,cliente_dni, cliente_telefono,cliente_direccion,cliente_email,cliente_fecha_nacimiento, cliente_usuario)
+select distinct m.Cliente_Nombre, m.Cliente_Apellido, m.Cliente_Dni, m.Cliente_Telefono, m.Cliente_Direccion, m.Cliente_Mail, m.Cliente_Fecha_Nac, u.usuario_ID
+from gd_esquema.Maestra m, DDG.Usuarios u
+where  cast( m.Cliente_Dni as varchar(255)) = u.usuario_username
+order by usuario_ID
+
+			/*Choferes*/
+insert into DDG.Choferes(chofer_nombre, chofer_apellido,chofer_dni, chofer_telefono,chofer_direccion,chofer_email,chofer_fecha_nacimiento, chofer_usuario)
+select distinct m.chofer_Nombre, m.chofer_Apellido, m.chofer_Dni, m.chofer_Telefono, m.chofer_Direccion, m.chofer_Mail, m.chofer_Fecha_Nac, u.usuario_ID
+from gd_esquema.Maestra m, DDG.Usuarios u
+where  cast( m.chofer_Dni as varchar(255)) = u.usuario_username
+order by usuario_ID
 
