@@ -95,24 +95,30 @@ GO
 
 create table [DDG].Autos (
 auto_id numeric(10,0) primary key identity,
-auto_turno numeric(10,0) not null references [DDG].Turnos,
 auto_chofer numeric(10,0) not null references [DDG].Choferes,
 auto_marca varchar(255) not null,
 auto_modelo varchar(255) not null,
-auto_patente varchar(10)  not null,
+auto_patente varchar(10)  not null unique,
 auto_licencia varchar(26) not null,
 auto_rodado varchar(10) not null,
 auto_habilitado numeric(1,0) not null default 1
 )
 GO
 
-create table [DDG].Pagos (
-pago_id numeric(10,0) primary key identity,
-pago_chofer numeric(10,0) not null references [DDG].Choferes,
-pago_turno numeric(10,0) not null references [DDG].Turnos,
-pago_importe decimal(7,2) not null default 0,
-pago_numero numeric(18,0) not null,
-pago_fecha datetime
+create table [DDG].AutosXTurnos (
+autoXTurno_id numeric(10,0) primary key identity,
+autoXTurno_auto numeric(10,0) not null references [DDG].Autos,
+autoXTurno_turno numeric(10,0) not null references [DDG].Turnos
+)
+GO
+
+create table [DDG].Rendiciones (
+rendicion_id numeric(10,0) primary key identity,
+rendicion_chofer numeric(10,0) not null references [DDG].Choferes,
+rendicion_turno numeric(10,0) not null references [DDG].Turnos,
+rendicion_importe decimal(7,2) not null default 0,
+rendicion_numero numeric(18,0) not null,
+rendicion_fecha datetime
 )
 GO
 
@@ -122,7 +128,7 @@ viaje_chofer numeric(10,0) not null references [DDG].Choferes,
 viaje_auto numeric(10,0) not null references [DDG].Autos,
 viaje_turno numeric(10,0) not null references [DDG].Turnos,
 viaje_cliente numeric(10,0) not null references [DDG].Clientes,
-viaje_pago numeric(10,0) references [DDG].Pagos,
+viaje_pago numeric(10,0) references [DDG].Rendiciones,
 viaje_factura numeric(18,0) references [DDG].Facturas,
 viaje_cantidad_km numeric(5,0) not null,
 viaje_fecha_viaje date not null,
@@ -133,15 +139,30 @@ GO
 
 												/* Carga de datos*/
 
-			/*Roles*/
+					/*Roles*/
 insert into [DDG].Roles (rol_nombre) values
 ('Administrativo'), 
 ('Chofer'), 
 ('Cliente');
 
-			/*Funciones*/
+					/*Funcionalidades*/
+insert into DDG.Funcionalidades (funcionalidad_descripcion) values
+('ABM de Rol'),
+('Registro de usuarios'),
+('ABM de Clientes'),
+('ABM de Automoviles'),
+('ABM de turnos'),
+('ABM de choferes'),
+('Registro de viajes'),
+('Rendicion de viajes'),
+('Facturacion de clientes'),
+('Listado estadistico');
 
-			/*Usuarios*/
+					/*RolesXFuncionalidades*/
+insert into [DDG].RolesXFuncionalidades (rolXFuncionalidad_rol, rolXFuncionalidad_funcionalidad) values
+(1,1), (1,2), (1,3), (1,4),(1,5),(1,6),(1,7),(2,8),(3,9),(1,10),(2,10),(3,10);
+
+					/*Usuarios*/
 /*Usuario pedido*/
 insert into DDG.Usuarios (usuario_username, usuario_password) values
 ('admin',HASHBYTES('SHA2_256','w23e'))
@@ -160,21 +181,36 @@ from gd_esquema.Maestra
 where Chofer_Dni is not null
 order by cast(Chofer_Dni as varchar(255))
 
-			/*Clientes*/
+					/*Clientes*/
 insert into DDG.Clientes (cliente_nombre, cliente_apellido,cliente_dni, cliente_telefono,cliente_direccion,cliente_email,cliente_fecha_nacimiento, cliente_usuario)
 select distinct m.Cliente_Nombre, m.Cliente_Apellido, m.Cliente_Dni, m.Cliente_Telefono, m.Cliente_Direccion, m.Cliente_Mail, m.Cliente_Fecha_Nac, u.usuario_ID
 from gd_esquema.Maestra m, DDG.Usuarios u
 where  cast( m.Cliente_Dni as varchar(255)) = u.usuario_username
 order by usuario_ID
 
-			/*Choferes*/
+					/*Choferes*/
 insert into DDG.Choferes(chofer_nombre, chofer_apellido,chofer_dni, chofer_telefono,chofer_direccion,chofer_email,chofer_fecha_nacimiento, chofer_usuario)
 select distinct m.chofer_Nombre, m.chofer_Apellido, m.chofer_Dni, m.chofer_Telefono, m.chofer_Direccion, m.chofer_Mail, m.chofer_Fecha_Nac, u.usuario_ID
 from gd_esquema.Maestra m, DDG.Usuarios u
 where  cast( m.chofer_Dni as varchar(255)) = u.usuario_username
 order by usuario_ID
 
-			/*Turnos*/
+					/*UsuariosXRoles*/
+/*usuariosXClientes*/
+insert into [DDG].UsuariosXRoles( usuarioXRol_usuario, usuarioXRol_rol)
+select distinct u.usuario_ID, r.rol_ID
+from DDG.Usuarios u, DDG.Clientes c, DDG.Roles r
+where u.usuario_username = cast(c.cliente_dni as varchar(255))
+and r.rol_nombre = ('Cliente')
+
+/*usuariosXChoferes*/
+insert into [DDG].UsuariosXRoles( usuarioXRol_usuario, usuarioXRol_rol)
+select distinct u.usuario_ID, r.rol_ID
+from DDG.Usuarios u, DDG.Choferes c, DDG.Roles r
+where u.usuario_username = cast(c.chofer_dni as varchar(255))
+and r.rol_nombre = ('Chofer')
+
+					/*Turnos*/
 insert into DDG.Turnos(turno_descripcion, turno_hora_fin, turno_hora_inicio, turno_precio_base, turno_valor_km)
 select distinct Turno_Descripcion, Turno_Hora_Fin, Turno_Hora_Inicio, Turno_Precio_Base, Turno_Valor_Kilometro
 from gd_esquema.Maestra
@@ -185,8 +221,8 @@ update DDG.Turnos
 set turno_descripcion = 'Turno Mañana'
 where turno_descripcion = 'Turno Mañna'
 
-			/*Pagos*/   /*Hay pagos duplicados y pagos con mismo numero y diferente importe)*/ /*Ya hice la consulta en el grupo*/
-insert into DDG.Pagos  ( pago_chofer, pago_fecha, pago_importe, pago_numero, pago_turno)
+					/*Rendiciones*/   /*Hay pagos con mismo numero y diferente importe)*/ /*Ya hice la consulta en el grupo*/
+insert into DDG.Rendiciones  ( rendicion_chofer, rendicion_fecha, rendicion_importe, rendicion_numero, rendicion_turno)
 select distinct c.chofer_id, m.Rendicion_Fecha, m.Rendicion_Importe, m.Rendicion_Nro, t.turno_id
 from gd_esquema.Maestra m, DDG.Choferes c, DDG.Turnos t
 where m.Rendicion_Fecha is not null
@@ -195,10 +231,16 @@ and m.Turno_Hora_Inicio = t.turno_hora_inicio
 order by Rendicion_Nro
 
 
-			/*Autos*/
-insert into DDG.Autos (auto_licencia, auto_marca, auto_modelo, auto_patente, auto_rodado, auto_chofer, auto_turno)
-select distinct m.Auto_Licencia, m.Auto_Marca, m.Auto_Modelo, m.Auto_Patente, m.Auto_Rodado, c.chofer_id, t.turno_id
+					/*Autos*/
+insert into DDG.Autos (auto_licencia, auto_marca, auto_modelo, auto_patente, auto_rodado, auto_chofer)
+select distinct m.Auto_Licencia, m.Auto_Marca, m.Auto_Modelo, m.Auto_Patente, m.Auto_Rodado, c.chofer_id
 from gd_esquema.Maestra m, DDG.Choferes c, DDG.Turnos t
 where m.Auto_Patente is not null
 and m.Chofer_Dni = c.chofer_dni
+
+					/*AutosXTurnos*/
+insert into DDG.AutosXTurnos (autoXTurno_auto, autoXTurno_turno)
+select distinct  a.auto_id, t.turno_id
+from gd_esquema.Maestra m, DDG.Autos a, ddg.Turnos t
+where m.Auto_Patente = a.auto_patente
 and m.Turno_Hora_Inicio = t.turno_hora_inicio
