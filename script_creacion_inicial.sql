@@ -50,7 +50,7 @@ cliente_apellido varchar(250) not null,
 cliente_fecha_nacimiento date not null,
 cliente_dni numeric(18,0) unique not null,
 cliente_direccion varchar(250) not null,
-cliente_codigo_postal numeric /*not null */,		/*saco el not null porque en la base de datos ningun cliente tiene cod postal)*/
+cliente_codigo_postal numeric  /*not null*/,		/*saco el not null porque en la base de datos ningun cliente tiene cod postal)*/
 cliente_telefono numeric(18,0) unique not null,
 cliente_email varchar(250),
 cliente_habilitado numeric(1,0) not null default 1
@@ -128,12 +128,12 @@ viaje_chofer numeric(10,0) not null references [DDG].Choferes,
 viaje_auto numeric(10,0) not null references [DDG].Autos,
 viaje_turno numeric(10,0) not null references [DDG].Turnos,
 viaje_cliente numeric(10,0) not null references [DDG].Clientes,
-viaje_pago numeric(10,0) references [DDG].Rendiciones,
+viaje_rendicion numeric(10,0) references [DDG].Rendiciones,
 viaje_factura numeric(18,0) references [DDG].Facturas,
 viaje_cantidad_km numeric(5,0) not null,
-viaje_fecha_viaje date not null,
-viaje_hora_inicio time not null,
-viaje_hora_fin time not null
+viaje_fecha_viaje datetime not null,
+viaje_hora_inicio time /*not null*/,
+viaje_hora_fin time /*not null*/		/*Datos en la base no tienen estos campos*/
 )
 GO
 
@@ -221,13 +221,14 @@ update DDG.Turnos
 set turno_descripcion = 'Turno Mañana'
 where turno_descripcion = 'Turno Mañna'
 
-					/*Rendiciones*/   /*Hay pagos con mismo numero y diferente importe)*/ /*Ya hice la consulta en el grupo*/
+					/*Rendiciones*/  
 insert into DDG.Rendiciones  ( rendicion_chofer, rendicion_fecha, rendicion_importe, rendicion_numero, rendicion_turno)
-select distinct c.chofer_id, m.Rendicion_Fecha, m.Rendicion_Importe, m.Rendicion_Nro, t.turno_id
+select distinct c.chofer_id, m.Rendicion_Fecha, sum(m.Rendicion_Importe), m.Rendicion_Nro, t.turno_id
 from gd_esquema.Maestra m, DDG.Choferes c, DDG.Turnos t
 where m.Rendicion_Fecha is not null
 and m.Chofer_Dni = c.chofer_dni
 and m.Turno_Hora_Inicio = t.turno_hora_inicio
+group by Rendicion_Nro, c.chofer_id, t.turno_id, m.Rendicion_Fecha
 order by Rendicion_Nro
 
 
@@ -244,3 +245,29 @@ select distinct  a.auto_id, t.turno_id
 from gd_esquema.Maestra m, DDG.Autos a, ddg.Turnos t
 where m.Auto_Patente = a.auto_patente
 and m.Turno_Hora_Inicio = t.turno_hora_inicio
+
+					/*Facturas*/
+insert into DDG.Facturas (factura_cliente, factura_fecha_inicio, factura_fecha_fin, factura_numero, factura_importe)
+select distinct c.cliente_id, m.Factura_Fecha_Inicio, m.Factura_Fecha_Fin, m.Factura_Nro, ( select sum(m2.Turno_Precio_Base + ( m2.Viaje_Cant_Kilometros * m2.Turno_Valor_Kilometro))   
+																							 from gd_esquema.Maestra m2
+																							where m2.Factura_Nro = m.Factura_Nro)
+from DDG.Clientes c, gd_esquema.Maestra m
+where Factura_Nro is not null
+and c.cliente_dni = m.Cliente_Dni
+order by Factura_Nro
+
+					/*Viajes*/
+insert into DDG.Viajes (viaje_auto, viaje_chofer, viaje_cliente, viaje_rendicion, viaje_turno, viaje_cantidad_km, viaje_fecha_viaje, viaje_factura)
+select distinct  a.auto_id, ch.chofer_id, cl.cliente_id, r.rendicion_id, t.turno_id, m.Viaje_Cant_Kilometros, m.Viaje_Fecha, f.factura_id
+from ddg.Autos a, DDG.Choferes ch, DDG.Clientes cl, DDG.Rendiciones r, DDG.Turnos t, gd_esquema.Maestra m, gd_esquema.Maestra m2, DDG.Facturas f
+where m.Viaje_Cant_Kilometros is not null
+and m.Auto_Patente = a.auto_patente
+and m.Chofer_Dni = ch.chofer_dni
+and m.Cliente_Dni = cl.cliente_dni
+and m.Rendicion_Nro = r.rendicion_numero
+and m.Turno_Hora_Inicio = t.turno_hora_inicio
+and m.Chofer_Dni = m2.Chofer_Dni
+and m.Cliente_Dni = m2.Cliente_Dni
+and m.Viaje_Fecha = m2.Viaje_Fecha
+and m2.Factura_Nro = f.factura_numero
+order by m.Viaje_Fecha
