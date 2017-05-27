@@ -3,6 +3,9 @@ go
 
 													/* Creacion de tablas*/
 
+
+
+
 create schema [DDG] authorization [gd]
 go
 
@@ -174,6 +177,8 @@ GO
 
 												/* Carga de datos*/
 
+
+
 					/*Roles*/
 insert into [DDG].Roles (rol_nombre) values
 ('Administrativo'), 
@@ -334,3 +339,139 @@ and m2.Factura_Nro = f.factura_numero
 and f.factura_id = fd.facturaDetalle_factura
 and r.rendicion_id = rd.rendicionDetalle_rendicion
 order by m.Viaje_Fecha
+
+
+
+													/* Stored procedures*/
+
+
+
+													/*Funciones*/
+
+
+
+--=============================================================================================================
+--TIPO		: Funcion
+--NOMBRE	: getTrimestre
+--OBJETIVO  : obtener trimestre dado un mes                                    
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='getTrimestre' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
+DROP FUNCTION [ddg].getTrimestre
+GO
+
+create function [DDG].getTrimestre (@mes int)
+returns int
+begin
+declare @retorno int
+
+if (@mes between 1 and 3) set @retorno = 1 
+if (@mes between 4 and 6) set @retorno = 2
+if (@mes between 7 and 9) set @retorno = 3
+if (@mes between 10 and 12) set @retorno = 4
+
+return @retorno
+end
+
+GO
+													/*Listados estadisticos*/
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_choferes_con_mayor_recaudacion
+--OBJETIVO  : obtener choferes con mayor recaudacion dado un año y un trimestre                                   
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_choferes_con_mayor_recaudacion' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_choferes_con_mayor_recaudacion
+GO
+
+create procedure [DDG].[sp_get_choferes_con_mayor_recaudacion] (@año int, @trimestre int)
+as
+
+begin
+select top 5 c.*, isnull(sum(r.rendicion_importe),0) as cantidad_recaudada
+from DDG.Choferes c left join DDG.Rendiciones r on c.chofer_id = r.rendicion_chofer
+where year(r.rendicion_fecha) = @año
+and DDG.getTrimestre(month(r.rendicion_fecha)) = @trimestre
+group by c.chofer_apellido,c.chofer_direccion,c.chofer_dni,c.chofer_email,c.chofer_fecha_nacimiento,c.chofer_fecha_nacimiento,c.chofer_habilitado,c.chofer_id,c.chofer_nombre,c.chofer_telefono,c.chofer_usuario
+order by isnull(sum(r.rendicion_importe),0) desc
+end
+
+GO
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_choferes_con_viaje_mas_largo
+--OBJETIVO  : obtener choferes con viajes mas largos dado un año y un trimestre                                   
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_choferes_con_viaje_mas_largo' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_choferes_con_viaje_mas_largo
+GO
+
+create procedure [DDG].[sp_get_choferes_con_viaje_mas_largo] (@año int, @trimestre int)
+as
+
+begin
+select top 5 c.*, isnull(sum(v.viaje_cantidad_km),0) as cantidad_de_km
+from DDG.Choferes c  left join DDG.Viajes v on c.chofer_id = v.viaje_chofer
+where year(v.viaje_fecha_viaje) = @año
+and DDG.getTrimestre(month(v.viaje_fecha_viaje)) = @trimestre
+group by c.chofer_apellido,c.chofer_direccion,c.chofer_dni,c.chofer_email,c.chofer_fecha_nacimiento,c.chofer_fecha_nacimiento,c.chofer_habilitado,c.chofer_id,c.chofer_nombre,c.chofer_telefono,c.chofer_usuario
+order by isnull(sum(v.viaje_cantidad_km),0) desc
+end
+
+GO
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_clientes_con_mayor_consumo
+--OBJETIVO  : obtener clientes con mayor consumo dado un año y un trimestre                                   
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_clientes_con_mayor_consumo' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_clientes_con_mayor_consumo
+GO
+
+create procedure [DDG].[sp_get_clientes_con_mayor_consumo] (@año int, @trimestre int)
+as
+
+begin
+select top 5 c.*, isnull(sum(f.factura_importe),0) as importe_total
+from DDG.Clientes c  left join DDG.Facturas f on c.cliente_id = f.factura_cliente
+where year(f.factura_fecha_inicio) = @año
+and DDG.getTrimestre(month(f.factura_fecha_inicio)) = @trimestre
+group by c.cliente_apellido,c.cliente_codigo_postal,c.cliente_direccion,c.cliente_dni,c.cliente_email,c.cliente_fecha_nacimiento,c.cliente_habilitado,c.cliente_id,c.cliente_nombre,c.cliente_telefono,c.cliente_usuario
+order by isnull(sum(f.factura_importe),0) desc
+end
+
+GO
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_clientes_mayor_uso_mismo_auto
+--OBJETIVO  : obtener clientes con mayor uso de un mismo automovil dado un año y un trimestre                                   
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_clientes_mayor_uso_mismo_auto' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_clientes_mayor_uso_mismo_auto
+GO
+
+create procedure [DDG].[sp_get_clientes_mayor_uso_mismo_auto] (@año int, @trimestre int)
+as
+
+begin
+select top 5 c.*, a.*, isnull(count(a.auto_id),0) as cantidad_veces_utilizado
+from DDG.Clientes c  left join Viajes v on c.cliente_id = v.viaje_cliente
+left join DDG.Autos a on v.viaje_auto = a.auto_id
+where year(v.viaje_fecha_viaje) = @año
+and DDG.getTrimestre(month(v.viaje_fecha_viaje)) = @trimestre
+group by c.cliente_apellido,c.cliente_codigo_postal,c.cliente_direccion,c.cliente_dni,c.cliente_email,c.cliente_fecha_nacimiento,c.cliente_habilitado,c.cliente_id,c.cliente_nombre,c.cliente_telefono,c.cliente_usuario,a.auto_chofer,a.auto_habilitado,a.auto_id,a.auto_licencia,a.auto_modelo,a.auto_patente,a.auto_patente,a.auto_rodado
+order by isnull(count(a.auto_id),0) desc
+end
+
+GO
