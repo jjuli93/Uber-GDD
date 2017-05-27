@@ -22,11 +22,6 @@ drop table [DDG].RolesXFuncionalidades
 drop table [DDG].Roles
 drop table [DDG].Funcionalidades
 
-
-drop procedure [DDG].sp_get_choferes_con_mayor_recaudacion_
-drop function  [DDG].getTrimestre
-
-
 drop schema DDG
 
 
