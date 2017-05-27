@@ -340,15 +340,272 @@ and f.factura_id = fd.facturaDetalle_factura
 and r.rendicion_id = rd.rendicionDetalle_rendicion
 order by m.Viaje_Fecha
 
+													/*Triggers*/
+
+
+--=============================================================================================================
+--TIPO		: Trigger
+--NOMBRE	: tr_baja_rol						
+--OBJETIVO  : al dar de baja un rol se da de baja la relacion de usuarios con ese rol                                 
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='tr_baja_rol')
+DROP TRIGGER tr_baja_rol
+GO
+
+create trigger [DDG].tr_baja_rol on [DDG].Roles for update
+as
+begin
+if UPDATE(rol_habilitado)
+	delete from [DDG].UsuariosXRoles
+	where usuarioXRol_rol in (select i.rol_ID
+							  from inserted i
+							  where i.rol_habilitado = 0)
+end
+
 
 
 													/* Stored procedures*/
+	/*ABM ROL*/
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_alta_rol						------------TODO falta pasarle la lista de funcionalidades---------------
+--OBJETIVO  : dar de alta un rol                                 
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_rol' AND type='p')
+	DROP PROCEDURE [DDG].sp_alta_rol
+GO
+
+create procedure [DDG].sp_alta_rol (@nombre varchar(255), @habilitado  bit)
+as
+begin
+
+insert into DDG.Roles (rol_nombre, rol_habilitado)
+values(@nombre, @habilitado)
+
+end
+GO
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_baja_rol						
+--OBJETIVO  : dar de baja un rol       (se puede usar este SP o el de update)                          
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_rol' AND type='p')
+	DROP PROCEDURE [DDG].sp_baja_rol
+GO
+
+create procedure [DDG].sp_baja_rol (@id numeric(10,0))
+as
+begin
+
+update DDG.Roles 
+set rol_habilitado = 0
+where rol_ID = @id
+
+end
+GO
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_update_rol							------------TODO falta pasarle la lista de funcionalidades---------------
+--OBJETIVO  : modificar un rol existente     (tambien sirve para la baja logica)                           
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_rol' AND type='p')
+	DROP PROCEDURE [DDG].sp_update_rol
+GO											
+
+create procedure [DDG].sp_update_rol (@id numeric(10,0), @nombre varchar, @habilitado bit)	
+as
+begin
+
+update DDG.Roles
+set rol_nombre = @nombre, rol_habilitado = @habilitado
+where rol_ID = @id
+
+end
+GO												
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_roles_habilitados
+--OBJETIVO  : get de roles habilitados                          
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_roles_habilitados' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_roles_habilitados
+GO	
+
+create procedure [DDG].sp_get_roles_habilitados
+as
+begin
+
+select * 
+from Roles
+where rol_habilitado = 1
+
+end
+GO
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_roles
+--OBJETIVO  : get de roles (habilitados o no)                         
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_roles' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_roles
+GO	
+
+create procedure [DDG].sp_get_roles
+as
+begin
+
+select * 
+from Roles
+
+end
+GO
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_login_check
+--OBJETIVO  : checkeo login correcto (chequea intentos fallidos)  
+--output: 0: si no existe usuario, 1: contraseña incorrecta (incrementa intentos fallidos), 2: login correcto (resetea intentos fallidos), 3:usuario bloqueado                     
+--=============================================================================================================
+ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_login_check' AND type='p')
+	DROP PROCEDURE [DDG].sp_login_check
+GO	
+
+create procedure [DDG].sp_login_check(@username varchar (255), @contraseña varchar(255), @retorno int output)
+as
+begin
+
+ if (DDG.existeUsuario(@username)) = 0 set @retorno = 0
+	else
+	begin
+	if(DDG.usuarioActivo(@username) = 0) set @retorno = 3
+		else
+		if(select usuario_password
+		from DDG.Usuarios
+		where usuario_username = @username) = HASHBYTES('SHA2_256',cast(@contraseña as varchar(255)))begin  set @retorno = 2 exec DDG.sp_limpiar_intentos_fallidos @username end
+			else 
+			begin
+			set @retorno=1
+			exec [DDG].sp_incrementar_intentos_fallidos @username 
+			end
+		end
+	return @retorno
+
+end
+GO
 
 
 
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_incrementar_intentos_fallidos
+--OBJETIVO  : incrementa intentos fallidos para un usuario                      
+--=============================================================================================================
+ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_incrementar_intentos_fallidos' AND type='p')
+	DROP PROCEDURE [DDG].sp_incrementar_intentos_fallidos
+GO
+
+create procedure [DDG].sp_incrementar_intentos_fallidos (@username varchar(255))
+as
+begin
+
+update  DDG.Usuarios set usuario_intentosFallidos = (usuario_intentosFallidos + 1)
+where usuario_username = @username
+
+end
+GO						
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_limpiar_intentos_fallidos
+--OBJETIVO  : intentos fallidos a 0                     
+--=============================================================================================================	
+ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_limpiar_intentos_fallidos' AND type='p')
+	DROP PROCEDURE [DDG].sp_limpiar_intentos_fallidos
+GO
+
+create procedure [DDG].sp_limpiar_intentos_fallidos (@username varchar(255))
+as
+begin
+
+update DDG.Usuarios set usuario_intentosFallidos = 0
+where usuario_username = @username
+
+end
+GO			
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_roles_usuario
+--OBJETIVO  : intentos fallidos a 0                     
+--=============================================================================================================	
+ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_roles_usuario' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_roles_usuario
+GO
+
+create procedure [DDG].sp_get_roles_usuario (@idUsuario numeric (10,0))	
+as
+begin
+
+select r.*
+from Usuarios u, UsuariosXRoles ur, Roles r
+where u.usuario_ID = ur.usuarioXRol_usuario
+and ur.usuarioXRol_rol = r.rol_ID 	
+
+end
+GO		
+									
 													/*Funciones*/
 
+--=============================================================================================================
+--TIPO		: Funcion
+--NOMBRE	: existeUsuario
+--OBJETIVO  : determinar si existe un usuario en el sistema                                   
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='existeUsuario' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
+DROP FUNCTION [ddg].existeUsuario
+GO
 
+create function [DDG].existeUsuario(@username varchar(255))
+returns bit
+begin
+declare @retorno bit
+
+if((select count(*)
+	from DDG.Usuarios
+	where usuario_username = @username) > 0) set @retorno = 1 else set @retorno = 0
+return @retorno
+
+end
+GO
+
+--=============================================================================================================
+--TIPO		: Funcion
+--NOMBRE	: usuarioActivo
+--OBJETIVO  : comprueba que el usuario tenga intentos restante para el login                                  
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='usuarioActivo' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
+DROP FUNCTION [ddg].usuarioActivo
+GO
+
+create function [DDG].usuarioActivo (@username varchar(255))
+returns bit
+begin
+declare @retorno bit
+
+if((select usuario_intentosFallidos
+	from Usuarios
+	where usuario_username = @username) < 3) set @retorno = 1 else set @retorno = 0
+
+return @retorno
+end
+GO
 
 --=============================================================================================================
 --TIPO		: Funcion
