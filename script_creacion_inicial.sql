@@ -81,6 +81,11 @@ factura_importe decimal(7,2) not null default 0
 )
 GO
 
+create table [DDG].FacturasDetalle (
+facturaDetalle_id numeric(18,0) primary key identity,
+facturaDetalle_factura numeric(18,0) not null references [DDG].Facturas
+)
+GO
 
 create table [DDG].Turnos (
 turno_id numeric(10,0) primary key identity,
@@ -93,11 +98,23 @@ turno_habilitado numeric(1,0) not null default 1
 )
 GO
 
+create table [DDG].Marcas (
+marca_id numeric(10,0) primary key identity,
+marca_descripcion varchar(255) not null
+)
+GO
+
+create table [DDG].Modelos (
+modelo_id numeric(10,0) primary key identity,
+modelo_descripcion varchar(255) not null,
+modelo_marca numeric(10,0) not null references [DDG].Marcas
+)
+GO
+
 create table [DDG].Autos (
 auto_id numeric(10,0) primary key identity,
 auto_chofer numeric(10,0) not null references [DDG].Choferes,
-auto_marca varchar(255) not null,
-auto_modelo varchar(255) not null,
+auto_modelo numeric(10,0) not null references [DDG].Modelos,
 auto_patente varchar(10)  not null unique,
 auto_licencia varchar(26) not null,
 auto_rodado varchar(10) not null,
@@ -112,13 +129,28 @@ autoXTurno_turno numeric(10,0) not null references [DDG].Turnos
 )
 GO
 
+create table [DDG].Porcentajes(
+porcentaje_id numeric(10,0) primary key identity,
+porcentaje_valor numeric(10,0) not null,
+porcentaje_fecha date not null,
+porcentaje_impuestoPor numeric(10,0)  references [DDG].Usuarios
+)
+GO
+
 create table [DDG].Rendiciones (
 rendicion_id numeric(10,0) primary key identity,
 rendicion_chofer numeric(10,0) not null references [DDG].Choferes,
 rendicion_turno numeric(10,0) not null references [DDG].Turnos,
 rendicion_importe decimal(7,2) not null default 0,
 rendicion_numero numeric(18,0) not null,
+rendicion_porcentaje numeric(10,0) not null references [DDG].Porcentajes,
 rendicion_fecha datetime
+)
+GO
+
+create table [DDG].RendicionesDetalle (
+rendicionDetalle_id numeric(10,0) primary key identity,
+rendicionDetalle_rendicion numeric(10,0) not null references [DDG].Rendiciones
 )
 GO
 
@@ -128,14 +160,17 @@ viaje_chofer numeric(10,0) not null references [DDG].Choferes,
 viaje_auto numeric(10,0) not null references [DDG].Autos,
 viaje_turno numeric(10,0) not null references [DDG].Turnos,
 viaje_cliente numeric(10,0) not null references [DDG].Clientes,
-viaje_rendicion numeric(10,0) references [DDG].Rendiciones,
-viaje_factura numeric(18,0) references [DDG].Facturas,
+viaje_rendicion numeric(10,0) references [DDG].RendicionesDetalle,
+viaje_factura numeric(18,0) references [DDG].FacturasDetalle,
 viaje_cantidad_km numeric(5,0) not null,
 viaje_fecha_viaje datetime not null,
 viaje_hora_inicio time /*not null*/,
 viaje_hora_fin time /*not null*/		/*Datos en la base no tienen estos campos*/
 )
 GO
+
+
+
 
 												/* Carga de datos*/
 
@@ -221,9 +256,13 @@ update DDG.Turnos
 set turno_descripcion = 'Turno Mañana'
 where turno_descripcion = 'Turno Mañna'
 
+					/*Porcentajes*/
+insert into [DDG].Porcentajes (porcentaje_fecha, porcentaje_valor)
+values(convert(date, getDate()), 30)
+
 					/*Rendiciones*/  
-insert into DDG.Rendiciones  ( rendicion_chofer, rendicion_fecha, rendicion_importe, rendicion_numero, rendicion_turno)
-select distinct c.chofer_id, m.Rendicion_Fecha, sum(m.Rendicion_Importe), m.Rendicion_Nro, t.turno_id
+insert into [DDG].Rendiciones  ( rendicion_chofer, rendicion_fecha, rendicion_importe, rendicion_numero, rendicion_turno, rendicion_porcentaje)
+select distinct c.chofer_id, m.Rendicion_Fecha, sum(m.Rendicion_Importe), m.Rendicion_Nro, t.turno_id, 1
 from gd_esquema.Maestra m, DDG.Choferes c, DDG.Turnos t
 where m.Rendicion_Fecha is not null
 and m.Chofer_Dni = c.chofer_dni
@@ -231,13 +270,30 @@ and m.Turno_Hora_Inicio = t.turno_hora_inicio
 group by Rendicion_Nro, c.chofer_id, t.turno_id, m.Rendicion_Fecha
 order by Rendicion_Nro
 
+					/*RendicionesDetalle*/
+insert into [DDG].RendicionesDetalle (rendicionDetalle_rendicion)
+select distinct r.rendicion_id
+from [DDG].Rendiciones r
+
+
+					/*Marcas*/
+insert into [DDG].Marcas (marca_descripcion)
+select distinct Auto_Marca
+from gd_esquema.Maestra
+
+					/*Modelos*/
+insert into [DDG].Modelos (modelo_descripcion, modelo_marca)
+select distinct m.Auto_Modelo, ma.marca_id
+from gd_esquema.Maestra m, [DDG].Marcas ma
+where m.Auto_Marca = ma.marca_descripcion
 
 					/*Autos*/
-insert into DDG.Autos (auto_licencia, auto_marca, auto_modelo, auto_patente, auto_rodado, auto_chofer)
-select distinct m.Auto_Licencia, m.Auto_Marca, m.Auto_Modelo, m.Auto_Patente, m.Auto_Rodado, c.chofer_id
-from gd_esquema.Maestra m, DDG.Choferes c, DDG.Turnos t
+insert into DDG.Autos (auto_licencia, auto_modelo, auto_patente, auto_rodado, auto_chofer)
+select distinct m.Auto_Licencia, mo.modelo_id, m.Auto_Patente, m.Auto_Rodado, c.chofer_id
+from gd_esquema.Maestra m, DDG.Choferes c, [DDG].Modelos mo
 where m.Auto_Patente is not null
 and m.Chofer_Dni = c.chofer_dni
+and m.Auto_Modelo = mo.modelo_descripcion
 
 					/*AutosXTurnos*/
 insert into DDG.AutosXTurnos (autoXTurno_auto, autoXTurno_turno)
@@ -256,10 +312,15 @@ where Factura_Nro is not null
 and c.cliente_dni = m.Cliente_Dni
 order by Factura_Nro
 
+					/*FacturasDetalle*/
+insert into [DDG].FacturasDetalle(facturaDetalle_factura)
+select distinct f.factura_id
+from [DDG].Facturas f
+
 					/*Viajes*/
 insert into DDG.Viajes (viaje_auto, viaje_chofer, viaje_cliente, viaje_rendicion, viaje_turno, viaje_cantidad_km, viaje_fecha_viaje, viaje_factura)
-select distinct  a.auto_id, ch.chofer_id, cl.cliente_id, r.rendicion_id, t.turno_id, m.Viaje_Cant_Kilometros, m.Viaje_Fecha, f.factura_id
-from ddg.Autos a, DDG.Choferes ch, DDG.Clientes cl, DDG.Rendiciones r, DDG.Turnos t, gd_esquema.Maestra m, gd_esquema.Maestra m2, DDG.Facturas f
+select distinct  a.auto_id, ch.chofer_id, cl.cliente_id, rd.rendicionDetalle_rendicion, t.turno_id, m.Viaje_Cant_Kilometros, m.Viaje_Fecha, fd.facturaDetalle_factura
+from ddg.Autos a, DDG.Choferes ch, DDG.Clientes cl, DDG.Rendiciones r, DDG.Turnos t, gd_esquema.Maestra m, gd_esquema.Maestra m2, DDG.Facturas f, DDG.FacturasDetalle fd, DDG.RendicionesDetalle rd
 where m.Viaje_Cant_Kilometros is not null
 and m.Auto_Patente = a.auto_patente
 and m.Chofer_Dni = ch.chofer_dni
@@ -270,4 +331,6 @@ and m.Chofer_Dni = m2.Chofer_Dni
 and m.Cliente_Dni = m2.Cliente_Dni
 and m.Viaje_Fecha = m2.Viaje_Fecha
 and m2.Factura_Nro = f.factura_numero
+and f.factura_id = fd.facturaDetalle_factura
+and r.rendicion_id = rd.rendicionDetalle_rendicion
 order by m.Viaje_Fecha
