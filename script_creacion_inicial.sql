@@ -782,8 +782,8 @@ create procedure [DDG].sp_alta_cliente (@nombre varchar(250), @apellido varchar(
 as
 begin
 
-insert into DDG.Clientes (cliente_usuario,cliente_nombre,cliente_apellido,cliente_fecha_nacimiento,cliente_dni,cliente_direccion,cliente_codigo_postal,cliente_telefono,cliente_email)
-values((select usuario_id from ddg.usuarios where usuario_username=@dni), @nombre, @apellido, @fechanac, @dni, @direccion, @codpost, @telefono, @email)
+	insert into DDG.Clientes(cliente_usuario,cliente_nombre,cliente_apellido,cliente_fecha_nacimiento,cliente_dni,cliente_direccion,cliente_codigo_postal,cliente_telefono,cliente_email)
+	values((select usuario_id from ddg.usuarios where usuario_username=@dni), @nombre, @apellido, @fechanac, @dni, @direccion, @codpost, @telefono, @email)
 
 end
 GO
@@ -807,3 +807,28 @@ begin
 	exec sp_executesql @sql_statement, N'@parametros varchar(1000)', @dni
 end
 GO
+
+
+
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_baja_cliente
+--OBJETIVO  : dar de baja (logica) a un cliente                                 
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_baja_cliente' AND type='p')
+	DROP PROCEDURE [DDG].sp_baja_cliente
+GO
+
+create procedure [DDG].sp_baja_cliente (@dni varchar(250)) as
+begin
+	update ddg.clientes
+	set cliente_habilitado = 0
+	where cliente_dni = @dni
+end
+GO
+
+
+
+
