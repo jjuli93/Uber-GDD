@@ -738,3 +738,72 @@ order by isnull(count(a.auto_id),0) desc
 end
 
 GO
+
+
+
+
+/* Alta Usuario */
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_alta_usuario
+--OBJETIVO  : dar de alta un usuario                                 
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_usuario' AND type='p')
+	DROP PROCEDURE [DDG].sp_alta_usuario
+GO
+
+create procedure [DDG].sp_alta_usuario (@dni numeric(10,0), @contrasenia varchar(16))
+as
+begin
+
+insert into DDG.Usuarios (usuario_username, usuario_password)
+values(@dni, HASHBYTES('SHA2_256',cast(@contrasenia as varchar(16))))
+
+end
+GO
+
+/* Fin alta usuario */
+
+
+
+/* ABM Cliente */
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_alta_cliente
+--OBJETIVO  : dar de alta un cliente                                 
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_cliente' AND type='p')
+	DROP PROCEDURE [DDG].sp_alta_cliente
+GO
+
+create procedure [DDG].sp_alta_cliente (@nombre varchar(250), @apellido varchar(250), @fechanac date, @dni numeric(10,0), @direccion varchar(250),@codpost numeric(18,0), @telefono numeric(18,0), @email varchar(250))
+as
+begin
+
+insert into DDG.Clientes (cliente_usuario,cliente_nombre,cliente_apellido,cliente_fecha_nacimiento,cliente_dni,cliente_direccion,cliente_codigo_postal,cliente_telefono,cliente_email)
+values((select usuario_id from ddg.usuarios where usuario_username=@dni), @nombre, @apellido, @fechanac, @dni, @direccion, @codpost, @telefono, @email)
+
+end
+GO
+
+
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_update_cliente
+--OBJETIVO  : modificar datos de un cliente                                 
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_cliente' AND type='p')
+	DROP PROCEDURE [DDG].sp_update_cliente
+GO
+
+create procedure [DDG].sp_update_cliente (@parametros varchar(1000), @dni varchar(250)) as
+begin
+	declare @sql_statement nvarchar(1000)
+	SET @sql_statement = 'update ddg.clientes set ' + @parametros + ' where cliente_dni = ' + @dni
+	exec sp_executesql @sql_statement, N'@parametros varchar(1000)', @dni
+end
+GO
