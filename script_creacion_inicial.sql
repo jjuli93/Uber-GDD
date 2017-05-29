@@ -392,7 +392,7 @@ GO
 --NOMBRE	: sp_baja_rol						
 --OBJETIVO  : dar de baja un rol       (se puede usar este SP o el de update)                          
 --=============================================================================================================
-IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_rol' AND type='p')
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_baja_rol' AND type='p')
 	DROP PROCEDURE [DDG].sp_baja_rol
 GO
 
@@ -467,6 +467,49 @@ end
 GO
 
 
+
+--=============================================================================================================
+--TIPO          : Stored procedure
+--NOMBRE        : sp_limpiar_intentos_fallidos
+--OBJETIVO  : intentos fallidos a 0                     
+--============================================================================================================= 
+ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_limpiar_intentos_fallidos' AND type='p')
+        DROP PROCEDURE [DDG].sp_limpiar_intentos_fallidos
+GO
+
+create procedure [DDG].sp_limpiar_intentos_fallidos (@username varchar(255))
+as
+begin
+
+update DDG.Usuarios set usuario_intentosFallidos = 0
+where usuario_username = @username
+
+end
+GO
+
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_incrementar_intentos_fallidos
+--OBJETIVO  : incrementa intentos fallidos para un usuario                      
+--=============================================================================================================
+ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_incrementar_intentos_fallidos' AND type='p')
+	DROP PROCEDURE [DDG].sp_incrementar_intentos_fallidos
+GO
+
+create procedure [DDG].sp_incrementar_intentos_fallidos (@username varchar(255))
+as
+begin
+
+update  DDG.Usuarios set usuario_intentosFallidos = (usuario_intentosFallidos + 1)
+where usuario_username = @username
+
+end
+GO
+
+
+
 --=============================================================================================================
 --TIPO		: Stored procedure
 --NOMBRE	: sp_login_check
@@ -501,44 +544,7 @@ end
 GO
 
 
-
---=============================================================================================================
---TIPO		: Stored procedure
---NOMBRE	: sp_incrementar_intentos_fallidos
---OBJETIVO  : incrementa intentos fallidos para un usuario                      
---=============================================================================================================
- IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_incrementar_intentos_fallidos' AND type='p')
-	DROP PROCEDURE [DDG].sp_incrementar_intentos_fallidos
-GO
-
-create procedure [DDG].sp_incrementar_intentos_fallidos (@username varchar(255))
-as
-begin
-
-update  DDG.Usuarios set usuario_intentosFallidos = (usuario_intentosFallidos + 1)
-where usuario_username = @username
-
-end
-GO						
-
---=============================================================================================================
---TIPO		: Stored procedure
---NOMBRE	: sp_limpiar_intentos_fallidos
---OBJETIVO  : intentos fallidos a 0                     
---=============================================================================================================	
- IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_limpiar_intentos_fallidos' AND type='p')
-	DROP PROCEDURE [DDG].sp_limpiar_intentos_fallidos
-GO
-
-create procedure [DDG].sp_limpiar_intentos_fallidos (@username varchar(255))
-as
-begin
-
-update DDG.Usuarios set usuario_intentosFallidos = 0
-where usuario_username = @username
-
-end
-GO			
+			
 
 --=============================================================================================================
 --TIPO		: Stored procedure
