@@ -800,11 +800,11 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_cliente' AND type='
 	DROP PROCEDURE [DDG].sp_update_cliente
 GO
 
-create procedure [DDG].sp_update_cliente (@parametros varchar(1000), @dni varchar(250)) as
+create procedure [DDG].sp_update_cliente (@parametros varchar(900), @idcliente numeric(10,0)) as
 begin
 	declare @sql_statement nvarchar(1000)
-	SET @sql_statement = 'update ddg.clientes set ' + @parametros + ' where cliente_dni = ' + @dni
-	exec sp_executesql @sql_statement, N'@parametros varchar(1000)', @dni
+	SET @sql_statement = 'update ddg.clientes set ' + @parametros + ' where cliente_id = ' + @idcliente
+	exec sp_executesql @sql_statement
 end
 GO
 
@@ -821,11 +821,11 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_baja_cliente' AND type='p'
 	DROP PROCEDURE [DDG].sp_baja_cliente
 GO
 
-create procedure [DDG].sp_baja_cliente (@dni varchar(250)) as
+create procedure [DDG].sp_baja_cliente (@idcliente numeric(10,0))) as
 begin
 	update ddg.clientes
 	set cliente_habilitado = 0
-	where cliente_dni = @dni
+	where cliente_id = @idcliente
 end
 GO
 
