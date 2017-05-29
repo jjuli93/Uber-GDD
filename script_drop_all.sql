@@ -47,6 +47,7 @@ DROP PROCEDURE [DDG].sp_get_choferes_con_mayor_recaudacion
 DROP PROCEDURE [DDG].sp_get_choferes_con_viaje_mas_largo
 DROP PROCEDURE [DDG].sp_get_clientes_con_mayor_consumo
 DROP PROCEDURE [DDG].sp_get_clientes_mayor_uso_mismo_auto
+DROP PROCEDURE [DDG].sp_alta_usuario
 DROP PROCEDURE [DDG].sp_alta_cliente
 DROP PROCEDURE [DDG].sp_update_cliente
 DROP PROCEDURE [DDG].sp_baja_cliente

@@ -821,7 +821,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_baja_cliente' AND type='p'
 	DROP PROCEDURE [DDG].sp_baja_cliente
 GO
 
-create procedure [DDG].sp_baja_cliente (@idcliente numeric(10,0))) as
+create procedure [DDG].sp_baja_cliente (@idcliente numeric(10,0)) as
 begin
 	update ddg.clientes
 	set cliente_habilitado = 0
