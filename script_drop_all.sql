@@ -51,6 +51,9 @@ DROP PROCEDURE [DDG].sp_alta_usuario
 DROP PROCEDURE [DDG].sp_alta_cliente
 DROP PROCEDURE [DDG].sp_update_cliente
 DROP PROCEDURE [DDG].sp_baja_cliente
+DROP PROCEDURE [DDG].sp_alta_automovil
+DROP PROCEDURE [DDG].sp_update_automovil
+DROP PROCEDURE [DDG].sp_baja_automovil
 
 
 
@@ -59,6 +62,7 @@ DROP PROCEDURE [DDG].sp_baja_cliente
 DROP FUNCTION [ddg].existeUsuario
 DROP FUNCTION [ddg].usuarioActivo
 DROP FUNCTION [ddg].getTrimestre
+DROP FUNCTION [ddg].choferYaAsignado
 
 
 
