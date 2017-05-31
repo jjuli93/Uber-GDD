@@ -636,6 +636,38 @@ return @retorno
 end
 
 GO
+
+
+
+--=============================================================================================================
+--TIPO		: Funcion
+--NOMBRE	: choferYaAsignado
+--OBJETIVO  : verificar si un chofer ya esta asignado a un automovil habilitado                                    
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='choferYaAsignado' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
+DROP FUNCTION [ddg].choferYaAsignado
+GO
+
+create function [DDG].choferYaAsignado(@idchofer numeric(10,0))
+returns bit
+begin
+declare @retorno bit
+
+if	((select count(*)
+	from DDG.Autos
+	where auto_chofer = @idchofer
+	and auto_habilitado = 1) > 0)
+
+	set @retorno = 1
+
+else
+	set @retorno = 0
+
+return @retorno
+
+end
+GO
 													/*Listados estadisticos*/
 
 
@@ -831,4 +863,88 @@ GO
 
 
 /* Fin ABM Cliente */
+
+
+
+
+/* ABM Automovil */
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_alta_automovil
+--OBJETIVO  : dar de alta un automovil                                 
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_automovil' AND type='p')
+	DROP PROCEDURE [DDG].sp_alta_automovil
+GO
+
+create procedure [DDG].sp_alta_automovil (@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10))
+as
+begin
+
+if (ddg.choferYaAsignado (@idchofer)=1)
+	
+	THROW 51000, 'El chofer ya esta asignado.', 1;
+
+else
+	insert into DDG.Autos(auto_chofer,auto_modelo,auto_patente,auto_licencia,auto_rodado)
+	values(@idchofer, @idmodelo, @patente, @licencia, @rodado)
+
+end
+GO
+
+
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_update_automovil
+--OBJETIVO  : modificar datos de un automovil                                 
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_automovil' AND type='p')
+	DROP PROCEDURE [DDG].sp_update_automovil
+GO
+
+create procedure [DDG].sp_update_automovil (@id numeric(10,0),@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10),@habilitado numeric(1,0)) as
+begin
+	
+if (ddg.choferYaAsignado (@idchofer)=1)
+	
+	THROW 51000, 'El chofer ya esta asignado.', 1;
+
+else
+
+	update 	ddg.autos
+	set 	auto_chofer = @idchofer,
+		auto_modelo = @idmodelo,
+		auto_patente = @patente,
+		auto_licencia = @licencia,
+		auto_rodado = @rodado,
+		auto_habilitado = @habilitado
+	where	auto_id = @id;
+end
+GO
+
+
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_baja_cliente
+--OBJETIVO  : dar de baja (logica) a un automovil                                 
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_baja_automovil' AND type='p')
+	DROP PROCEDURE [DDG].sp_baja_automovil
+GO
+
+create procedure [DDG].sp_baja_automovil (@idauto numeric(10,0)) as
+begin
+	update ddg.autos
+	set auto_habilitado = 0
+	where auto_id = @idauto
+end
+GO
+
+
+/* Fin ABM Automovil */
 
