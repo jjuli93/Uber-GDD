@@ -340,6 +340,113 @@ and f.factura_id = fd.facturaDetalle_factura
 and r.rendicion_id = rd.rendicionDetalle_rendicion
 order by m.Viaje_Fecha
 
+
+
+													/*Listados estadisticos*/
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_choferes_con_mayor_recaudacion
+--OBJETIVO  : obtener choferes con mayor recaudacion dado un año y un trimestre                                   
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_choferes_con_mayor_recaudacion' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_choferes_con_mayor_recaudacion
+GO
+
+create procedure [DDG].[sp_get_choferes_con_mayor_recaudacion] (@año int, @trimestre int)
+as
+
+begin
+select top 5 c.*, isnull(sum(r.rendicion_importe),0) as cantidad_recaudada
+from DDG.Choferes c left join DDG.Rendiciones r on c.chofer_id = r.rendicion_chofer
+where year(r.rendicion_fecha) = @año
+and DDG.getTrimestre(month(r.rendicion_fecha)) = @trimestre
+group by c.chofer_apellido,c.chofer_direccion,c.chofer_dni,c.chofer_email,c.chofer_fecha_nacimiento,c.chofer_fecha_nacimiento,c.chofer_habilitado,c.chofer_id,c.chofer_nombre,c.chofer_telefono,c.chofer_usuario
+order by isnull(sum(r.rendicion_importe),0) desc
+end
+
+GO
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_choferes_con_viaje_mas_largo
+--OBJETIVO  : obtener choferes con viajes mas largos dado un año y un trimestre                                   
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_choferes_con_viaje_mas_largo' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_choferes_con_viaje_mas_largo
+GO
+
+create procedure [DDG].[sp_get_choferes_con_viaje_mas_largo] (@año int, @trimestre int)
+as
+
+begin
+select top 5 c.*, isnull(sum(v.viaje_cantidad_km),0) as cantidad_de_km
+from DDG.Choferes c  left join DDG.Viajes v on c.chofer_id = v.viaje_chofer
+where year(v.viaje_fecha_viaje) = @año
+and DDG.getTrimestre(month(v.viaje_fecha_viaje)) = @trimestre
+group by c.chofer_apellido,c.chofer_direccion,c.chofer_dni,c.chofer_email,c.chofer_fecha_nacimiento,c.chofer_fecha_nacimiento,c.chofer_habilitado,c.chofer_id,c.chofer_nombre,c.chofer_telefono,c.chofer_usuario
+order by isnull(sum(v.viaje_cantidad_km),0) desc
+end
+
+GO
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_clientes_con_mayor_consumo
+--OBJETIVO  : obtener clientes con mayor consumo dado un año y un trimestre                                   
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_clientes_con_mayor_consumo' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_clientes_con_mayor_consumo
+GO
+
+create procedure [DDG].[sp_get_clientes_con_mayor_consumo] (@año int, @trimestre int)
+as
+
+begin
+select top 5 c.*, isnull(sum(f.factura_importe),0) as importe_total
+from DDG.Clientes c  left join DDG.Facturas f on c.cliente_id = f.factura_cliente
+where year(f.factura_fecha_inicio) = @año
+and DDG.getTrimestre(month(f.factura_fecha_inicio)) = @trimestre
+group by c.cliente_apellido,c.cliente_codigo_postal,c.cliente_direccion,c.cliente_dni,c.cliente_email,c.cliente_fecha_nacimiento,c.cliente_habilitado,c.cliente_id,c.cliente_nombre,c.cliente_telefono,c.cliente_usuario
+order by isnull(sum(f.factura_importe),0) desc
+end
+
+GO
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_clientes_mayor_uso_mismo_auto
+--OBJETIVO  : obtener clientes con mayor uso de un mismo automovil dado un año y un trimestre                                   
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_clientes_mayor_uso_mismo_auto' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_clientes_mayor_uso_mismo_auto
+GO
+
+create procedure [DDG].[sp_get_clientes_mayor_uso_mismo_auto] (@año int, @trimestre int)
+as
+
+begin
+select top 5 c.*, a.*, isnull(count(a.auto_id),0) as cantidad_veces_utilizado
+from DDG.Clientes c  left join Viajes v on c.cliente_id = v.viaje_cliente
+left join DDG.Autos a on v.viaje_auto = a.auto_id
+where year(v.viaje_fecha_viaje) = @año
+and DDG.getTrimestre(month(v.viaje_fecha_viaje)) = @trimestre
+group by c.cliente_apellido,c.cliente_codigo_postal,c.cliente_direccion,c.cliente_dni,c.cliente_email,c.cliente_fecha_nacimiento,c.cliente_habilitado,c.cliente_id,c.cliente_nombre,c.cliente_telefono,c.cliente_usuario,a.auto_chofer,a.auto_habilitado,a.auto_id,a.auto_licencia,a.auto_modelo,a.auto_patente,a.auto_patente,a.auto_rodado
+order by isnull(count(a.auto_id),0) desc
+end
+
+GO
+
+
+
 													/*Triggers*/
 
 
@@ -361,8 +468,6 @@ if UPDATE(rol_habilitado)
 							  from inserted i
 							  where i.rol_habilitado = 0)
 end
-
-
 
 													/* Stored procedures*/
 	/*ABM ROL*/
@@ -668,111 +773,29 @@ return @retorno
 
 end
 GO
-													/*Listados estadisticos*/
-
 
 --=============================================================================================================
---TIPO		: Stored procedure
---NOMBRE	: sp_get_choferes_con_mayor_recaudacion
---OBJETIVO  : obtener choferes con mayor recaudacion dado un año y un trimestre                                   
+--TIPO		: Funcion
+--NOMBRE	: calcularimporteViaje
+--OBJETIVO  : calcula el importe de un viaje                                    
 --=============================================================================================================
-
-IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_choferes_con_mayor_recaudacion' AND type='p')
-	DROP PROCEDURE [DDG].sp_get_choferes_con_mayor_recaudacion
+IF EXISTS (SELECT name FROM sysobjects WHERE name='calcularimporteViaje' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
+DROP FUNCTION [ddg].calcularimporteViaje
 GO
 
-create procedure [DDG].[sp_get_choferes_con_mayor_recaudacion] (@año int, @trimestre int)
-as
-
+create function [DDG].calcularimporteViaje(@idViaje numeric(10,0))
+	returns float
 begin
-select top 5 c.*, isnull(sum(r.rendicion_importe),0) as cantidad_recaudada
-from DDG.Choferes c left join DDG.Rendiciones r on c.chofer_id = r.rendicion_chofer
-where year(r.rendicion_fecha) = @año
-and DDG.getTrimestre(month(r.rendicion_fecha)) = @trimestre
-group by c.chofer_apellido,c.chofer_direccion,c.chofer_dni,c.chofer_email,c.chofer_fecha_nacimiento,c.chofer_fecha_nacimiento,c.chofer_habilitado,c.chofer_id,c.chofer_nombre,c.chofer_telefono,c.chofer_usuario
-order by isnull(sum(r.rendicion_importe),0) desc
+declare @retorno float
+
+set @retorno = (select( turno_precio_base + (turno_valor_km * viaje_cantidad_km))
+				from viajes, turnos
+				where viaje_id = @idViaje
+				and viaje_turno = turno_id)
+
+return @retorno
 end
-
 GO
-
-
---=============================================================================================================
---TIPO		: Stored procedure
---NOMBRE	: sp_get_choferes_con_viaje_mas_largo
---OBJETIVO  : obtener choferes con viajes mas largos dado un año y un trimestre                                   
---=============================================================================================================
-
-IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_choferes_con_viaje_mas_largo' AND type='p')
-	DROP PROCEDURE [DDG].sp_get_choferes_con_viaje_mas_largo
-GO
-
-create procedure [DDG].[sp_get_choferes_con_viaje_mas_largo] (@año int, @trimestre int)
-as
-
-begin
-select top 5 c.*, isnull(sum(v.viaje_cantidad_km),0) as cantidad_de_km
-from DDG.Choferes c  left join DDG.Viajes v on c.chofer_id = v.viaje_chofer
-where year(v.viaje_fecha_viaje) = @año
-and DDG.getTrimestre(month(v.viaje_fecha_viaje)) = @trimestre
-group by c.chofer_apellido,c.chofer_direccion,c.chofer_dni,c.chofer_email,c.chofer_fecha_nacimiento,c.chofer_fecha_nacimiento,c.chofer_habilitado,c.chofer_id,c.chofer_nombre,c.chofer_telefono,c.chofer_usuario
-order by isnull(sum(v.viaje_cantidad_km),0) desc
-end
-
-GO
-
-
---=============================================================================================================
---TIPO		: Stored procedure
---NOMBRE	: sp_get_clientes_con_mayor_consumo
---OBJETIVO  : obtener clientes con mayor consumo dado un año y un trimestre                                   
---=============================================================================================================
-
-IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_clientes_con_mayor_consumo' AND type='p')
-	DROP PROCEDURE [DDG].sp_get_clientes_con_mayor_consumo
-GO
-
-create procedure [DDG].[sp_get_clientes_con_mayor_consumo] (@año int, @trimestre int)
-as
-
-begin
-select top 5 c.*, isnull(sum(f.factura_importe),0) as importe_total
-from DDG.Clientes c  left join DDG.Facturas f on c.cliente_id = f.factura_cliente
-where year(f.factura_fecha_inicio) = @año
-and DDG.getTrimestre(month(f.factura_fecha_inicio)) = @trimestre
-group by c.cliente_apellido,c.cliente_codigo_postal,c.cliente_direccion,c.cliente_dni,c.cliente_email,c.cliente_fecha_nacimiento,c.cliente_habilitado,c.cliente_id,c.cliente_nombre,c.cliente_telefono,c.cliente_usuario
-order by isnull(sum(f.factura_importe),0) desc
-end
-
-GO
-
-
---=============================================================================================================
---TIPO		: Stored procedure
---NOMBRE	: sp_get_clientes_mayor_uso_mismo_auto
---OBJETIVO  : obtener clientes con mayor uso de un mismo automovil dado un año y un trimestre                                   
---=============================================================================================================
-
-IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_clientes_mayor_uso_mismo_auto' AND type='p')
-	DROP PROCEDURE [DDG].sp_get_clientes_mayor_uso_mismo_auto
-GO
-
-create procedure [DDG].[sp_get_clientes_mayor_uso_mismo_auto] (@año int, @trimestre int)
-as
-
-begin
-select top 5 c.*, a.*, isnull(count(a.auto_id),0) as cantidad_veces_utilizado
-from DDG.Clientes c  left join Viajes v on c.cliente_id = v.viaje_cliente
-left join DDG.Autos a on v.viaje_auto = a.auto_id
-where year(v.viaje_fecha_viaje) = @año
-and DDG.getTrimestre(month(v.viaje_fecha_viaje)) = @trimestre
-group by c.cliente_apellido,c.cliente_codigo_postal,c.cliente_direccion,c.cliente_dni,c.cliente_email,c.cliente_fecha_nacimiento,c.cliente_habilitado,c.cliente_id,c.cliente_nombre,c.cliente_telefono,c.cliente_usuario,a.auto_chofer,a.auto_habilitado,a.auto_id,a.auto_licencia,a.auto_modelo,a.auto_patente,a.auto_patente,a.auto_rodado
-order by isnull(count(a.auto_id),0) desc
-end
-
-GO
-
-
-
 
 /* Alta Usuario */
 
@@ -785,12 +808,12 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_usuario' AND type='p'
 	DROP PROCEDURE [DDG].sp_alta_usuario
 GO
 
-create procedure [DDG].sp_alta_usuario (@dni numeric(10,0), @contrasenia varchar(16))
+create procedure [DDG].sp_alta_usuario (@username varchar(255), @contrasenia varchar(255))
 as
 begin
 
 insert into DDG.Usuarios (usuario_username, usuario_password)
-values(@dni, HASHBYTES('SHA2_256',cast(@contrasenia as varchar(16))))
+values(@username, HASHBYTES('SHA2_256',cast(@contrasenia as varchar(16))))
 
 end
 GO
@@ -803,8 +826,8 @@ GO
 
 --=============================================================================================================
 --TIPO		: Stored procedure
---NOMBRE	: sp_alta_cliente
---OBJETIVO  : dar de alta un cliente                                 
+--NOMBRE	: sp_alta_cliente						
+--OBJETIVO  : dar de alta un cliente                              
 --=============================================================================================================
 IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_cliente' AND type='p')
 	DROP PROCEDURE [DDG].sp_alta_cliente
@@ -813,6 +836,12 @@ GO
 create procedure [DDG].sp_alta_cliente (@nombre varchar(250), @apellido varchar(250), @fechanac date, @dni numeric(10,0), @direccion varchar(250),@codpost numeric(18,0), @telefono numeric(18,0), @email varchar(250))
 as
 begin
+	declare @usuario varchar(255)
+	declare @contraseña varchar(255)
+	set @usuario =   convert(varchar(255), @dni)
+	set @contraseña =   convert(varchar(255), @dni)
+
+	exec [DDG].sp_alta_usuario @usuario, @contraseña
 
 	insert into DDG.Clientes(cliente_usuario,cliente_nombre,cliente_apellido,cliente_fecha_nacimiento,cliente_dni,cliente_direccion,cliente_codigo_postal,cliente_telefono,cliente_email)
 	values((select usuario_id from ddg.usuarios where usuario_username=@dni), @nombre, @apellido, @fechanac, @dni, @direccion, @codpost, @telefono, @email)
@@ -884,7 +913,7 @@ begin
 
 if (ddg.choferYaAsignado (@idchofer)=1)
 	
-	THROW 51000, 'El chofer ya esta asignado.', 1;
+	THROW 51000, 'El chofer ya esta asignado.', 1;														/*TODO un chofer puede  tener mas de un auto a la vez*/
 
 else
 	insert into DDG.Autos(auto_chofer,auto_modelo,auto_patente,auto_licencia,auto_rodado)
@@ -910,7 +939,7 @@ begin
 	
 if (ddg.choferYaAsignado (@idchofer)=1)
 	
-	THROW 51000, 'El chofer ya esta asignado.', 1;
+	THROW 51000, 'El chofer ya esta asignado.', 1;													/*TODO un chofer puede  tener mas de un auto a la vez*/
 
 else
 
@@ -930,7 +959,7 @@ GO
 
 --=============================================================================================================
 --TIPO		: Stored procedure
---NOMBRE	: sp_baja_cliente
+--NOMBRE	: sp_baja_automovil
 --OBJETIVO  : dar de baja (logica) a un automovil                                 
 --=============================================================================================================
 IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_baja_automovil' AND type='p')
@@ -947,4 +976,272 @@ GO
 
 
 /* Fin ABM Automovil */
+
+
+/* ABM Choferes */
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_alta_chofer	
+--OBJETIVO  : dar de alta un chofer                               
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_chofer' AND type='p')
+	DROP PROCEDURE [DDG].sp_alta_chofer
+GO
+
+create procedure [DDG].sp_alta_chofer (@nombre varchar(250), @apellido varchar(250), @fechanac date, @dni numeric(10,0), @direccion varchar(250),@codpost numeric(18,0), @telefono numeric(18,0), @email varchar(250))
+as
+begin
+	declare @usuario varchar(255)
+	declare @contraseña varchar(255)
+	set @usuario =   convert(varchar(255), @dni)
+	set @contraseña =   convert(varchar(255), @dni)
+
+	exec [DDG].sp_alta_usuario @usuario, @contraseña
+
+	insert into DDG.Choferes(chofer_usuario ,chofer_nombre ,chofer_apellido, chofer_fecha_nacimiento ,chofer_dni, chofer_direccion,chofer_telefono ,chofer_email)
+	values((select usuario_id from ddg.usuarios where usuario_username=@dni), @nombre, @apellido, @fechanac, @dni, @direccion, @telefono, @email)
+
+end
+GO
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_update_chofer							
+--OBJETIVO  : modificar datos de un chofer                              
+--=============================================================================================================
+/*Probar si funciona lo de mariano*/
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_baja_chofer							
+--OBJETIVO  : eliminar chofer                             
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_baja_chofer' AND type='p')
+	DROP PROCEDURE [DDG].sp_baja_chofer
+GO
+
+create procedure [DDG].sp_baja_chofer (@idchofer numeric(10,0)) as
+begin
+	update ddg.Choferes
+	set chofer_habilitado = 0
+	where chofer_id = @idchofer
+end
+GO
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_alta_viaje							
+--OBJETIVO  : dar de alta un viaje                             
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_viaje' AND type='p')
+	DROP PROCEDURE [DDG].sp_alta_viaje
+GO
+
+create procedure [ddg].sp_alta_viaje (@idChofer numeric(10,0), @idAuto numeric(10,0), @idTurno numeric(10,0), @idCliente numeric(10,0), @cantKM numeric(5,0), @horaIn time(7) , @horaFin time(7)) as
+begin
+	insert into ddg.viajes(viaje_chofer, viaje_auto, viaje_turno, viaje_cliente, viaje_cantidad_km, viaje_hora_inicio, viaje_hora_fin) 
+	values (@idChofer, @idAuto, @idTurno, @idCliente, @cantKM, @horaIn , @horaFin)
+end
+GO
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_obtenerPorcentajeActual						
+--OBJETIVO  : Obtener ultima actualizacion de porcentaje de pago a choferes                            
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_obtenerPorcentajeActual' AND type='p')
+	DROP PROCEDURE [DDG].sp_obtenerPorcentajeActual
+GO
+
+create procedure [DDG].sp_obtenerPorcentajeActual as
+begin
+	select top 1 porcentaje_valor
+	from [ddg].Porcentajes
+	order by porcentaje_id desc
+end
+GO
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_alta_rendicion																																	(TODO falta asignar viajes a rendicion)
+--OBJETIVO  : pagar a un chofer los viajes de un dia particular (dar de alta una rendicion de un dia y actualizar los viajes con esa rendicion)                            
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_rendicion' AND type='p')
+	DROP PROCEDURE [DDG].sp_alta_rendicion
+GO
+
+create procedure [ddg].sp_alta_rendicion (@idChofer numeric(10,0), @fecha date, @idTurno numeric(10,0)) as
+begin
+	insert into ddg.rendiciones (rendicion_importe, rendicion_fecha, rendicion_chofer, rendicion_turno, rendicion_porcentaje)
+		values( ((select sum([DDG].calcularImporteViaje(viaje_id))
+					from [ddg].viajes
+					where viaje_chofer = @idchofer
+					and viaje_fecha_viaje = @fecha
+					and viaje_turno = @idTurno) * (select top 1 porcentaje_valor from [ddg].Porcentajes order by porcentaje_id desc)) , @fecha, @idchofer, @idTurno,  (select max(porcentaje_id) from DDG.Porcentajes))
+end
+GO
+
+--=============================================================================================================
+--TIPO		: funcion
+--NOMBRE	: sp_get_importe_rendicion						
+--OBJETIVO  : calcula el importe total de una rendicion                           
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_importe_rendicion' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_importe_rendicion
+GO
+
+create procedure [ddg].sp_get_importe_rendicion (@idRendicion numeric(10,0)) as
+begin
+		select rendicion_importe
+		from ddg.rendiciones
+		where rendicion_id = @idRendicion
+end
+GO
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_funcionalidades_rol					
+--OBJETIVO  : Obtener funcionalidades de un rol en particular                         
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_funcionalidades_rol' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_funcionalidades_rol
+GO
+
+create procedure [DDG].sp_get_funcionalidades_rol(@idRol numeric(10,0)) as
+begin
+	select f.*
+	from ddg.funcionalidades f, ddg.RolesXFuncionalidades rf
+	where @idRol = rf.rolXFuncionalidad_rol
+	and rf.rolXFuncionalidad_funcionalidad = f.funcionalidad_ID
+end
+GO
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_funcionalidades					
+--OBJETIVO  : Obtener todas las funcionalidades                       
+--============================================================================================================= 
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_funcionalidades' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_funcionalidades
+GO
+
+create procedure [DDG].sp_get_funcionalidades as
+begin
+	select * 
+	from ddg.Funcionalidades
+end
+GO
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_marcas				
+--OBJETIVO  : Obtener todas las marcas de auto                  
+--============================================================================================================= 
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_marcas' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_marcas
+GO
+
+create procedure [DDG].sp_get_marcas as
+begin
+	select *
+	from ddg.marcas
+end
+GO
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_modelos			
+--OBJETIVO  : Obtener todas los modelos de auto                  
+--============================================================================================================= 
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_modelos' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_modelos
+GO
+
+create procedure [DDG].sp_get_modelos as
+begin
+	select *
+	from ddg.modelos
+end
+GO
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_turnos_habilitados			
+--OBJETIVO  : Obtener los turnos habilitados                 
+--============================================================================================================= 
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_turnos_habilitados' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_turnos_habilitados
+GO
+
+create procedure [DDG].sp_get_turnos_habilitados as
+begin
+	select *
+	from ddg.turnos
+	where turno_habilitado = 1
+end
+GO
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_turnos_automovil		
+--OBJETIVO  : Obtener los turnos habilitados                 
+--============================================================================================================= 
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_turnos_automovil' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_turnos_automovil
+GO
+
+create procedure [DDG].sp_get_turnos_automovil(@idAuto numeric(10,0)) as
+begin
+	select t.*
+	from turnos t, AutosXTurnos at
+	where at.autoXTurno_auto = @idAuto
+	and t.turno_id = at.autoXTurno_turno
+end
+GO
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_automoviles_chofer		
+--OBJETIVO  : Obtener los autos de un chofer                 
+--============================================================================================================= 
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_automoviles_chofer' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_automoviles_chofer
+GO
+
+create procedure [DDG].sp_get_automoviles_chofer(@idChofer numeric(10,0)) as
+begin
+	select *
+	from ddg.autos
+	where auto_chofer = @idChofer
+end
+GO
+
+--=============================================================================================================
+--TIPO		: funcion
+--NOMBRE	: sp_get_importe_factura					
+--OBJETIVO  : obtiene importe total de una factura                          
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_importe_factura' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_importe_factura
+GO
+
+create procedure [ddg].sp_get_importe_factura (@idFactura numeric(10,0)) as
+begin
+		select factura_importe
+		from ddg.Facturas
+		where factura_id = @idFactura
+end
+GO
+
+
 
