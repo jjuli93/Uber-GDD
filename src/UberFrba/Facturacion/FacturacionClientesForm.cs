@@ -87,5 +87,10 @@ namespace UberFrba.Facturacion
                 }
             }
         }
+
+        private void cerrarSesionLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            objController.cerrar_sesion();
+        }
     }
 }

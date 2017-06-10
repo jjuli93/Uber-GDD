@@ -48,6 +48,7 @@
             this.cancelarButton = new System.Windows.Forms.Button();
             this.facturarButton = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.cerrarSesionLinkLabel = new System.Windows.Forms.LinkLabel();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.viajesDataGridView)).BeginInit();
@@ -70,7 +71,7 @@
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(13, 13);
+            this.groupBox1.Location = new System.Drawing.Point(13, 27);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(404, 392);
             this.groupBox1.TabIndex = 0;
@@ -222,7 +223,7 @@
             // 
             // cancelarButton
             // 
-            this.cancelarButton.Location = new System.Drawing.Point(35, 414);
+            this.cancelarButton.Location = new System.Drawing.Point(35, 428);
             this.cancelarButton.Name = "cancelarButton";
             this.cancelarButton.Size = new System.Drawing.Size(75, 23);
             this.cancelarButton.TabIndex = 1;
@@ -232,7 +233,7 @@
             // 
             // facturarButton
             // 
-            this.facturarButton.Location = new System.Drawing.Point(261, 414);
+            this.facturarButton.Location = new System.Drawing.Point(261, 428);
             this.facturarButton.Name = "facturarButton";
             this.facturarButton.Size = new System.Drawing.Size(130, 23);
             this.facturarButton.TabIndex = 2;
@@ -244,11 +245,23 @@
             // 
             this.errorProvider.ContainerControl = this;
             // 
+            // cerrarSesionLinkLabel
+            // 
+            this.cerrarSesionLinkLabel.AutoSize = true;
+            this.cerrarSesionLinkLabel.Location = new System.Drawing.Point(344, 11);
+            this.cerrarSesionLinkLabel.Name = "cerrarSesionLinkLabel";
+            this.cerrarSesionLinkLabel.Size = new System.Drawing.Size(67, 13);
+            this.cerrarSesionLinkLabel.TabIndex = 3;
+            this.cerrarSesionLinkLabel.TabStop = true;
+            this.cerrarSesionLinkLabel.Text = "cerrar sesión";
+            this.cerrarSesionLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cerrarSesionLinkLabel_LinkClicked);
+            // 
             // FacturacionClientesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(429, 445);
+            this.ClientSize = new System.Drawing.Size(429, 459);
+            this.Controls.Add(this.cerrarSesionLinkLabel);
             this.Controls.Add(this.facturarButton);
             this.Controls.Add(this.cancelarButton);
             this.Controls.Add(this.groupBox1);
@@ -261,6 +274,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.viajesDataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -285,5 +299,6 @@
         private System.Windows.Forms.Button facturarButton;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.ErrorProvider errorProvider;
+        private System.Windows.Forms.LinkLabel cerrarSesionLinkLabel;
     }
 }

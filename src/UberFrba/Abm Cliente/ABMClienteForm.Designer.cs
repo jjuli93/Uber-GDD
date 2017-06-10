@@ -61,6 +61,7 @@
             this.cancelarButton = new System.Windows.Forms.Button();
             this.buscarButton = new System.Windows.Forms.Button();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.cerrarSesionLinkLabel = new System.Windows.Forms.LinkLabel();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
@@ -95,7 +96,7 @@
             this.groupBox1.Controls.Add(this.nombreTextBox);
             this.groupBox1.Controls.Add(this.dniTextBox);
             this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Location = new System.Drawing.Point(13, 13);
+            this.groupBox1.Location = new System.Drawing.Point(13, 32);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(384, 351);
             this.groupBox1.TabIndex = 0;
@@ -373,7 +374,7 @@
             // 
             // cancelarButton
             // 
-            this.cancelarButton.Location = new System.Drawing.Point(36, 373);
+            this.cancelarButton.Location = new System.Drawing.Point(36, 392);
             this.cancelarButton.Name = "cancelarButton";
             this.cancelarButton.Size = new System.Drawing.Size(75, 23);
             this.cancelarButton.TabIndex = 1;
@@ -383,7 +384,7 @@
             // 
             // buscarButton
             // 
-            this.buscarButton.Location = new System.Drawing.Point(263, 373);
+            this.buscarButton.Location = new System.Drawing.Point(263, 392);
             this.buscarButton.Name = "buscarButton";
             this.buscarButton.Size = new System.Drawing.Size(100, 23);
             this.buscarButton.TabIndex = 3;
@@ -396,11 +397,23 @@
             this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider1.ContainerControl = this;
             // 
+            // cerrarSesionLinkLabel
+            // 
+            this.cerrarSesionLinkLabel.AutoSize = true;
+            this.cerrarSesionLinkLabel.Location = new System.Drawing.Point(325, 13);
+            this.cerrarSesionLinkLabel.Name = "cerrarSesionLinkLabel";
+            this.cerrarSesionLinkLabel.Size = new System.Drawing.Size(67, 13);
+            this.cerrarSesionLinkLabel.TabIndex = 4;
+            this.cerrarSesionLinkLabel.TabStop = true;
+            this.cerrarSesionLinkLabel.Text = "cerrar sesión";
+            this.cerrarSesionLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cerrarSesionLinkLabel_LinkClicked);
+            // 
             // ABMClienteForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(409, 408);
+            this.ClientSize = new System.Drawing.Size(409, 425);
+            this.Controls.Add(this.cerrarSesionLinkLabel);
             this.Controls.Add(this.buscarButton);
             this.Controls.Add(this.cancelarButton);
             this.Controls.Add(this.groupBox1);
@@ -412,6 +425,7 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -449,5 +463,6 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ErrorProvider errorProvider1;
+        private System.Windows.Forms.LinkLabel cerrarSesionLinkLabel;
     }
 }

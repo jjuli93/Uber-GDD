@@ -88,6 +88,11 @@ namespace UberFrba.Abm_Cliente
             this.Owner.Show();
             this.Dispose();
         }
+
+        private void cerrarSesionLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            objController.cerrar_sesion();
+        }
         
     }
 }
