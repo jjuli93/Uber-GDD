@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.crearButton = new System.Windows.Forms.Button();
-            this.limpiarButton = new System.Windows.Forms.Button();
             this.cancelarButton = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -50,8 +49,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.limpiarButton = new System.Windows.Forms.Button();
             this.buscarAutoButton = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.cerrarSesionLinkLabel = new System.Windows.Forms.LinkLabel();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
@@ -93,16 +94,6 @@
             this.crearButton.Text = "Crear nuevo";
             this.crearButton.UseVisualStyleBackColor = true;
             this.crearButton.Click += new System.EventHandler(this.crearButton_Click);
-            // 
-            // limpiarButton
-            // 
-            this.limpiarButton.Location = new System.Drawing.Point(255, 15);
-            this.limpiarButton.Name = "limpiarButton";
-            this.limpiarButton.Size = new System.Drawing.Size(75, 23);
-            this.limpiarButton.TabIndex = 20;
-            this.limpiarButton.Text = "Limpiar";
-            this.limpiarButton.UseVisualStyleBackColor = true;
-            this.limpiarButton.Click += new System.EventHandler(this.limpiarButton_Click);
             // 
             // cancelarButton
             // 
@@ -279,6 +270,16 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Marca: ";
             // 
+            // limpiarButton
+            // 
+            this.limpiarButton.Location = new System.Drawing.Point(137, 15);
+            this.limpiarButton.Name = "limpiarButton";
+            this.limpiarButton.Size = new System.Drawing.Size(75, 23);
+            this.limpiarButton.TabIndex = 20;
+            this.limpiarButton.Text = "Limpiar";
+            this.limpiarButton.UseVisualStyleBackColor = true;
+            this.limpiarButton.Click += new System.EventHandler(this.limpiarButton_Click);
+            // 
             // buscarAutoButton
             // 
             this.buscarAutoButton.Location = new System.Drawing.Point(45, 15);
@@ -294,11 +295,23 @@
             this.errorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider.ContainerControl = this;
             // 
+            // cerrarSesionLinkLabel
+            // 
+            this.cerrarSesionLinkLabel.AutoSize = true;
+            this.cerrarSesionLinkLabel.Location = new System.Drawing.Point(288, 15);
+            this.cerrarSesionLinkLabel.Name = "cerrarSesionLinkLabel";
+            this.cerrarSesionLinkLabel.Size = new System.Drawing.Size(67, 13);
+            this.cerrarSesionLinkLabel.TabIndex = 21;
+            this.cerrarSesionLinkLabel.TabStop = true;
+            this.cerrarSesionLinkLabel.Text = "cerrar sesión";
+            this.cerrarSesionLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cerrarSesionLinkLabel_LinkClicked);
+            // 
             // ABMAutomovilForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(367, 373);
+            this.Controls.Add(this.cerrarSesionLinkLabel);
             this.Controls.Add(this.buscarAutoButton);
             this.Controls.Add(this.limpiarButton);
             this.Controls.Add(this.groupBox1);
@@ -309,6 +322,7 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -337,5 +351,6 @@
         private System.Windows.Forms.Button crearButton;
         private System.Windows.Forms.Button buscarAutoButton;
         private System.Windows.Forms.ErrorProvider errorProvider;
+        private System.Windows.Forms.LinkLabel cerrarSesionLinkLabel;
     }
 }

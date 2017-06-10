@@ -89,5 +89,10 @@ namespace UberFrba.Abm_Automovil
             buscadorAutos.Show(this);
         }
 
+        private void cerrarSesionLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            objController.cerrar_sesion();
+        }
+
     }
 }
