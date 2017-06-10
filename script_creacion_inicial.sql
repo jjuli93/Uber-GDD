@@ -134,7 +134,7 @@ GO
 
 create table [DDG].Porcentajes(
 porcentaje_id numeric(10,0) primary key identity,
-porcentaje_valor numeric(10,0) not null,
+porcentaje_valor numeric(10,4) not null,
 porcentaje_fecha date not null,
 porcentaje_impuestoPor numeric(10,0)  references [DDG].Usuarios
 )
@@ -263,7 +263,7 @@ where turno_descripcion = 'Turno Mañna'
 
 					/*Porcentajes*/
 insert into [DDG].Porcentajes (porcentaje_fecha, porcentaje_valor)
-values(convert(date, getDate()), 30)
+values(convert(date, getDate()), 0.30)
 
 					/*Rendiciones*/  
 insert into [DDG].Rendiciones  ( rendicion_chofer, rendicion_fecha, rendicion_importe, rendicion_numero, rendicion_turno, rendicion_porcentaje)
@@ -1069,8 +1069,8 @@ GO
 
 
 --=============================================================================================================
---TIPO		: Stored procedure
---NOMBRE	: sp_alta_rendicion																																	(TODO falta asignar viajes a rendicion)
+--TIPO		: Stored procedure				(TODO podria devolver el id para que sea mas facil buscar los viajes despues)
+--NOMBRE	: sp_alta_rendicion																												
 --OBJETIVO  : pagar a un chofer los viajes de un dia particular (dar de alta una rendicion de un dia y actualizar los viajes con esa rendicion)                            
 --=============================================================================================================
 IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_rendicion' AND type='p')
@@ -1079,12 +1079,55 @@ GO
 
 create procedure [ddg].sp_alta_rendicion (@idChofer numeric(10,0), @fecha date, @idTurno numeric(10,0)) as
 begin
+declare @idRendicion int
+
 	insert into ddg.rendiciones (rendicion_importe, rendicion_fecha, rendicion_chofer, rendicion_turno, rendicion_porcentaje)
 		values( ((select sum([DDG].calcularImporteViaje(viaje_id))
 					from [ddg].viajes
 					where viaje_chofer = @idchofer
 					and viaje_fecha_viaje = @fecha
 					and viaje_turno = @idTurno) * (select top 1 porcentaje_valor from [ddg].Porcentajes order by porcentaje_id desc)) , @fecha, @idchofer, @idTurno,  (select max(porcentaje_id) from DDG.Porcentajes))
+	
+	set @idRendicion = ((select rendicion_id from DDG.Rendiciones where rendicion_chofer= @idChofer and rendicion_fecha = @fecha))
+
+	insert into DDG.RendicionesDetalle (rendicionDetalle_rendicion)
+	values (@idRendicion)
+
+	update DDG.Viajes
+	set viaje_rendicion = @idRendicion
+	where viaje_chofer = @idChofer and viaje_fecha_viaje = @fecha and viaje_turno = @idTurno
+
+end
+GO
+
+--=============================================================================================================
+--TIPO		: Stored procedure						(TODO podria devolver el id para que sea mas facil buscar los viajes despues)
+--NOMBRE	: sp_alta_factura																												
+--OBJETIVO  : facturar desde una fecha a otra (dar de alta la factura y actualizar los viajes)                            
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_factura' AND type='p')
+	DROP PROCEDURE [DDG].sp_alta_factura
+GO
+
+create procedure [ddg].sp_alta_factura (@idCliente numeric(10,0), @fechaDesde date, @fechaHasta date) as
+begin
+declare @idfactura int
+
+	insert into ddg.Facturas(factura_importe, factura_cliente, factura_fecha_fin, factura_fecha_inicio, factura_numero)
+		values( ((select sum([DDG].calcularImporteViaje(viaje_id))
+					from [ddg].viajes
+					where viaje_cliente = @idCliente
+					and viaje_fecha_viaje between @fechaDesde and @fechaHasta)) , @idCliente, @fechaHasta, @fechaDesde,  (select max(factura_numero) + 1 from DDG.Facturas))
+	
+	set @idfactura = ((select factura_id from DDG.Facturas where factura_cliente = @idCliente and factura_fecha_inicio = @fechaDesde and factura_fecha_fin = @fechaHasta))
+
+	insert into DDG.FacturasDetalle(facturaDetalle_factura)
+	values (@idfactura)
+
+	update DDG.Viajes
+	set viaje_factura = @idfactura
+	where viaje_cliente = @idCliente and viaje_fecha_viaje between @fechaDesde and @fechaHasta
+
 end
 GO
 
@@ -1244,4 +1287,43 @@ end
 GO
 
 
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_viajes_rendicion																											
+--OBJETIVO  : get viajes de una rendicion                           
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_viajes_rendicion' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_viajes_rendicion
+GO
 
+create procedure [ddg].sp_get_viajes_rendicion(@idRendicion numeric(10,0)) as
+begin
+
+select v.*, (ddg.calcularimporteViaje(v.viaje_id) * (select top 1 porcentaje_valor from [ddg].Porcentajes order by porcentaje_id desc))
+from Viajes v, RendicionesDetalle rd
+where rd.rendicionDetalle_rendicion = @idRendicion
+and v.viaje_rendicion = rd.rendicionDetalle_id
+
+end
+GO
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_viajes_factura																										
+--OBJETIVO  : get viajes de una factura                           
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_viajes_factura' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_viajes_factura
+GO
+
+create procedure [ddg].sp_get_viajes_factura(@idFactura numeric(10,0)) as
+begin
+
+select v.*, ddg.calcularimporteViaje(v.viaje_id)
+from Viajes v, FacturasDetalle fd
+where fd.facturaDetalle_factura = @idFactura
+and v.viaje_factura = fd.facturaDetalle_id
+
+end
+GO
