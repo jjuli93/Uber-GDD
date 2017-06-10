@@ -1,0 +1,347 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A07A4359-5DDB-4119-84B2-D71B45190295}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UberFrba</RootNamespace>
+    <AssemblyName>UberFrba</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Abm Automovil\ABMAutomovilForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Automovil\ABMAutomovilForm.Designer.cs">
+      <DependentUpon>ABMAutomovilForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Automovil\DetalleAutomovilForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Automovil\DetalleAutomovilForm.Designer.cs">
+      <DependentUpon>DetalleAutomovilForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Automovil\ListadoAutomovilesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Automovil\ListadoAutomovilesForm.Designer.cs">
+      <DependentUpon>ListadoAutomovilesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Automovil\ModificarAutomovilForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Automovil\ModificarAutomovilForm.Designer.cs">
+      <DependentUpon>ModificarAutomovilForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Chofer\ABMChoferForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Chofer\ABMChoferForm.Designer.cs">
+      <DependentUpon>ABMChoferForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Chofer\DetalleChoferForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Chofer\DetalleChoferForm.Designer.cs">
+      <DependentUpon>DetalleChoferForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Chofer\ListadoChoferesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Chofer\ListadoChoferesForm.Designer.cs">
+      <DependentUpon>ListadoChoferesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Chofer\ModificarChoferForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Chofer\ModificarChoferForm.Designer.cs">
+      <DependentUpon>ModificarChoferForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Cliente\ABMClienteForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Cliente\ABMClienteForm.Designer.cs">
+      <DependentUpon>ABMClienteForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Cliente\DetalleClienteForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Cliente\DetalleClienteForm.Designer.cs">
+      <DependentUpon>DetalleClienteForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Cliente\ListadoClientesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Cliente\ListadoClientesForm.Designer.cs">
+      <DependentUpon>ListadoClientesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Cliente\ModificarClienteForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Cliente\ModificarClienteForm.Designer.cs">
+      <DependentUpon>ModificarClienteForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Rol\ABMRolForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Rol\ABMRolForm.Designer.cs">
+      <DependentUpon>ABMRolForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Rol\DetalleRolForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Rol\DetalleRolForm.Designer.cs">
+      <DependentUpon>DetalleRolForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Rol\ListadoRolesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Rol\ListadoRolesForm.Designer.cs">
+      <DependentUpon>ListadoRolesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Rol\ModificarRolForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Rol\ModificarRolForm.Designer.cs">
+      <DependentUpon>ModificarRolForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Turno\ABMTurnoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Turno\ABMTurnoForm.Designer.cs">
+      <DependentUpon>ABMTurnoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Turno\DetalleTurnoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Turno\DetalleTurnoForm.Designer.cs">
+      <DependentUpon>DetalleTurnoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Turno\ListadoTurnosForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Turno\ListadoTurnosForm.Designer.cs">
+      <DependentUpon>ListadoTurnosForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm Turno\ModificarTurnoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm Turno\ModificarTurnoForm.Designer.cs">
+      <DependentUpon>ModificarTurnoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\AutomovilDAO.cs" />
+    <Compile Include="Controllers\ChoferDAO.cs" />
+    <Compile Include="Controllers\ClienteDAO.cs" />
+    <Compile Include="Controllers\FuncionalidadDAO.cs" />
+    <Compile Include="Controllers\LoginDAO.cs" />
+    <Compile Include="Controllers\ObjetosFormCTRL.cs" />
+    <Compile Include="Controllers\RolDAO.cs" />
+    <Compile Include="Controllers\TurnoDAO.cs" />
+    <Compile Include="Facturacion\FacturacionClientesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Facturacion\FacturacionClientesForm.designer.cs">
+      <DependentUpon>FacturacionClientesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Listado Estadistico\ListadoEstadisticoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Listado Estadistico\ListadoEstadisticoForm.Designer.cs">
+      <DependentUpon>ListadoEstadisticoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Login\LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Login\LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Login\menuFuncsRolUserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Login\menuFuncsRolUserForm.Designer.cs">
+      <DependentUpon>menuFuncsRolUserForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Login\SeleccionRolUserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Login\SeleccionRolUserForm.Designer.cs">
+      <DependentUpon>SeleccionRolUserForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Automovil.cs" />
+    <Compile Include="Modelo\Chofer.cs" />
+    <Compile Include="Modelo\Cliente.cs" />
+    <Compile Include="Modelo\Facturacion.cs" />
+    <Compile Include="Modelo\Funcionalidad.cs" />
+    <Compile Include="Modelo\Persona.cs" />
+    <Compile Include="Modelo\Rendicion.cs" />
+    <Compile Include="Modelo\Rol.cs" />
+    <Compile Include="Modelo\Turno.cs" />
+    <Compile Include="Modelo\Usuario.cs" />
+    <Compile Include="Modelo\Viaje.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Registro Viajes\RegistroViajeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Registro Viajes\RegistroViajeForm.Designer.cs">
+      <DependentUpon>RegistroViajeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Rendicion Viajes\RendicionViajesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Rendicion Viajes\RendicionViajesForm.Designer.cs">
+      <DependentUpon>RendicionViajesForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Abm Automovil\ABMAutomovilForm.resx">
+      <DependentUpon>ABMAutomovilForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Automovil\DetalleAutomovilForm.resx">
+      <DependentUpon>DetalleAutomovilForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Automovil\ListadoAutomovilesForm.resx">
+      <DependentUpon>ListadoAutomovilesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Automovil\ModificarAutomovilForm.resx">
+      <DependentUpon>ModificarAutomovilForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Chofer\ABMChoferForm.resx">
+      <DependentUpon>ABMChoferForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Chofer\DetalleChoferForm.resx">
+      <DependentUpon>DetalleChoferForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Chofer\ListadoChoferesForm.resx">
+      <DependentUpon>ListadoChoferesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Chofer\ModificarChoferForm.resx">
+      <DependentUpon>ModificarChoferForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Cliente\ABMClienteForm.resx">
+      <DependentUpon>ABMClienteForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Cliente\DetalleClienteForm.resx">
+      <DependentUpon>DetalleClienteForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Cliente\ListadoClientesForm.resx">
+      <DependentUpon>ListadoClientesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Cliente\ModificarClienteForm.resx">
+      <DependentUpon>ModificarClienteForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Rol\ABMRolForm.resx">
+      <DependentUpon>ABMRolForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Rol\DetalleRolForm.resx">
+      <DependentUpon>DetalleRolForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Rol\ListadoRolesForm.resx">
+      <DependentUpon>ListadoRolesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Rol\ModificarRolForm.resx">
+      <DependentUpon>ModificarRolForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Turno\ABMTurnoForm.resx">
+      <DependentUpon>ABMTurnoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Turno\DetalleTurnoForm.resx">
+      <DependentUpon>DetalleTurnoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Turno\ListadoTurnosForm.resx">
+      <DependentUpon>ListadoTurnosForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm Turno\ModificarTurnoForm.resx">
+      <DependentUpon>ModificarTurnoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Facturacion\FacturacionClientesForm.resx">
+      <DependentUpon>FacturacionClientesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Listado Estadistico\ListadoEstadisticoForm.resx">
+      <DependentUpon>ListadoEstadisticoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Login\LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Login\menuFuncsRolUserForm.resx">
+      <DependentUpon>menuFuncsRolUserForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Login\SeleccionRolUserForm.resx">
+      <DependentUpon>SeleccionRolUserForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Registro Viajes\RegistroViajeForm.resx">
+      <DependentUpon>RegistroViajeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Rendicion Viajes\RendicionViajesForm.resx">
+      <DependentUpon>RendicionViajesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Login\LOGO UBER-FRBA2.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
