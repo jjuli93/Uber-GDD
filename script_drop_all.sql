@@ -28,7 +28,7 @@ drop table [DDG].Funcionalidades
 
 -- Eliminacion de triggers
 
---DROP TRIGGER tr_baja_rol
+DROP TRIGGER tr_baja_rol
 
 
 
@@ -54,6 +54,22 @@ DROP PROCEDURE [DDG].sp_baja_cliente
 DROP PROCEDURE [DDG].sp_alta_automovil
 DROP PROCEDURE [DDG].sp_update_automovil
 DROP PROCEDURE [DDG].sp_baja_automovil
+DROP PROCEDURE [DDG].sp_alta_chofer
+DROP PROCEDURE [DDG].sp_baja_chofer
+DROP PROCEDURE [DDG].sp_update_chofer
+DROP PROCEDURE [DDG].sp_alta_viaje
+DROP PROCEDURE [DDG].sp_alta_rendicion
+DROP PROCEDURE [DDG].sp_get_importe_rendicion
+DROP PROCEDURE [DDG].sp_obtenerPorcentajeActual
+DROP PROCEDURE [DDG].sp_get_funcionalidades_rol
+DROP PROCEDURE [DDG].sp_get_funcionalidades
+DROP PROCEDURE [DDG].sp_get_marcas
+DROP PROCEDURE [DDG].sp_get_modelos
+DROP PROCEDURE [DDG].sp_get_turnos_habilitados
+DROP PROCEDURE [DDG].sp_get_turnos_automovil
+DROP PROCEDURE [DDG].sp_get_automoviles_chofer
+DROP PROCEDURE [DDG].sp_get_importe_rendicion
+
 
 
 
@@ -63,6 +79,7 @@ DROP FUNCTION [ddg].existeUsuario
 DROP FUNCTION [ddg].usuarioActivo
 DROP FUNCTION [ddg].getTrimestre
 DROP FUNCTION [ddg].choferYaAsignado
+DROP FUNCTION [ddg].calcularimporteViaje
 
 
 
