@@ -23,8 +23,6 @@ namespace UberFrba.Abm_Cliente
             InitializeComponent();
             this.CenterToScreen();
             verButton.Enabled = false;
-            modificarButton.Enabled = false;
-            eliminarButton.Enabled = false;
             formAnterior = _formAnterior;
             objController = ObjetosFormCTRL.Instance;
             fromABM = _fromABM;
@@ -38,10 +36,15 @@ namespace UberFrba.Abm_Cliente
                 volverButton.Enabled = false;
                 volverButton.Visible = false;
 
-                seleccionarButton.Enabled = true;
+                seleccionarButton.Enabled = false;
                 seleccionarButton.Visible = true;
                 cancelarButton.Enabled = true;
                 cancelarButton.Visible = true;
+            }
+            else
+            {
+                modificarButton.Enabled = false;
+                eliminarButton.Enabled = false;
             }
 
             this.FormClosing += ListadoClientesForm_FormClosing;

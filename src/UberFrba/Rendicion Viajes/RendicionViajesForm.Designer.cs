@@ -105,11 +105,13 @@
             this.viajesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.viajesDataGridView.Location = new System.Drawing.Point(7, 20);
             this.viajesDataGridView.Name = "viajesDataGridView";
+            this.viajesDataGridView.ReadOnly = true;
             this.viajesDataGridView.Size = new System.Drawing.Size(306, 137);
             this.viajesDataGridView.TabIndex = 0;
             // 
             // importeTextBox
             // 
+            this.importeTextBox.Enabled = false;
             this.importeTextBox.Location = new System.Drawing.Point(188, 164);
             this.importeTextBox.Name = "importeTextBox";
             this.importeTextBox.ReadOnly = true;
@@ -181,13 +183,13 @@
             // 
             // datosChoferTB
             // 
+            this.datosChoferTB.Enabled = false;
             this.datosChoferTB.ForeColor = System.Drawing.SystemColors.WindowText;
             this.datosChoferTB.Location = new System.Drawing.Point(29, 93);
             this.datosChoferTB.Name = "datosChoferTB";
             this.datosChoferTB.ReadOnly = true;
             this.datosChoferTB.Size = new System.Drawing.Size(290, 20);
             this.datosChoferTB.TabIndex = 31;
-            this.datosChoferTB.Text = "Nombre y Apellido del chofer";
             // 
             // buscarChoferBtn
             // 
