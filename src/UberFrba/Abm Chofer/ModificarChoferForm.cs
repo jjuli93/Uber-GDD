@@ -41,7 +41,7 @@ namespace UberFrba.Abm_Chofer
         {
             nombreTextBox.Text = chofer.nombre;
             apeliidoTextBox.Text = chofer.apellido;
-            dniTextBox.Text = chofer.dni;
+            dniTextBox.Text = chofer.dni.ToString();
             direccionTextBox.Text = chofer.direccion;
             telefonoTextBox.Text = chofer.telefono.ToString();
             mailTextBox.Text = chofer.mail;

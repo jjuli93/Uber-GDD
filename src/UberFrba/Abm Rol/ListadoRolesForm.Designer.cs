@@ -29,15 +29,15 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.verButton = new System.Windows.Forms.Button();
-            this.eliminarButton = new System.Windows.Forms.Button();
-            this.atrasButton = new System.Windows.Forms.Button();
-            this.modificarButton = new System.Windows.Forms.Button();
-            this.rolesDataGridView = new System.Windows.Forms.DataGridView();
             this.rolSeleccionadoPanel = new System.Windows.Forms.Panel();
+            this.eliminarButton = new System.Windows.Forms.Button();
+            this.modificarButton = new System.Windows.Forms.Button();
+            this.verButton = new System.Windows.Forms.Button();
+            this.atrasButton = new System.Windows.Forms.Button();
+            this.rolesDataGridView = new System.Windows.Forms.DataGridView();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.rolesDataGridView)).BeginInit();
             this.rolSeleccionadoPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rolesDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -52,16 +52,15 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Roles del sistema:";
             // 
-            // verButton
+            // rolSeleccionadoPanel
             // 
-            this.verButton.Enabled = false;
-            this.verButton.Location = new System.Drawing.Point(10, 5);
-            this.verButton.Name = "verButton";
-            this.verButton.Size = new System.Drawing.Size(75, 23);
-            this.verButton.TabIndex = 4;
-            this.verButton.Text = "Ver";
-            this.verButton.UseVisualStyleBackColor = true;
-            this.verButton.Click += new System.EventHandler(this.verButton_Click);
+            this.rolSeleccionadoPanel.Controls.Add(this.eliminarButton);
+            this.rolSeleccionadoPanel.Controls.Add(this.modificarButton);
+            this.rolSeleccionadoPanel.Controls.Add(this.verButton);
+            this.rolSeleccionadoPanel.Location = new System.Drawing.Point(109, 191);
+            this.rolSeleccionadoPanel.Name = "rolSeleccionadoPanel";
+            this.rolSeleccionadoPanel.Size = new System.Drawing.Size(258, 32);
+            this.rolSeleccionadoPanel.TabIndex = 5;
             // 
             // eliminarButton
             // 
@@ -74,16 +73,6 @@
             this.eliminarButton.UseVisualStyleBackColor = true;
             this.eliminarButton.Click += new System.EventHandler(this.eliminarButton_Click);
             // 
-            // atrasButton
-            // 
-            this.atrasButton.Location = new System.Drawing.Point(16, 196);
-            this.atrasButton.Name = "atrasButton";
-            this.atrasButton.Size = new System.Drawing.Size(75, 23);
-            this.atrasButton.TabIndex = 2;
-            this.atrasButton.Text = "<< Volver";
-            this.atrasButton.UseVisualStyleBackColor = true;
-            this.atrasButton.Click += new System.EventHandler(this.atrasButton_Click);
-            // 
             // modificarButton
             // 
             this.modificarButton.Enabled = false;
@@ -94,6 +83,27 @@
             this.modificarButton.Text = "Modificar";
             this.modificarButton.UseVisualStyleBackColor = true;
             this.modificarButton.Click += new System.EventHandler(this.modificarButton_Click);
+            // 
+            // verButton
+            // 
+            this.verButton.Enabled = false;
+            this.verButton.Location = new System.Drawing.Point(10, 5);
+            this.verButton.Name = "verButton";
+            this.verButton.Size = new System.Drawing.Size(75, 23);
+            this.verButton.TabIndex = 4;
+            this.verButton.Text = "Ver";
+            this.verButton.UseVisualStyleBackColor = true;
+            this.verButton.Click += new System.EventHandler(this.verButton_Click);
+            // 
+            // atrasButton
+            // 
+            this.atrasButton.Location = new System.Drawing.Point(16, 196);
+            this.atrasButton.Name = "atrasButton";
+            this.atrasButton.Size = new System.Drawing.Size(75, 23);
+            this.atrasButton.TabIndex = 2;
+            this.atrasButton.Text = "<< Volver";
+            this.atrasButton.UseVisualStyleBackColor = true;
+            this.atrasButton.Click += new System.EventHandler(this.atrasButton_Click);
             // 
             // rolesDataGridView
             // 
@@ -107,16 +117,6 @@
             this.rolesDataGridView.TabIndex = 0;
             this.rolesDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
-            // rolSeleccionadoPanel
-            // 
-            this.rolSeleccionadoPanel.Controls.Add(this.eliminarButton);
-            this.rolSeleccionadoPanel.Controls.Add(this.modificarButton);
-            this.rolSeleccionadoPanel.Controls.Add(this.verButton);
-            this.rolSeleccionadoPanel.Location = new System.Drawing.Point(109, 191);
-            this.rolSeleccionadoPanel.Name = "rolSeleccionadoPanel";
-            this.rolSeleccionadoPanel.Size = new System.Drawing.Size(258, 32);
-            this.rolSeleccionadoPanel.TabIndex = 5;
-            // 
             // ListadoRolesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -126,9 +126,10 @@
             this.Name = "ListadoRolesForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Listado de Roles";
+            this.Click += new System.EventHandler(this.ListadoRolesForm_Click);
             this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.rolesDataGridView)).EndInit();
             this.rolSeleccionadoPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.rolesDataGridView)).EndInit();
             this.ResumeLayout(false);
 
         }

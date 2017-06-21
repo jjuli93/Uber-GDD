@@ -40,9 +40,11 @@ namespace UberFrba.Login
 
         private void fillListBox()
         {
+            rolSelected.funcionalidades.AddRange(FuncionalidadDAO.Instance.get_funcionalidades_by_Rol(rolSelected.id));
+
             foreach (Funcionalidad func in rolSelected.funcionalidades)
             {
-                this.funcionalidadesListBox.Items.Add(new ObjetosFormCTRL.itemListBox(func.nombre, func.id));
+                this.funcionalidadesListBox.Items.Add(new ObjetosFormCTRL.itemListBox(func.descripcion, func.id));
             }
         }
 
@@ -56,7 +58,7 @@ namespace UberFrba.Login
 
             foreach (Funcionalidad item in this.rolSelected.funcionalidades)
             {
-                if ((item.id == funcSelected.id_item) && (item.nombre.Equals(funcSelected.nombre_item)))
+                if ((item.id == funcSelected.id_item) && (item.descripcion.Equals(funcSelected.nombre_item)))
                 {
                     funcionalidadSeleccionada = item;
                     break;
@@ -66,13 +68,14 @@ namespace UberFrba.Login
             if (funcionalidadSeleccionada != null)
             {
                 seleccionarButton.Enabled = true;
-                descripcionRichTextBox.Text = funcionalidadSeleccionada.descripcion;
             }
         }
 
         private void volverButton_Click(object sender, EventArgs e)
         {
-            //this.Hide();
+            funcionalidadesListBox.ClearSelected();
+            funcionalidadesListBox.Items.Clear();
+            rolSelected.funcionalidades.Clear();
             this.formAnterior.Show();
             this.Dispose();
         }

@@ -139,6 +139,8 @@
             this.clientesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.clientesDataGridView.Location = new System.Drawing.Point(12, 145);
             this.clientesDataGridView.Name = "clientesDataGridView";
+            this.clientesDataGridView.ReadOnly = true;
+            this.clientesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.clientesDataGridView.Size = new System.Drawing.Size(507, 150);
             this.clientesDataGridView.TabIndex = 2;
             this.clientesDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientesDataGridView_CellContentClick);
@@ -241,6 +243,7 @@
             this.Name = "ListadoClientesForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Listado de Clientes";
+            this.Click += new System.EventHandler(this.ListadoClientesForm_Click);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clientesDataGridView)).EndInit();

@@ -42,7 +42,6 @@
             this.nombreChoferTB = new System.Windows.Forms.TextBox();
             this.buscarChoferButton = new System.Windows.Forms.Button();
             this.patenteTextBox = new System.Windows.Forms.TextBox();
-            this.modeloTextBox = new System.Windows.Forms.TextBox();
             this.marcaComboBox = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -53,12 +52,14 @@
             this.buscarAutoButton = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.cerrarSesionLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.modeloComboBox = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.modeloComboBox);
             this.groupBox1.Controls.Add(this.crearButton);
             this.groupBox1.Controls.Add(this.cancelarButton);
             this.groupBox1.Controls.Add(this.label11);
@@ -71,7 +72,6 @@
             this.groupBox1.Controls.Add(this.nombreChoferTB);
             this.groupBox1.Controls.Add(this.buscarChoferButton);
             this.groupBox1.Controls.Add(this.patenteTextBox);
-            this.groupBox1.Controls.Add(this.modeloTextBox);
             this.groupBox1.Controls.Add(this.marcaComboBox);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
@@ -210,13 +210,6 @@
             this.patenteTextBox.Size = new System.Drawing.Size(190, 20);
             this.patenteTextBox.TabIndex = 7;
             // 
-            // modeloTextBox
-            // 
-            this.modeloTextBox.Location = new System.Drawing.Point(104, 62);
-            this.modeloTextBox.Name = "modeloTextBox";
-            this.modeloTextBox.Size = new System.Drawing.Size(190, 20);
-            this.modeloTextBox.TabIndex = 6;
-            // 
             // marcaComboBox
             // 
             this.marcaComboBox.FormattingEnabled = true;
@@ -224,6 +217,7 @@
             this.marcaComboBox.Name = "marcaComboBox";
             this.marcaComboBox.Size = new System.Drawing.Size(190, 21);
             this.marcaComboBox.TabIndex = 5;
+            this.marcaComboBox.SelectedIndexChanged += new System.EventHandler(this.marcaComboBox_SelectedIndexChanged);
             // 
             // label5
             // 
@@ -306,6 +300,14 @@
             this.cerrarSesionLinkLabel.Text = "cerrar sesión";
             this.cerrarSesionLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cerrarSesionLinkLabel_LinkClicked);
             // 
+            // modeloComboBox
+            // 
+            this.modeloComboBox.FormattingEnabled = true;
+            this.modeloComboBox.Location = new System.Drawing.Point(104, 62);
+            this.modeloComboBox.Name = "modeloComboBox";
+            this.modeloComboBox.Size = new System.Drawing.Size(190, 21);
+            this.modeloComboBox.TabIndex = 22;
+            // 
             // ABMAutomovilForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -338,7 +340,6 @@
         private System.Windows.Forms.TextBox nombreChoferTB;
         private System.Windows.Forms.Button buscarChoferButton;
         private System.Windows.Forms.TextBox patenteTextBox;
-        private System.Windows.Forms.TextBox modeloTextBox;
         private System.Windows.Forms.ComboBox marcaComboBox;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
@@ -352,5 +353,6 @@
         private System.Windows.Forms.Button buscarAutoButton;
         private System.Windows.Forms.ErrorProvider errorProvider;
         private System.Windows.Forms.LinkLabel cerrarSesionLinkLabel;
+        private System.Windows.Forms.ComboBox modeloComboBox;
     }
 }

@@ -18,7 +18,7 @@ GO
 
 create table [DDG].Roles(
 rol_ID numeric(10,0) primary key identity,
-rol_nombre varchar(255) not null,
+rol_nombre varchar(255) not null unique,
 rol_habilitado bit default 1
 )
 GO
@@ -188,7 +188,6 @@ insert into [DDG].Roles (rol_nombre) values
 					/*Funcionalidades*/
 insert into DDG.Funcionalidades (funcionalidad_descripcion) values
 ('ABM de Rol'),
-('Registro de usuarios'),
 ('ABM de Clientes'),
 ('ABM de Automoviles'),
 ('ABM de turnos'),
@@ -200,12 +199,15 @@ insert into DDG.Funcionalidades (funcionalidad_descripcion) values
 
 					/*RolesXFuncionalidades*/
 insert into [DDG].RolesXFuncionalidades (rolXFuncionalidad_rol, rolXFuncionalidad_funcionalidad) values
-(1,1), (1,2), (1,3), (1,4),(1,5),(1,6),(1,7),(2,8),(3,9),(1,10),(2,10),(3,10);
+(1,1), (1,2), (1,3), (1,4),(1,5),(1,6),(1,7),(1,8),(1,9),(2,9),(3,9);
 
 					/*Usuarios*/
 /*Usuario pedido*/
 insert into DDG.Usuarios (usuario_username, usuario_password) values
 ('admin',HASHBYTES('SHA2_256','w23e'))
+
+insert into ddg.UsuariosXRoles (usuarioXRol_usuario, usuarioXRol_rol) values
+(1,1)
 
 /*usuarios clientes*/
 insert into DDG.Usuarios (usuario_username, usuario_password)
@@ -619,27 +621,27 @@ GO
 --TIPO		: Stored procedure
 --NOMBRE	: sp_login_check
 --OBJETIVO  : checkeo login correcto (chequea intentos fallidos)  
---output: 0: si no existe usuario, 1: contraseña incorrecta (incrementa intentos fallidos), 2: login correcto (resetea intentos fallidos), 3:usuario bloqueado                     
+--output: -1: si no existe usuario, -2: contraseña incorrecta (incrementa intentos fallidos), id: login correcto (resetea intentos fallidos), -3:usuario bloqueado                     
 --=============================================================================================================
  IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_login_check' AND type='p')
 	DROP PROCEDURE [DDG].sp_login_check
 GO	
 
-create procedure [DDG].sp_login_check(@username varchar (255), @contraseña varchar(255), @retorno int output)
+create procedure [DDG].sp_login_check(@username varchar (255), @contrasenia varchar(255), @retorno int output)
 as
 begin
 
- if (DDG.existeUsuario(@username)) = 0 set @retorno = 0
+ if (DDG.existeUsuario(@username)) = 0 set @retorno = -1
 	else
 	begin
-	if(DDG.usuarioActivo(@username) = 0) set @retorno = 3
+	if(DDG.usuarioActivo(@username) = 0) set @retorno = -3
 		else
 		if(select usuario_password
 		from DDG.Usuarios
-		where usuario_username = @username) = HASHBYTES('SHA2_256',cast(@contraseña as varchar(255)))begin  set @retorno = 2 exec DDG.sp_limpiar_intentos_fallidos @username end
+		where usuario_username = @username) = HASHBYTES('SHA2_256',cast(@contrasenia as varchar(255)))begin  set @retorno = (select u.usuario_ID  from Usuarios u where u.usuario_username = @username) exec DDG.sp_limpiar_intentos_fallidos @username end
 			else 
 			begin
-			set @retorno=1
+			set @retorno=-2
 			exec [DDG].sp_incrementar_intentos_fallidos @username 
 			end
 		end
@@ -666,7 +668,8 @@ begin
 
 select r.*
 from Usuarios u, UsuariosXRoles ur, Roles r
-where u.usuario_ID = ur.usuarioXRol_usuario
+where u.usuario_ID = @idUsuario
+and u.usuario_ID = ur.usuarioXRol_usuario
 and ur.usuarioXRol_rol = r.rol_ID 	
 
 end

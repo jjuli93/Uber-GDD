@@ -21,6 +21,7 @@ namespace UberFrba.Facturacion
         private int id_cliente;
         private ClienteDAO clienteDAO;
         private List<Control> camposObligatorios;
+        private Cliente cliente_seleccionado = null;
 
         public FacturacionClientesForm(menuFuncsRolUserForm _parent)
         {
@@ -55,21 +56,6 @@ namespace UberFrba.Facturacion
             this.Dispose();
         }
 
-        public void seleccionarCliente(Cliente cliente)
-        {
-            if (cliente != null)
-            {
-                this.id_cliente = cliente.id;
-                datosClienteTB.Text = "[" + "]  " + cliente.nombre + " " + cliente.apellido;
-            }
-            else
-            {
-                if (MessageBox.Show("Error en el cliente seleccionado, por favor vuelva a buscar uno.", "Error en el cliente", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
-                    return;
-            }
-            
-        }
-
         private void facturarButton_Click(object sender, EventArgs e)
         {
             if (objController.cumpleCamposObligatorios(camposObligatorios, errorProvider) && (id_cliente != -1))
@@ -92,5 +78,27 @@ namespace UberFrba.Facturacion
         {
             objController.cerrar_sesion();
         }
+
+        public void seleccionarCliente(Cliente _cliente_seleccionado)
+        {
+            this.cliente_seleccionado = _cliente_seleccionado;
+
+            if (_cliente_seleccionado != null)
+            {
+                objController.borrarMensajeDeError(camposObligatorios, errorProvider);
+                datosClienteTB.Text = string.Format("{0} {1}", _cliente_seleccionado.nombre, _cliente_seleccionado.apellido);
+            }
+            else
+            {
+                errorProvider.SetError(datosClienteTB, "Error en el cliente seleccionado");
+            }
+        }
+
+        private bool cumple_campos()
+        {
+            return objController.cumpleCamposObligatorios(camposObligatorios, errorProvider)
+                && (cliente_seleccionado != null);
+        }
+
     }
 }

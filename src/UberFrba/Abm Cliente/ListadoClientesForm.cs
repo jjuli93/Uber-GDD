@@ -17,6 +17,7 @@ namespace UberFrba.Abm_Cliente
         private Form formAnterior;
         private ObjetosFormCTRL objController;
         bool fromABM;
+        int index_cliente_selecccionado = -1;
 
         public ListadoClientesForm(Form _formAnterior, bool _fromABM)
         {
@@ -57,6 +58,8 @@ namespace UberFrba.Abm_Cliente
 
         private void clientesDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            index_cliente_selecccionado = e.RowIndex;
+
             verButton.Enabled = true;
 
             if (fromABM)
@@ -74,21 +77,33 @@ namespace UberFrba.Abm_Cliente
         // ------> Botones desde ABM Cliente
         private void modificarButton_Click(object sender, EventArgs e)
         {
-            ModificarClienteForm modificar_form = new ModificarClienteForm(null);
+            ModificarClienteForm modificar_form = new ModificarClienteForm(get_selected_client());
 
             this.Hide();
             modificar_form.Show(this);           
         }
 
         private void eliminarButton_Click(object sender, EventArgs e)
-        {
-
+        {            
+            if (MessageBox.Show("¿Está seguro de querer eliminar el cliente seleccionado?", "Eliminar Cliente", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                int id_cliente = (int)clientesDataGridView.Rows[index_cliente_selecccionado].Cells[0].Value;
+                
+                if (ClienteDAO.Instance.eliminar_cliente(id_cliente))
+                {
+                    MessageBox.Show("Cliente eliminado", "Eliminar Cliente", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    MessageBox.Show("No se ha podido eliminar el cliente", "Error en Eliminar Cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }    
+            }            
         }
         // <------ end abm cliente
 
         private void verButton_Click(object sender, EventArgs e)
         {
-            DetalleClienteForm detalle_form = new DetalleClienteForm(null);
+            DetalleClienteForm detalle_form = new DetalleClienteForm(get_selected_client());
 
             this.Hide();
             detalle_form.Show(this);
@@ -100,9 +115,19 @@ namespace UberFrba.Abm_Cliente
             /*
              *  # Registro de Viaje
              *  # Facturacion Clientes
-             * 
-             * formAnterior.seleccionarCliente(cliente_seleccionado)
              */
+            /*
+            var reg = this.Owner as UberFrba.Registro_Viajes.RegistroViajeForm;
+            var fact = this.Owner as UberFrba.Facturacion.FacturacionClientesForm;
+
+            if (reg != null)
+                reg.seleccionarCliente(get_selected_client());
+
+            if (fact != null)
+                fact.seleccionarCliente(get_selected_client());
+             * */
+            dynamic form = this.Owner;
+            form.seleccionarCliente(get_selected_client());
         }
 
         private void cancelarButton_Click(object sender, EventArgs e)
@@ -116,6 +141,22 @@ namespace UberFrba.Abm_Cliente
         {
             this.Owner.Show();
             this.Dispose();
+        }
+
+        private Cliente get_selected_client()
+        {
+            if (index_cliente_selecccionado == -1)
+                return null;
+
+            return ClienteDAO.Instance.obtener_cliente_from_row(clientesDataGridView.Rows[index_cliente_selecccionado]);
+        }
+
+        private void ListadoClientesForm_Click(object sender, EventArgs e)
+        {
+            index_cliente_selecccionado = -1;
+            clientesDataGridView.ClearSelection();
+
+            objController.habilitarContenidoPanel(clienteSeleccionadoPanel, false);
         }
         
     }

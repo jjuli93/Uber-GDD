@@ -33,8 +33,6 @@
             this.nombreTextBox = new System.Windows.Forms.TextBox();
             this.buscarButton = new System.Windows.Forms.Button();
             this.cerrarSesionLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.label2 = new System.Windows.Forms.Label();
-            this.descripcionTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.chkListBoxFuncs = new System.Windows.Forms.CheckedListBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -45,13 +43,14 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.volverButton = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(31, 85);
+            this.label1.Location = new System.Drawing.Point(29, 50);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(50, 13);
             this.label1.TabIndex = 0;
@@ -59,14 +58,14 @@
             // 
             // nombreTextBox
             // 
-            this.nombreTextBox.Location = new System.Drawing.Point(118, 82);
+            this.nombreTextBox.Location = new System.Drawing.Point(116, 47);
             this.nombreTextBox.Name = "nombreTextBox";
             this.nombreTextBox.Size = new System.Drawing.Size(194, 20);
             this.nombreTextBox.TabIndex = 1;
             // 
             // buscarButton
             // 
-            this.buscarButton.Location = new System.Drawing.Point(31, 20);
+            this.buscarButton.Location = new System.Drawing.Point(258, 282);
             this.buscarButton.Name = "buscarButton";
             this.buscarButton.Size = new System.Drawing.Size(75, 23);
             this.buscarButton.TabIndex = 2;
@@ -77,28 +76,12 @@
             // cerrarSesionLinkLabel
             // 
             this.cerrarSesionLinkLabel.AutoSize = true;
-            this.cerrarSesionLinkLabel.Location = new System.Drawing.Point(347, 20);
+            this.cerrarSesionLinkLabel.Location = new System.Drawing.Point(284, 8);
             this.cerrarSesionLinkLabel.Name = "cerrarSesionLinkLabel";
             this.cerrarSesionLinkLabel.Size = new System.Drawing.Size(67, 13);
             this.cerrarSesionLinkLabel.TabIndex = 3;
             this.cerrarSesionLinkLabel.TabStop = true;
             this.cerrarSesionLinkLabel.Text = "cerrar sesión";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(31, 122);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(66, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Descripción:";
-            // 
-            // descripcionTextBox
-            // 
-            this.descripcionTextBox.Location = new System.Drawing.Point(118, 119);
-            this.descripcionTextBox.Name = "descripcionTextBox";
-            this.descripcionTextBox.Size = new System.Drawing.Size(277, 20);
-            this.descripcionTextBox.TabIndex = 5;
             // 
             // label3
             // 
@@ -106,7 +89,7 @@
             this.label3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label3.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.Red;
-            this.label3.Location = new System.Drawing.Point(318, 82);
+            this.label3.Location = new System.Drawing.Point(316, 47);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(17, 20);
             this.label3.TabIndex = 6;
@@ -115,15 +98,15 @@
             // chkListBoxFuncs
             // 
             this.chkListBoxFuncs.FormattingEnabled = true;
-            this.chkListBoxFuncs.Location = new System.Drawing.Point(32, 182);
+            this.chkListBoxFuncs.Location = new System.Drawing.Point(30, 107);
             this.chkListBoxFuncs.Name = "chkListBoxFuncs";
-            this.chkListBoxFuncs.Size = new System.Drawing.Size(364, 94);
+            this.chkListBoxFuncs.Size = new System.Drawing.Size(280, 94);
             this.chkListBoxFuncs.TabIndex = 7;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(31, 157);
+            this.label4.Location = new System.Drawing.Point(29, 82);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(90, 13);
             this.label4.TabIndex = 8;
@@ -131,7 +114,7 @@
             // 
             // limpiarButton
             // 
-            this.limpiarButton.Location = new System.Drawing.Point(150, 20);
+            this.limpiarButton.Location = new System.Drawing.Point(144, 282);
             this.limpiarButton.Name = "limpiarButton";
             this.limpiarButton.Size = new System.Drawing.Size(75, 23);
             this.limpiarButton.TabIndex = 9;
@@ -145,7 +128,7 @@
             this.label5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label5.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.Red;
-            this.label5.Location = new System.Drawing.Point(122, 155);
+            this.label5.Location = new System.Drawing.Point(120, 80);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(17, 20);
             this.label5.TabIndex = 10;
@@ -157,7 +140,7 @@
             this.label6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label6.Font = new System.Drawing.Font("Dutch801 XBd BT", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.Red;
-            this.label6.Location = new System.Drawing.Point(29, 295);
+            this.label6.Location = new System.Drawing.Point(27, 220);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(132, 14);
             this.label6.TabIndex = 11;
@@ -165,7 +148,7 @@
             // 
             // crearButton
             // 
-            this.crearButton.Location = new System.Drawing.Point(295, 290);
+            this.crearButton.Location = new System.Drawing.Point(222, 192);
             this.crearButton.Name = "crearButton";
             this.crearButton.Size = new System.Drawing.Size(100, 23);
             this.crearButton.TabIndex = 15;
@@ -175,16 +158,17 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Location = new System.Drawing.Point(13, 58);
+            this.groupBox1.Controls.Add(this.crearButton);
+            this.groupBox1.Location = new System.Drawing.Point(11, 24);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(401, 266);
+            this.groupBox1.Size = new System.Drawing.Size(340, 236);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Nuevo rol";
             // 
             // volverButton
             // 
-            this.volverButton.Location = new System.Drawing.Point(31, 341);
+            this.volverButton.Location = new System.Drawing.Point(29, 282);
             this.volverButton.Name = "volverButton";
             this.volverButton.Size = new System.Drawing.Size(75, 23);
             this.volverButton.TabIndex = 17;
@@ -201,17 +185,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(427, 376);
+            this.ClientSize = new System.Drawing.Size(365, 322);
             this.Controls.Add(this.volverButton);
-            this.Controls.Add(this.crearButton);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.limpiarButton);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.chkListBoxFuncs);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.descripcionTextBox);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.cerrarSesionLinkLabel);
             this.Controls.Add(this.buscarButton);
             this.Controls.Add(this.nombreTextBox);
@@ -220,6 +201,7 @@
             this.Name = "ABMRolForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ABM Rol";
+            this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -232,8 +214,6 @@
         private System.Windows.Forms.TextBox nombreTextBox;
         private System.Windows.Forms.Button buscarButton;
         private System.Windows.Forms.LinkLabel cerrarSesionLinkLabel;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox descripcionTextBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckedListBox chkListBoxFuncs;
         private System.Windows.Forms.Label label4;

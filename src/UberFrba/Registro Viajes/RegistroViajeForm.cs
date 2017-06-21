@@ -20,6 +20,9 @@ namespace UberFrba.Registro_Viajes
         private menuFuncsRolUserForm formAnterior;
         private ObjetosFormCTRL objController;
         private List<Control> camposObligatorios;
+        private Chofer chofer_seleccionado = null;
+        private Automovil auto_seleccionado = null;
+        private Cliente cliente_seleccionado = null;
 
         public RegistroViajeForm(menuFuncsRolUserForm _parent)
         {
@@ -57,7 +60,7 @@ namespace UberFrba.Registro_Viajes
 
         private void registrarButton_Click(object sender, EventArgs e)
         {
-            if (objController.cumpleCamposObligatorios(camposObligatorios, errorProvider))
+            if (cumple_campos())
             {
                 //magia.....
                 if (MessageBox.Show("Registro exitoso.", "Registro de viaje", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
@@ -85,6 +88,44 @@ namespace UberFrba.Registro_Viajes
         private void cerrarSesionLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             objController.cerrar_sesion();
+        }
+
+        public void seleccionarChofer(Chofer _chofer_seleccionado)
+        {
+            this.chofer_seleccionado = _chofer_seleccionado;
+
+            if (_chofer_seleccionado != null)
+            {
+                datosChoferTB.Text = string.Format("{0} {1}", _chofer_seleccionado.nombre, _chofer_seleccionado.apellido);
+            }
+        }
+
+        public void seleccionarAutomovil(Automovil _auto_seleccionado)
+        {
+            this.auto_seleccionado = _auto_seleccionado;
+
+            if (_auto_seleccionado != null)
+            {
+                autoTextBox.Text = string.Format("{0} {1}  -  Patente nro: [{2}]",_auto_seleccionado.marca, _auto_seleccionado.modelo, _auto_seleccionado.patente.ToString());
+            }
+        }
+
+        public void seleccionarCliente(Cliente _cliente_seleccionado)
+        {
+            this.cliente_seleccionado = _cliente_seleccionado;
+
+            if (_cliente_seleccionado != null)
+            {
+                datosClienteTB.Text = string.Format("{0} {1}", _cliente_seleccionado.nombre, _cliente_seleccionado.apellido);
+            }
+        }
+
+        private bool cumple_campos()
+        {
+            return objController.cumpleCamposObligatorios(camposObligatorios, errorProvider) 
+                && (cliente_seleccionado != null) 
+                && (chofer_seleccionado != null) 
+                && (auto_seleccionado != null);
         }
     }
 }

@@ -26,6 +26,7 @@ namespace UberFrba.Abm_Rol
             formAnterior = _menu;
             objController = ObjetosFormCTRL.Instance;
             camposObligatorios = new List<Control>() { nombreTextBox, chkListBoxFuncs };
+            chkListBoxFuncs.Items.Clear();
             this.inicializarFuncionalidades();
 
             this.FormClosing += ABMRolForm_FormClosing;
@@ -48,13 +49,12 @@ namespace UberFrba.Abm_Rol
 
         private void inicializarFuncionalidades()
         {
-            //FuncionalidadDAO funcController = FuncionalidadDAO.Instance;
+            var funcionalidades = FuncionalidadDAO.Instance.get_funcionalidades();
 
-            //List<Funcionalidad> listaFuncionalidades = funcController.get_funcionalidades();
-
-            chkListBoxFuncs.Items.Add("F_1");
-            chkListBoxFuncs.Items.Add("F_2");
-            chkListBoxFuncs.Items.Add("F_3");
+            foreach (Funcionalidad func in funcionalidades)
+            {
+                this.chkListBoxFuncs.Items.Add(new ObjetosFormCTRL.itemListBox(func.descripcion, func.id));
+            }
         }
 
         private void buscarButton_Click(object sender, EventArgs e)
@@ -71,8 +71,15 @@ namespace UberFrba.Abm_Rol
 
             if (objController.cumpleCamposObligatorios(camposObligatorios, errorProvider))
             {
-                MessageBox.Show("Rol creado");
-                this.limpiar_form();
+                if (RolDAO.Instance.crear_rol(nombreTextBox.Text, chkListBoxFuncs.SelectedItems))
+                {
+                    MessageBox.Show("Rol creado", "Nuevo Rol");
+                    this.limpiar_form();
+                }
+                else
+                {
+                    MessageBox.Show("No se ha podido crear el Rol", "Error en Nuevo Rol");
+                }
             }
             else
             {
@@ -82,6 +89,7 @@ namespace UberFrba.Abm_Rol
 
         private void volverButton_Click(object sender, EventArgs e)
         {
+            this.limpiar_form();
             this.Owner.Show();
             this.Dispose();
         }

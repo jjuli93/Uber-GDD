@@ -10,7 +10,7 @@ namespace UberFrba.Modelo
     {
         public Cliente(int _id) : base(_id) {}
 
-        public string codigoPostal { get; set; }
+        public int codigoPostal { get; set; }
         
     }
 }

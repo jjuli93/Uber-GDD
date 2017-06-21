@@ -47,6 +47,7 @@ namespace UberFrba.Controllers
         {
             public itemListBox(string _nombre, int _id) : base(_nombre, _id) { }
         }
+
         /*
          * Llena el contenido de los comboBox para la fecha de nacimiento
          */
@@ -290,9 +291,7 @@ namespace UberFrba.Controllers
 
         public void inicializar_Marcas(ComboBox combo)
         {
-            Automovil car = new Automovil(-1, "xxxxxx");
-
-            combo.Items.AddRange(car.get_Marcas_AsArray());
+            AutomovilDAO.Instance.setMarcas(combo);
         }
 
         public void habilitar_botones(List<Button> botones, bool valorHab)
@@ -320,6 +319,22 @@ namespace UberFrba.Controllers
             if (MessageBox.Show("¿Está ud. seguro de querer salir de UberFRBA?", "Salir de UberFRBA", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 Application.Restart();
+            }
+        }
+
+        public void mostrar_mensajeDeError(string mensaje)
+        {
+            MessageBox.Show(mensaje);
+        }
+
+        public void check_item_by_id(CheckedListBox list, int id, CheckState state)
+        {
+            for (int i = 0; i < list.Items.Count; i++)
+            {
+                var item = (ObjetosFormCTRL.itemListBox)list.Items[i];
+
+                if (item.id_item == id)
+                    list.SetItemCheckState(i, state);
             }
         }
     }

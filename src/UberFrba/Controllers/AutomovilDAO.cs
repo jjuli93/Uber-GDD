@@ -40,5 +40,52 @@ namespace UberFrba.Controllers
 
             return resultados;
         }
+
+        public void setMarcas(ComboBox combo)
+        {
+            using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+            using (SqlCommand cmd = new SqlCommand("DDG.sp_get_marcas", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                conn.Open();
+                SqlDataReader lector = cmd.ExecuteReader();
+
+                if (lector.HasRows)
+                {
+                    while (lector.Read())
+                    {
+                        combo.Items.Add(new ObjetosFormCTRL.itemComboBox(lector["marca_descripcion"].ToString(), Convert.ToInt32(lector["marca_id"])));
+                    }
+                }
+
+                lector.Close();
+            }
+        }
+
+        public void setModelos(ComboBox combo, int id_marca)
+        {
+            using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+            using (SqlCommand cmd = new SqlCommand("DDG.sp_get_modelos_marca", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@idMarca", id_marca);
+
+                conn.Open();
+                SqlDataReader lector = cmd.ExecuteReader();
+
+                if (lector.HasRows)
+                {
+                    while (lector.Read())
+                    {
+                        combo.Items.Add(new ObjetosFormCTRL.itemComboBox(lector["modelo_descripcion"].ToString(), Convert.ToInt32(lector["modelo_id"])));
+                    }
+                }
+
+                lector.Close();
+            }
+        }
+
     }
 }

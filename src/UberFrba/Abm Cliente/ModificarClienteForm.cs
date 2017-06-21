@@ -16,6 +16,7 @@ namespace UberFrba.Abm_Cliente
     {
         ObjetosFormCTRL objController;
         ClienteDAO clienteDAO;
+        Cliente client_selected;
 
         public ModificarClienteForm(Cliente _cliente)
         {
@@ -23,8 +24,11 @@ namespace UberFrba.Abm_Cliente
             objController = ObjetosFormCTRL.Instance;
             clienteDAO = ClienteDAO.Instance;
 
-            if (_cliente != null)
+            if (_cliente != null) 
+            {
+                client_selected = _cliente;
                 llenar_datos_form(_cliente);
+            }
             else
             {
                 if (MessageBox.Show("La aplicación sufrió un error al querer modificar un cliente.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand) == DialogResult.OK)
@@ -46,11 +50,11 @@ namespace UberFrba.Abm_Cliente
         {
             nombreTextBox.Text = cliente.nombre;
             apellidoTextBox.Text = cliente.apellido;
-            dniTextBox.Text = cliente.dni;
+            dniTextBox.Text = cliente.dni.ToString();
             mailTextBox.Text = cliente.mail;
             telTextBox.Text = cliente.telefono.ToString();
             dirTextBox.Text = cliente.direccion;
-            cpTextBox.Text = cliente.codigoPostal;
+            cpTextBox.Text = cliente.codigoPostal.ToString();
 
             objController.cargar_valor_comboBox(dayComboBox, cliente.fecha_nacimiento.Day.ToString());
             objController.cargar_valor_comboBox(monthComboBox, cliente.fecha_nacimiento.Month.ToString());
@@ -67,9 +71,22 @@ namespace UberFrba.Abm_Cliente
 
         private void guardarButton_Click(object sender, EventArgs e)
         {
-            /*
-             * clienteDAO hace la magia de actualizar los datos
-             */
+            var campos = new List<Control>() { nombreTextBox, apellidoTextBox, dniTextBox, telTextBox, dirTextBox, cpTextBox, dayComboBox, monthComboBox, yearComboBox };
+
+            if (objController.cumpleCamposObligatorios(campos, errorProvider))
+            {
+                if (MessageBox.Show("¿Está seguro de querer modificar los datos del cliente?", "Modificar Cliente", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    if (ClienteDAO.Instance.modificar_cliente(client_selected))
+                    {
+                        MessageBox.Show("Los datos del cliente han sido modificados.", "Modificar Cliente", MessageBoxButtons.OK);
+                    }
+                    else
+                    {
+                        MessageBox.Show("No se ha podido modificar los datos del cliente", "Error en Modificar Cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
     }
 }

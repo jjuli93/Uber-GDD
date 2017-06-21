@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.habilitarCheckBox = new System.Windows.Forms.CheckBox();
             this.yearComboBox = new System.Windows.Forms.ComboBox();
@@ -50,7 +51,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.cancelarButton = new System.Windows.Forms.Button();
             this.guardarButton = new System.Windows.Forms.Button();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -259,6 +262,10 @@
             this.guardarButton.UseVisualStyleBackColor = true;
             this.guardarButton.Click += new System.EventHandler(this.guardarButton_Click);
             // 
+            // errorProvider
+            // 
+            this.errorProvider.ContainerControl = this;
+            // 
             // ModificarClienteForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -272,6 +279,7 @@
             this.Text = "Modificar Cliente";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -300,5 +308,6 @@
         private System.Windows.Forms.Button cancelarButton;
         private System.Windows.Forms.Button guardarButton;
         private System.Windows.Forms.CheckBox habilitarCheckBox;
+        private System.Windows.Forms.ErrorProvider errorProvider;
     }
 }

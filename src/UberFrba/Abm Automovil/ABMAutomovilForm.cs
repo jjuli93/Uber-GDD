@@ -20,6 +20,7 @@ namespace UberFrba.Abm_Automovil
         private ObjetosFormCTRL objController;
         private List<Control> camposObligatorios;
         public Chofer choferSeleccionado;
+        ObjetosFormCTRL.itemComboBox marca_seleccionada = null;
 
         public ABMAutomovilForm(menuFuncsRolUserForm _menu)
         {
@@ -28,8 +29,9 @@ namespace UberFrba.Abm_Automovil
             formAnterior = _menu;
             objController = ObjetosFormCTRL.Instance;
             objController.inicializar_Marcas(this.marcaComboBox);
-            camposObligatorios = new List<Control>() { marcaComboBox, modeloTextBox, patenteTextBox, nombreChoferTB, turnoComboBox };
+            camposObligatorios = new List<Control>() { marcaComboBox, modeloComboBox, patenteTextBox, nombreChoferTB, turnoComboBox };
             objController.setCBTurno(this.turnoComboBox);
+            
             this.FormClosing += ABMAutomovilForm_FormClosing;
         }
 
@@ -94,5 +96,12 @@ namespace UberFrba.Abm_Automovil
             objController.cerrar_sesion();
         }
 
+        private void marcaComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            modeloComboBox.Items.Clear();
+            marca_seleccionada = (ObjetosFormCTRL.itemComboBox) marcaComboBox.SelectedItem;
+
+            AutomovilDAO.Instance.setModelos(modeloComboBox, marca_seleccionada.id_item);
+        }
     }
 }

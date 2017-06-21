@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using UberFrba.Controllers;
 using UberFrba.Login;
+using UberFrba.Modelo;
 
 namespace UberFrba.Abm_Cliente
 {
@@ -47,11 +48,21 @@ namespace UberFrba.Abm_Cliente
             }
             else
             {
-                /*
-                 * Llama al metodo "crear_cliente" de ClienteDAO
-                 */
-                MessageBox.Show("Cliente creado");
-                limpiar_form();
+                Cliente cliente_nuevo = new Cliente(0);
+                DateTime fechaNac = new DateTime((int)dayComboBox.SelectedItem, (int)monthComboBox.SelectedItem, (int)yearComboBox.SelectedItem);
+                cliente_nuevo.set_datos_principales(nombreTextBox.Text, apellidoTextBox.Text, Convert.ToDouble(dniTextBox.Text), fechaNac);
+                cliente_nuevo.set_datos_secundarios(mailTextBox.Text, Convert.ToDouble(telTextBox.Text), dirTextBox.Text);
+
+                if (ClienteDAO.Instance.crear_cliente(cliente_nuevo))
+                {
+                    MessageBox.Show("Cliente creado.", "Alta cliente", MessageBoxButtons.OK);
+                    limpiar_form();
+                }
+                else
+                {
+                    MessageBox.Show("No se pudo crear el cliente.", "Error en Alta Cliente", MessageBoxButtons.OK);
+                }
+                
             } 
         }
 

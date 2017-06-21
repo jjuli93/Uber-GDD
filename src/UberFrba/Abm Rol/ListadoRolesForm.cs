@@ -16,7 +16,7 @@ namespace UberFrba.Abm_Rol
     {
         private ABMRolForm formAnterior;
         private ObjetosFormCTRL objController;
-        private Rol rolSeleccionado;
+        private int index_rol_seleccionado = -1;
 
         public ListadoRolesForm(ABMRolForm _formAnterior)
         {
@@ -35,13 +35,15 @@ namespace UberFrba.Abm_Rol
 
         private void atrasButton_Click(object sender, EventArgs e)
         {
+            rolesDataGridView.Rows.Clear();
+            rolesDataGridView.Refresh();
             this.Owner.Show();
             this.Dispose();
         }
 
         private void verButton_Click(object sender, EventArgs e)
         {
-            var detalle_form = new DetalleRolForm();
+            var detalle_form = new DetalleRolForm(RolDAO.Instance.obtenerRol(rolesDataGridView.Rows[index_rol_seleccionado]));
 
             this.Hide();
             detalle_form.Show(this);
@@ -49,7 +51,7 @@ namespace UberFrba.Abm_Rol
 
         private void modificarButton_Click(object sender, EventArgs e)
         {
-            var modificar_form = new ModificarRolForm(null);
+            var modificar_form = new ModificarRolForm(RolDAO.Instance.obtenerRol(rolesDataGridView.Rows[index_rol_seleccionado]));
 
             this.Hide();
             modificar_form.Show(this);
@@ -57,14 +59,34 @@ namespace UberFrba.Abm_Rol
 
         private void eliminarButton_Click(object sender, EventArgs e)
         {
-            //rolDAO.eliminarRol(rolSeleccionado);
+            var id_rol = (int) rolesDataGridView.Rows[index_rol_seleccionado].Cells[0].Value;
+            var nombre_rol = rolesDataGridView.Rows[index_rol_seleccionado].Cells[1].Value.ToString();
+
+            if (MessageBox.Show(string.Format("¿Está seguro de querer eliminar el rol {0}?", nombre_rol), "Eliminar Rol", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                if (RolDAO.Instance.eliminar_rol(id_rol))
+                {
+                    MessageBox.Show(string.Format("Se ha eliminado el rol {0}?", nombre_rol), "Rol eliminado", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    MessageBox.Show(string.Format("No se ha podido eliminar el rol {0}?", nombre_rol), "Error en Eliminar Rol", MessageBoxButtons.OK);
+                }
+            }
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             objController.habilitarContenidoPanel(this.rolSeleccionadoPanel, true);
-            //seteo el rol seleccionado
-            //rolSeleccionado = rolDAO.obtenerRol(rolesDataGridView.SelectedRows);
+            
+            index_rol_seleccionado = e.RowIndex;
+        }
+
+        private void ListadoRolesForm_Click(object sender, EventArgs e)
+        {
+            objController.habilitarContenidoPanel(this.rolSeleccionadoPanel, false);
+            
+            index_rol_seleccionado = -1;
         }
     }
 }

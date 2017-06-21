@@ -43,11 +43,11 @@ namespace UberFrba.Abm_Cliente
 
             nombreTextBox.Text = cliente.nombre;
             apellidoTextBox.Text = cliente.apellido;
-            dniTextBox.Text = cliente.dni;
+            dniTextBox.Text = cliente.dni.ToString();
             mailTextBox.Text = cliente.mail;
             telTextBox.Text = cliente.telefono.ToString();
             dirTextBox.Text = cliente.direccion;
-            cpTextBox.Text = cliente.codigoPostal;
+            cpTextBox.Text = cliente.codigoPostal.ToString();
             fechaNacTextBox.Text = cliente.fecha_nacimiento.Day.ToString() + "/" + cliente.fecha_nacimiento.Month.ToString() + "/" + cliente.fecha_nacimiento.Year.ToString();
             habilitadoCheckBox.Checked = cliente.habilitado;
         }
