@@ -1,0 +1,31 @@
+1)	sp_get_modelos_marca @marca <- los modelos dado una marca
+
+
+2)	sp_update_cliente <- recibe @parametros un varchar de 900
+		     queda asi o se cambia por cada atributo?
+		     si queda asi como escribo los parametros?
+
+
+3)	falta el manejo de listas en las altas y modificaciones
+
+
+4)	sp_get_clientes
+			-> todos
+			-> con filtros de busqueda
+
+
+5)	sp_get_choferes
+			-> todos
+			-> con filtros de busqueda
+
+
+6)	sp_get_automoviles
+			-> todos
+			-> con filtros de busqueda
+
+
+7)	sp_get_turnos
+			-> todos
+			-> con filtros de busqueda
+
+
