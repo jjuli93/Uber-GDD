@@ -51,7 +51,7 @@ cliente_usuario numeric(10,0) unique not null references [DDG].Usuarios,
 cliente_nombre varchar(250) not null,
 cliente_apellido varchar(250) not null,
 cliente_fecha_nacimiento date not null,
-cliente_dni numeric(18,0) unique not null,
+cliente_dni numeric(18,0)  not null,
 cliente_direccion varchar(250) not null,
 cliente_codigo_postal numeric  /*not null*/,		/*saco el not null porque en la base de datos ningun cliente tiene cod postal)*/
 cliente_telefono numeric(18,0) unique not null,
@@ -65,10 +65,10 @@ chofer_id numeric(10,0) primary key identity,
 chofer_usuario numeric(10,0) unique not null references [DDG].Usuarios,
 chofer_nombre varchar(250) not null,
 chofer_apellido varchar(250) not null,
-chofer_fecha_nacimiento datetime not null,
-chofer_dni numeric(18,0) unique not null,
+chofer_fecha_nacimiento date not null,
+chofer_dni numeric(18,0) not null,
 chofer_direccion varchar(250) not null,
-chofer_telefono numeric(18,0) unique not null,
+chofer_telefono numeric(18,0) not null,
 chofer_email varchar(250),
 chofer_habilitado numeric(1,0) not null default 1
 )
@@ -458,7 +458,7 @@ GO
 --OBJETIVO  : al dar de baja un rol se da de baja la relacion de usuarios con ese rol                                 
 --=============================================================================================================
 IF EXISTS (SELECT name FROM sysobjects WHERE name='tr_baja_rol')
-DROP TRIGGER tr_baja_rol
+DROP trigger [ddg].tr_baja_rol
 GO
 
 create trigger [DDG].tr_baja_rol on [DDG].Roles for update
@@ -745,6 +745,28 @@ end
 
 GO
 
+--=============================================================================================================
+--TIPO		: Funcion
+--NOMBRE	: existeClienteConMismoTelefono                            
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='existeClienteConMismoTelefono' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
+DROP FUNCTION [ddg].existeClienteConMismoTelefono
+GO
+
+create function [DDG].existeClienteConMismoTelefono (@idCliente numeric(10,0), @telefonoAComprobar numeric(18,0))
+returns int
+begin
+declare @retorno int
+
+if((select count(*)
+	from ddg.Clientes
+	where (@idCliente is null or (@idCliente != cliente_id))
+	and @telefonoAComprobar = cliente_telefono) > 0) set @retorno = 1 
+	else set @retorno = 0
+
+return @retorno
+end
+GO
 
 
 --=============================================================================================================
@@ -758,7 +780,7 @@ DROP FUNCTION [ddg].choferYaAsignado
 GO
 
 create function [DDG].choferYaAsignado(@idchofer numeric(10,0))
-returns bit
+returns int
 begin
 declare @retorno bit
 
@@ -800,6 +822,30 @@ return @retorno
 end
 GO
 
+--=============================================================================================================
+--TIPO		: Funcion
+--NOMBRE	: ExisteRendicion                            
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='existeClienteConMismoTelefono' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
+DROP FUNCTION [ddg].ExisteRendicion
+GO
+
+create function [DDG].ExisteRendicion (@idChofer numeric(10,0), @idTurno numeric(10,0), @fecha date)
+returns int
+begin
+declare @retorno int
+
+if((select count(*)
+	from ddg.Rendiciones
+	where rendicion_chofer = @idChofer
+	and rendicion_fecha = @fecha
+	and rendicion_turno = @idTurno) > 0) set @retorno = 1 else set @retorno = 0
+
+return @retorno
+end
+GO
+
+
 /* Alta Usuario */
 
 --=============================================================================================================
@@ -839,6 +885,11 @@ GO
 create procedure [DDG].sp_alta_cliente (@nombre varchar(250), @apellido varchar(250), @fechanac date, @dni numeric(10,0), @direccion varchar(250),@codpost numeric(18,0), @telefono numeric(18,0), @email varchar(250))
 as
 begin
+
+	declare @noPuedoCrearUsuario int
+	set @noPuedoCrearUsuario = ddg.existeClienteConMismoTelefono(null,@telefono)
+	if(@noPuedoCrearUsuario = 1) THROW 51000, 'Ya existe un cliente con el numero de telefono ingresado.', 1;	
+
 	declare @usuario varchar(255)
 	declare @contraseña varchar(255)
 	set @usuario =   convert(varchar(255), @dni)
@@ -864,16 +915,26 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_cliente' AND type='
 	DROP PROCEDURE [DDG].sp_update_cliente
 GO
 
-create procedure [DDG].sp_update_cliente (@parametros varchar(900), @idcliente numeric(10,0)) as
+create procedure [DDG].sp_update_cliente (@nombre varchar(250),  @apellido varchar(250), @fechaNacimiento date, @direccion varchar(250), @codPostal numeric, @telefono numeric(18,0),  @email varchar(250), @habilitado numeric(1,0), @idcliente numeric(10,0)) as
 begin
-	declare @sql_statement nvarchar(1000)
-	SET @sql_statement = 'update ddg.clientes set ' + @parametros + ' where cliente_id = ' + @idcliente
-	exec sp_executesql @sql_statement
+
+declare @noPuedoCrearUsuario int
+	set @noPuedoCrearUsuario = ddg.existeClienteConMismoTelefono(@idcliente,@telefono)
+	if(@noPuedoCrearUsuario = 1) THROW 51000, 'Ya existe un cliente con el numero de telefono ingresado.', 1;	
+
+update ddg.Clientes
+set cliente_nombre = @nombre,
+cliente_apellido = @apellido,
+cliente_fecha_nacimiento = @fechaNacimiento,
+cliente_direccion = @direccion,
+cliente_codigo_postal = @codPostal,
+cliente_telefono = @telefono,
+cliente_email = @email,
+cliente_habilitado = @habilitado
+where cliente_id = @idcliente
+
 end
 GO
-
-
-
 
 
 --=============================================================================================================
@@ -916,7 +977,7 @@ begin
 
 if (ddg.choferYaAsignado (@idchofer)=1)
 	
-	THROW 51000, 'El chofer ya esta asignado.', 1;														/*TODO un chofer puede  tener mas de un auto a la vez*/
+	THROW 51000, 'El chofer ya esta asignado.', 1;														
 
 else
 	insert into DDG.Autos(auto_chofer,auto_modelo,auto_patente,auto_licencia,auto_rodado)
@@ -942,7 +1003,7 @@ begin
 	
 if (ddg.choferYaAsignado (@idchofer)=1)
 	
-	THROW 51000, 'El chofer ya esta asignado.', 1;													/*TODO un chofer puede  tener mas de un auto a la vez*/
+	THROW 51000, 'El chofer ya esta asignado.', 1;												
 
 else
 
@@ -993,7 +1054,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_chofer' AND type='p')
 	DROP PROCEDURE [DDG].sp_alta_chofer
 GO
 
-create procedure [DDG].sp_alta_chofer (@nombre varchar(250), @apellido varchar(250), @fechanac date, @dni numeric(10,0), @direccion varchar(250),@codpost numeric(18,0), @telefono numeric(18,0), @email varchar(250))
+create procedure [DDG].sp_alta_chofer (@nombre varchar(250), @apellido varchar(250), @fechanac date, @dni numeric(10,0), @direccion varchar(250), @telefono numeric(18,0), @email varchar(250))
 as
 begin
 	declare @usuario varchar(255)
@@ -1015,7 +1076,27 @@ GO
 --NOMBRE	: sp_update_chofer							
 --OBJETIVO  : modificar datos de un chofer                              
 --=============================================================================================================
-/*Probar si funciona lo de mariano*/
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_chofer' AND type='p')
+	DROP PROCEDURE [DDG].sp_update_chofer
+GO
+
+create procedure [DDG].sp_update_chofer (@nombre varchar(250), @apellido varchar(250), @fechanac date, @dni numeric(10,0), @direccion varchar(250), @telefono numeric(18,0), @email varchar(250), @habilitado numeric(1,0), @idChofer numeric(10,0))
+as
+begin
+
+update ddg.Choferes
+set chofer_nombre = @nombre,
+chofer_apellido = @apellido,
+chofer_fecha_nacimiento = @fechanac,
+chofer_dni = @dni,
+chofer_direccion = @direccion,
+chofer_telefono = @telefono,
+chofer_email = @email,
+chofer_habilitado = @habilitado
+where chofer_id = @idChofer
+
+end
+GO
 
 
 --=============================================================================================================
@@ -1084,6 +1165,8 @@ create procedure [ddg].sp_alta_rendicion (@idChofer numeric(10,0), @fecha date, 
 begin
 declare @idRendicion int
 
+	if(ddg.ExisteRendicion(@idChofer, @idTurno, @fecha) = 1) THROW 51000, 'Ya se realizó la rendicion solicitada', 1;	
+
 	insert into ddg.rendiciones (rendicion_importe, rendicion_fecha, rendicion_chofer, rendicion_turno, rendicion_porcentaje)
 		values( ((select sum([DDG].calcularImporteViaje(viaje_id))
 					from [ddg].viajes
@@ -1112,7 +1195,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_factura' AND type='p'
 	DROP PROCEDURE [DDG].sp_alta_factura
 GO
 
-create procedure [ddg].sp_alta_factura (@idCliente numeric(10,0), @fechaDesde date, @fechaHasta date) as
+create procedure [DDG].sp_alta_factura (@idCliente numeric(10,0), @fechaDesde date, @fechaHasta date) as
 begin
 declare @idfactura int
 
@@ -1135,7 +1218,7 @@ end
 GO
 
 --=============================================================================================================
---TIPO		: funcion
+--TIPO		: stored procedure
 --NOMBRE	: sp_get_importe_rendicion						
 --OBJETIVO  : calcula el importe total de una rendicion                           
 --=============================================================================================================
@@ -1143,7 +1226,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_importe_rendicion' AND
 	DROP PROCEDURE [DDG].sp_get_importe_rendicion
 GO
 
-create procedure [ddg].sp_get_importe_rendicion (@idRendicion numeric(10,0)) as
+create procedure [DDG].sp_get_importe_rendicion (@idRendicion numeric(10,0)) as
 begin
 		select rendicion_importe
 		from ddg.rendiciones
@@ -1273,6 +1356,24 @@ end
 GO
 
 --=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_automovilesHabilitados_chofer		
+--OBJETIVO  : Obtener los autos de un chofer                 
+--============================================================================================================= 
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_automovilesHabilitados_chofer' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_automovilesHabilitados_chofer
+GO
+
+create procedure [DDG].sp_get_automovilesHabilitados_chofer(@idChofer numeric(10,0)) as
+begin
+	select *
+	from ddg.autos
+	where auto_chofer = @idChofer
+	and auto_habilitado = 1
+end
+GO
+
+--=============================================================================================================
 --TIPO		: funcion
 --NOMBRE	: sp_get_importe_factura					
 --OBJETIVO  : obtiene importe total de una factura                          
@@ -1375,6 +1476,28 @@ OPTION (RECOMPILE)
 end
 go
 
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_clientesHabilitados																										                       
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_clientesHabilitados' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_clientesHabilitados
+GO
+
+create procedure [ddg].sp_get_clientesHabilitados(@nombre varchar(250), @apellido varchar(250), @dni numeric(18,0)) as
+begin
+
+select *
+from ddg.Clientes
+where (@apellido is null or (cliente_apellido like CONCAT('%',@apellido,'%')))
+and   (@nombre is null or   (cliente_nombre like CONCAT('%',@nombre,'%')))
+and	  (@dni is null or (cliente_dni = @dni))
+and cliente_habilitado = 1
+
+OPTION (RECOMPILE)
+end
+go
+
 
 --=============================================================================================================
 --TIPO		: Stored procedure
@@ -1397,6 +1520,28 @@ OPTION (RECOMPILE)
 end
 go
 
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_choferesHabilitados																										                       
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_choferesHabilitados' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_choferesHabilitados
+GO
+
+create procedure [ddg].sp_get_choferesHabilitados(@nombre varchar(250), @apellido varchar(250), @dni numeric(18,0)) as
+begin
+
+select *
+from ddg.Choferes
+where (@apellido is null or (chofer_apellido like CONCAT('%',@apellido,'%')))
+and   (@nombre is null or   (chofer_nombre like CONCAT('%',@nombre,'%')))
+and	  (@dni is null or (chofer_dni = @dni))
+and chofer_habilitado = 1
+
+OPTION (RECOMPILE)
+end
+go
+
 
 --=============================================================================================================
 --TIPO		: Stored procedure
@@ -1406,16 +1551,40 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_automoviles' AND type=
 	DROP PROCEDURE [DDG].sp_get_automoviles
 GO
 
-create procedure [ddg].sp_get_automoviles(@idMarca numeric(10,0), @idModelo numeric(10,0), @patente varchar(10), @idChofer numeric(10,0)) as
+create procedure [ddg].sp_get_automoviles(@idMarca numeric(10,0), @modelo varchar(250), @patente varchar(10), @idChofer numeric(10,0)) as
 begin
 
 select a.*
 from DDG.Autos a, ddg.Modelos m
 where a.auto_modelo = m.modelo_id
 and (@idMarca is null or (@idMarca = m.modelo_marca))
-and (@idModelo is null or (@idModelo = auto_modelo))
+and (@modelo is null or (@modelo = m.modelo_descripcion))
 and (@patente is null or (@patente = auto_patente))
 and (@idChofer is null or (@idChofer = auto_chofer))
+
+OPTION (RECOMPILE)
+end
+go
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_automovilesHabilitados																										                       
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_automovilesHabilitados' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_automovilesHabilitados
+GO
+
+create procedure [ddg].sp_get_automovilesHabilitados(@idMarca numeric(10,0), @modelo varchar(250), @patente varchar(10), @idChofer numeric(10,0)) as
+begin
+
+select a.*
+from DDG.Autos a, ddg.Modelos m
+where a.auto_modelo = m.modelo_id
+and (@idMarca is null or (@idMarca = m.modelo_marca))
+and (@modelo is null or (@modelo = m.modelo_descripcion))
+and (@patente is null or (@patente = auto_patente))
+and (@idChofer is null or (@idChofer = auto_chofer))
+and auto_habilitado = 1
 
 OPTION (RECOMPILE)
 end
