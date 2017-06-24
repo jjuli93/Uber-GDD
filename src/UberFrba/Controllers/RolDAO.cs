@@ -47,12 +47,58 @@ namespace UberFrba.Controllers
 
         public bool modificar_rol(Rol rol_modificado)
         {
-            return true;
+            bool result = true;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_update_rol", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@id", rol_modificado.id);
+                    cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = rol_modificado.nombre;
+                    cmd.Parameters.Add("@habilitado", SqlDbType.Bit).Value = Convert.ToInt32(rol_modificado.habilitado);
+
+                    //Faltan las funcionalidades
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException)
+            {
+                result = false;
+                //throw;
+            }
+
+            return result;
         }
 
         public bool eliminar_rol(int id_rol)
         {
-            return true;
+            bool result = true;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_baja_rol", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@id", id_rol);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException)
+            {
+                
+                throw;
+            }
+
+            return result;
         }
 
         internal bool crear_rol(string nombre_rol, System.Windows.Forms.ListBox.SelectedObjectCollection funcionalidades)
@@ -84,10 +130,13 @@ namespace UberFrba.Controllers
 
         public Rol obtenerRol(System.Windows.Forms.DataGridViewRow row)
         {
-            Rol rol = new Rol((int)row.Cells[0].Value);
+            if (row.Cells[0].Value == null || row.Cells[1].Value == null || row.Cells[2].Value == null)
+                return null;
+
+            Rol rol = new Rol(Convert.ToInt32(row.Cells[0].Value));
 
             rol.nombre = row.Cells[1].Value.ToString();
-            rol.habilitado = Convert.ToBoolean((int)row.Cells[0].Value);
+            rol.habilitado = Convert.ToBoolean(row.Cells[2].Value);
 
             rol.funcionalidades = FuncionalidadDAO.Instance.get_funcionalidades_by_Rol(rol.id);
 

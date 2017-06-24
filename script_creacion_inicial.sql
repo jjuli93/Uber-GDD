@@ -523,7 +523,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_rol' AND type='p')
 	DROP PROCEDURE [DDG].sp_update_rol
 GO											
 
-create procedure [DDG].sp_update_rol (@id numeric(10,0), @nombre varchar, @habilitado bit)	
+create procedure [DDG].sp_update_rol (@id numeric(10,0), @nombre varchar(255), @habilitado bit)	
 as
 begin
 
@@ -656,7 +656,7 @@ GO
 --=============================================================================================================
 --TIPO		: Stored procedure
 --NOMBRE	: sp_get_roles_usuario
---OBJETIVO  : intentos fallidos a 0                     
+--OBJETIVO  : get roles de usuario hablitados                    
 --=============================================================================================================	
  IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_roles_usuario' AND type='p')
 	DROP PROCEDURE [DDG].sp_get_roles_usuario
@@ -670,7 +670,8 @@ select r.*
 from Usuarios u, UsuariosXRoles ur, Roles r
 where u.usuario_ID = @idUsuario
 and u.usuario_ID = ur.usuarioXRol_usuario
-and ur.usuarioXRol_rol = r.rol_ID 	
+and ur.usuarioXRol_rol = r.rol_ID
+and r.rol_habilitado = 1 	
 
 end
 GO		

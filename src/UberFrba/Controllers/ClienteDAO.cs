@@ -28,28 +28,32 @@ namespace UberFrba.Controllers
 
         public bool crear_cliente(Cliente cliente)
         {
-            bool result = false;
+            bool result = true;
 
-            using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
-            using (SqlCommand cmd = new SqlCommand("DDG.sp_login_check", conn))
+            try
             {
-                cmd.CommandType = CommandType.StoredProcedure;
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_alta_cliente", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = cliente.nombre;
-                cmd.Parameters.Add("@apellido", SqlDbType.VarChar).Value = cliente.apellido;
-                cmd.Parameters.Add("@fechanac", SqlDbType.Date).Value = cliente.fecha_nacimiento;
-                cmd.Parameters.Add("@dni", SqlDbType.Decimal).Value = cliente.dni;
-                cmd.Parameters.Add("@direccion", SqlDbType.VarChar).Value = cliente.direccion;
-                cmd.Parameters.Add("@codpost", SqlDbType.Decimal).Value = cliente.codigoPostal;
-                cmd.Parameters.Add("@telefono", SqlDbType.Decimal).Value = cliente.telefono;
-                cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = cliente.mail;
+                    cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = cliente.nombre;
+                    cmd.Parameters.Add("@apellido", SqlDbType.VarChar).Value = cliente.apellido;
+                    cmd.Parameters.Add("@fechanac", SqlDbType.Date).Value = cliente.fecha_nacimiento;
+                    cmd.Parameters.Add("@dni", SqlDbType.Decimal).Value = cliente.dni;
+                    cmd.Parameters.Add("@direccion", SqlDbType.VarChar).Value = cliente.direccion;
+                    cmd.Parameters.Add("@codpost", SqlDbType.Decimal).Value = cliente.codigoPostal;
+                    cmd.Parameters.Add("@telefono", SqlDbType.Decimal).Value = cliente.telefono;
+                    cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = cliente.mail;
 
-                SqlParameter returnParameter = cmd.Parameters.Add("@retorno", SqlDbType.Int);
-                returnParameter.Direction = ParameterDirection.ReturnValue;
-
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                result = Convert.ToBoolean((int)cmd.Parameters["@retorno"].Value);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();                    
+                }
+            }
+            catch (SqlException)
+            {
+                result = false;
+                //throw;
             }
 
             return result;
@@ -57,28 +61,53 @@ namespace UberFrba.Controllers
 
         public bool modificar_cliente(Cliente cliente)
         {
-            bool result = false;
-            
+            bool result = true;
+
+            //try
+            //{
+            //    using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+            //    using (SqlCommand cmd = new SqlCommand("DDG.sp_update_cliente", conn))
+            //    {
+            //        cmd.CommandType = CommandType.StoredProcedure;
+
+            //        cmd.Parameters.AddWithValue("@idcliente", cliente.id);
+                    
+            //        //definir bien como va a hacer para modificar
+
+            //        conn.Open();
+            //        cmd.ExecuteNonQuery();
+            //    }
+            //}
+            //catch (SqlException)
+            //{
+            //    result = false;
+            //    //throw;
+            //}
+
             return result;
         }
 
         public bool eliminar_cliente(int id_cliente)
         {
-            bool result = false;
-            
-            using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
-            using (SqlCommand cmd = new SqlCommand("DDG.sp_baja_cliente", conn))
+            bool result = true;
+
+            try
             {
-                cmd.CommandType = CommandType.StoredProcedure;
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_baja_cliente", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@idcliente", id_cliente);
+                    cmd.Parameters.AddWithValue("@idcliente", id_cliente);
 
-                SqlParameter returnParameter = cmd.Parameters.Add("@retorno", SqlDbType.Int);
-                returnParameter.Direction = ParameterDirection.ReturnValue;
-
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                result = Convert.ToBoolean((int)cmd.Parameters["@retorno"].Value);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException)
+            {
+                result = false;
+                //throw;
             }
 
             return result;
@@ -95,19 +124,28 @@ namespace UberFrba.Controllers
 
         public DataTable get_clientes()
         {
-            DataTable clientes = new DataTable();
+            DataTable clientes = null;
 
-            using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
-            using (SqlCommand cmd = new SqlCommand("DDG.sp_get_clientes", conn))
+            try
             {
-                cmd.CommandType = CommandType.StoredProcedure;
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_get_clientes", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                conn.Open();
-                SqlDataReader lector = cmd.ExecuteReader();
+                    conn.Open();
+                    SqlDataReader lector = cmd.ExecuteReader();
 
-                clientes.Load(lector);
+                    clientes = new DataTable();
+                    clientes.Load(lector);
 
-                lector.Close();
+                    lector.Close();
+                }
+            }
+            catch (SqlException)
+            {
+                
+                //throw;
             }
 
             return clientes;

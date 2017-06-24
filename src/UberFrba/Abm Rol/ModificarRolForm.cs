@@ -20,6 +20,9 @@ namespace UberFrba.Abm_Rol
         public ModificarRolForm(Rol _rol)
         {
             InitializeComponent();
+            //SACAAAAAAR
+            this.asdasczxcf(_rol);
+            //--------
             rolSeleccionado = _rol;
             objController = ObjetosFormCTRL.Instance;
             
@@ -69,6 +72,8 @@ namespace UberFrba.Abm_Rol
                     if (RolDAO.Instance.modificar_rol(rolSeleccionado))
                     {
                         MessageBox.Show(string.Format("Se ha modificado el rol {0}?", rolSeleccionado.nombre), "Rol modificado", MessageBoxButtons.OK);
+                        var listado = (ListadoRolesForm)this.Owner;
+                        listado.reloadTable();
                     }
                     else
                     {
@@ -77,5 +82,64 @@ namespace UberFrba.Abm_Rol
                 }
             }
         }
+
+        private void nombreTextBox_TextChanged(object sender, EventArgs e)
+        {
+            rolSeleccionado.nombre = nombreTextBox.Text;
+        }
+
+        private void habilitarCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            rolSeleccionado.habilitado = habilitarCheckBox.Checked;
+        }
+
+        private void chkListBoxFuncs_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            var item = (ObjetosFormCTRL.itemListBox)chkListBoxFuncs.Items[e.Index];
+
+            if (e.NewValue == CheckState.Checked)
+            {
+                //se agrega una nueva funcionalidad
+                if (rolSeleccionado.funcionalidades.All(f => f.id != item.id_item))
+                {
+                    Funcionalidad nueva = new Funcionalidad(item.id_item);
+                    nueva.descripcion = item.nombre_item;
+                    nueva.habilitada = true;
+
+                    rolSeleccionado.funcionalidades.Add(nueva);
+                }
+            }
+            else
+            {
+                //se elimina una funcionalidad
+                Funcionalidad fun = rolSeleccionado.funcionalidades.Find(f => f.id == item.id_item);
+
+                if (fun != null)
+                {
+                    rolSeleccionado.funcionalidades.Remove(fun);
+                }
+            }
+        }
+
+        public void asdasczxcf(Rol rol)
+        {
+            Funcionalidad f1 = new Funcionalidad(1);
+            f1.habilitada = true;
+            f1.descripcion = "ABM de Rol";
+
+            Funcionalidad f2 = new Funcionalidad(2);
+            f2.habilitada = true;
+            f2.descripcion = "ABM de Clientes";
+
+            Funcionalidad f3 = new Funcionalidad(3);
+            f3.habilitada = true;
+            f3.descripcion = "ABM de Automoviles";
+
+
+            rol.funcionalidades.Add(f1);
+            rol.funcionalidades.Add(f2);
+            rol.funcionalidades.Add(f3);
+        }
+
     }
 }

@@ -19,6 +19,8 @@ namespace UberFrba.Modelo
         
         public string descripcion { get; set; }
 
+        public bool habilitada { get; set; }
+
         public Form get_form_funcionalidad(Funcionalidad funcionalidad, Login.menuFuncsRolUserForm parent)
         {
             Form formToReturn = null;

@@ -158,6 +158,14 @@ namespace UberFrba.Abm_Cliente
 
             objController.habilitarContenidoPanel(clienteSeleccionadoPanel, false);
         }
+
+        private void buscarButton_Click(object sender, EventArgs e)
+        {
+            //ver el tema de buscar clientes
+            //siempre verificar que la DataTable devuelta por 
+            //el controller sea distinto de null para llenarla
+            //en el datagridview
+        }
         
     }
 }

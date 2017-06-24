@@ -67,6 +67,7 @@
             this.habilitarCheckBox.TabIndex = 18;
             this.habilitarCheckBox.Text = "Habilitar";
             this.habilitarCheckBox.UseVisualStyleBackColor = true;
+            this.habilitarCheckBox.CheckedChanged += new System.EventHandler(this.habilitarCheckBox_CheckedChanged);
             // 
             // cancelarButton
             // 
@@ -104,6 +105,7 @@
             this.chkListBoxFuncs.Name = "chkListBoxFuncs";
             this.chkListBoxFuncs.Size = new System.Drawing.Size(280, 94);
             this.chkListBoxFuncs.TabIndex = 13;
+            this.chkListBoxFuncs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chkListBoxFuncs_ItemCheck);
             // 
             // nombreTextBox
             // 
@@ -111,6 +113,7 @@
             this.nombreTextBox.Name = "nombreTextBox";
             this.nombreTextBox.Size = new System.Drawing.Size(213, 20);
             this.nombreTextBox.TabIndex = 10;
+            this.nombreTextBox.TextChanged += new System.EventHandler(this.nombreTextBox_TextChanged);
             // 
             // label1
             // 

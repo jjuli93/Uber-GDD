@@ -24,6 +24,8 @@ namespace UberFrba.Abm_Rol
             this.CenterToScreen();
             objController = ObjetosFormCTRL.Instance;
             formAnterior = _formAnterior;
+            rolesDataGridView.Rows.Clear();
+            rolesDataGridView.DataSource = RolDAO.Instance.get_roles();
 
             this.FormClosing += ListadoRolesForm_FormClosing;
         }
@@ -35,8 +37,6 @@ namespace UberFrba.Abm_Rol
 
         private void atrasButton_Click(object sender, EventArgs e)
         {
-            rolesDataGridView.Rows.Clear();
-            rolesDataGridView.Refresh();
             this.Owner.Show();
             this.Dispose();
         }
@@ -59,7 +59,7 @@ namespace UberFrba.Abm_Rol
 
         private void eliminarButton_Click(object sender, EventArgs e)
         {
-            var id_rol = (int) rolesDataGridView.Rows[index_rol_seleccionado].Cells[0].Value;
+            var id_rol = Convert.ToInt32(rolesDataGridView.Rows[index_rol_seleccionado].Cells[0].Value);
             var nombre_rol = rolesDataGridView.Rows[index_rol_seleccionado].Cells[1].Value.ToString();
 
             if (MessageBox.Show(string.Format("¿Está seguro de querer eliminar el rol {0}?", nombre_rol), "Eliminar Rol", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
@@ -67,6 +67,7 @@ namespace UberFrba.Abm_Rol
                 if (RolDAO.Instance.eliminar_rol(id_rol))
                 {
                     MessageBox.Show(string.Format("Se ha eliminado el rol {0}?", nombre_rol), "Rol eliminado", MessageBoxButtons.OK);
+                    this.reloadTable();
                 }
                 else
                 {
@@ -87,6 +88,12 @@ namespace UberFrba.Abm_Rol
             objController.habilitarContenidoPanel(this.rolSeleccionadoPanel, false);
             
             index_rol_seleccionado = -1;
+        }
+
+        public void reloadTable()
+        {
+            this.rolesDataGridView.Refresh();
+            this.rolesDataGridView.DataSource = RolDAO.Instance.get_roles();
         }
     }
 }
