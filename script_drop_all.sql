@@ -53,6 +53,10 @@ DROP PROCEDURE [DDG].sp_get_clientes
 DROP PROCEDURE [DDG].sp_get_choferes
 DROP PROCEDURE [DDG].sp_get_automoviles
 DROP PROCEDURE [DDG].sp_get_turnos
+DROP PROCEDURE [DDG].sp_get_automovilesHabilitados
+DROP PROCEDURE [DDG].sp_get_choferesHabilitados
+DROP PROCEDURE [DDG].sp_get_clientesHabilitados
+
 
 
 
@@ -64,6 +68,8 @@ DROP FUNCTION [ddg].usuarioActivo
 DROP FUNCTION [ddg].getTrimestre
 DROP FUNCTION [ddg].choferYaAsignado
 DROP FUNCTION [ddg].calcularimporteViaje
+DROP FUNCTION [ddg].existeClienteConMismoTelefono
+DROP FUNCTION [ddg].ExisteRendicion
 
 
 -- Eliminacion de tablas

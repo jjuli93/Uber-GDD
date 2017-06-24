@@ -826,7 +826,7 @@ GO
 --TIPO		: Funcion
 --NOMBRE	: ExisteRendicion                            
 --=============================================================================================================
-IF EXISTS (SELECT name FROM sysobjects WHERE name='existeClienteConMismoTelefono' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
+IF EXISTS (SELECT name FROM sysobjects WHERE name='ExisteRendicion' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
 DROP FUNCTION [ddg].ExisteRendicion
 GO
 
@@ -844,6 +844,31 @@ if((select count(*)
 return @retorno
 end
 GO
+
+
+--=============================================================================================================
+--TIPO		: Funcion
+--NOMBRE	: ExisteFacturacion                            
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='ExisteFacturacion' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
+DROP FUNCTION [ddg].ExisteFacturacion
+GO
+
+create function [DDG].ExisteFacturacion (@idCliente numeric(10,0), @fechaInicio date , @fechafin date)
+returns int
+begin
+declare @retorno int
+
+if((select count(*)
+	from ddg.Facturas
+	where factura_cliente = @idCliente
+	and factura_fecha_inicio = @fechaInicio
+	and factura_fecha_fin = @fechafin) > 0) set @retorno = 1 else set @retorno = 0
+
+return @retorno
+end
+GO
+
 
 
 /* Alta Usuario */
@@ -1199,6 +1224,8 @@ create procedure [DDG].sp_alta_factura (@idCliente numeric(10,0), @fechaDesde da
 begin
 declare @idfactura int
 
+	if(ddg.ExisteFacturacion(@idCliente, @fechaDesde, @fechaHasta) = 1) THROW 51000, 'Ya se realizó la facturación solicitada', 1;
+	
 	insert into ddg.Facturas(factura_importe, factura_cliente, factura_fecha_fin, factura_fecha_inicio, factura_numero)
 		values( ((select sum([DDG].calcularImporteViaje(viaje_id))
 					from [ddg].viajes
