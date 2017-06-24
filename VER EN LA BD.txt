@@ -1,0 +1,3 @@
+
+3)	falta el manejo de listas en abm rol
+
