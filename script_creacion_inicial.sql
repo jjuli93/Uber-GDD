@@ -1249,7 +1249,7 @@ GO
 create procedure [DDG].sp_get_turnos_automovil(@idAuto numeric(10,0)) as
 begin
 	select t.*
-	from turnos t, AutosXTurnos at
+	from ddg.turnos t, ddg.AutosXTurnos at
 	where at.autoXTurno_auto = @idAuto
 	and t.turno_id = at.autoXTurno_turno
 end
@@ -1303,7 +1303,7 @@ create procedure [ddg].sp_get_viajes_rendicion(@idRendicion numeric(10,0)) as
 begin
 
 select v.*, (ddg.calcularimporteViaje(v.viaje_id) * (select top 1 porcentaje_valor from [ddg].Porcentajes order by porcentaje_id desc))
-from Viajes v, RendicionesDetalle rd
+from ddg.Viajes v, ddg.RendicionesDetalle rd
 where rd.rendicionDetalle_rendicion = @idRendicion
 and v.viaje_rendicion = rd.rendicionDetalle_id
 
@@ -1324,9 +1324,119 @@ create procedure [ddg].sp_get_viajes_factura(@idFactura numeric(10,0)) as
 begin
 
 select v.*, ddg.calcularimporteViaje(v.viaje_id)
-from Viajes v, FacturasDetalle fd
+from ddg.Viajes v, ddg.FacturasDetalle fd
 where fd.facturaDetalle_factura = @idFactura
 and v.viaje_factura = fd.facturaDetalle_id
 
 end
 GO
+
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_modelos_marca																										                       
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_modelos_marca' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_modelos_marca
+GO
+
+create procedure [ddg].sp_get_modelos_marca(@idMarca numeric(10,0)) as
+begin
+
+select *
+from ddg.Modelos
+where modelo_marca = @idMarca
+
+end
+
+GO
+
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_clientes																										                       
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_clientes' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_clientes
+GO
+
+create procedure [ddg].sp_get_clientes(@nombre varchar(250), @apellido varchar(250), @dni numeric(18,0)) as
+begin
+
+select *
+from ddg.Clientes
+where (@apellido is null or (cliente_apellido like CONCAT('%',@apellido,'%')))
+and   (@nombre is null or   (cliente_nombre like CONCAT('%',@nombre,'%')))
+and	  (@dni is null or (cliente_dni = @dni))
+
+OPTION (RECOMPILE)
+end
+go
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_choferes																										                       
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_choferes' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_choferes
+GO
+
+create procedure [ddg].sp_get_choferes(@nombre varchar(250), @apellido varchar(250), @dni numeric(18,0)) as
+begin
+
+select *
+from ddg.Choferes
+where (@apellido is null or (chofer_apellido like CONCAT('%',@apellido,'%')))
+and   (@nombre is null or   (chofer_nombre like CONCAT('%',@nombre,'%')))
+and	  (@dni is null or (chofer_dni = @dni))
+
+OPTION (RECOMPILE)
+end
+go
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_automoviles																										                       
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_automoviles' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_automoviles
+GO
+
+create procedure [ddg].sp_get_automoviles(@idMarca numeric(10,0), @idModelo numeric(10,0), @patente varchar(10), @idChofer numeric(10,0)) as
+begin
+
+select a.*
+from DDG.Autos a, ddg.Modelos m
+where a.auto_modelo = m.modelo_id
+and (@idMarca is null or (@idMarca = m.modelo_marca))
+and (@idModelo is null or (@idModelo = auto_modelo))
+and (@patente is null or (@patente = auto_patente))
+and (@idChofer is null or (@idChofer = auto_chofer))
+
+OPTION (RECOMPILE)
+end
+go
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_turnos																										                       
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_turnos' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_turnos
+GO
+
+create procedure [ddg].sp_get_turnos(@descripcion varchar(255)) as
+begin
+
+select *
+from ddg.Turnos
+where (@descripcion is null or (@descripcion = turno_descripcion))
+
+OPTION(RECOMPILE)
+end
+go
