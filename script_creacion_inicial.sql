@@ -121,16 +121,11 @@ auto_modelo numeric(10,0) not null references [DDG].Modelos,
 auto_patente varchar(10)  not null unique,
 auto_licencia varchar(26) not null,
 auto_rodado varchar(10) not null,
+auto_turno numeric(10,0) not null references [DDG].Turnos,
 auto_habilitado numeric(1,0) not null default 1
 )
 GO
 
-create table [DDG].AutosXTurnos (
-autoXTurno_id numeric(10,0) primary key identity,
-autoXTurno_auto numeric(10,0) not null references [DDG].Autos,
-autoXTurno_turno numeric(10,0) not null references [DDG].Turnos
-)
-GO
 
 create table [DDG].Porcentajes(
 porcentaje_id numeric(10,0) primary key identity,
@@ -295,19 +290,14 @@ from gd_esquema.Maestra m, [DDG].Marcas ma
 where m.Auto_Marca = ma.marca_descripcion
 
 					/*Autos*/
-insert into DDG.Autos (auto_licencia, auto_modelo, auto_patente, auto_rodado, auto_chofer)
-select distinct m.Auto_Licencia, mo.modelo_id, m.Auto_Patente, m.Auto_Rodado, c.chofer_id
+insert into DDG.Autos (auto_licencia, auto_modelo, auto_patente, auto_rodado, auto_chofer, auto_turno)
+select distinct m.Auto_Licencia, mo.modelo_id, m.Auto_Patente, m.Auto_Rodado, c.chofer_id, ABS(Checksum(NewID()) % 3) + 1		/*Les inserto un turno random ya que todos se utilizaron en todos los turnos*/
 from gd_esquema.Maestra m, DDG.Choferes c, [DDG].Modelos mo
 where m.Auto_Patente is not null
 and m.Chofer_Dni = c.chofer_dni
 and m.Auto_Modelo = mo.modelo_descripcion
+group by m.Auto_Licencia, mo.modelo_id, m.Auto_Patente, m.Auto_Rodado, c.chofer_id
 
-					/*AutosXTurnos*/
-insert into DDG.AutosXTurnos (autoXTurno_auto, autoXTurno_turno)
-select distinct  a.auto_id, t.turno_id
-from gd_esquema.Maestra m, DDG.Autos a, ddg.Turnos t
-where m.Auto_Patente = a.auto_patente
-and m.Turno_Hora_Inicio = t.turno_hora_inicio
 
 					/*Facturas*/
 insert into DDG.Facturas (factura_cliente, factura_fecha_inicio, factura_fecha_fin, factura_numero, factura_importe)
@@ -780,7 +770,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='choferYaAsignado' AND type in
 DROP FUNCTION [ddg].choferYaAsignado
 GO
 
-create function [DDG].choferYaAsignado(@idchofer numeric(10,0))
+create function [DDG].choferYaAsignado(@idchofer numeric(10,0), @idTurno numeric(10,0), @idAuto numeric(10,0))
 returns int
 begin
 declare @retorno bit
@@ -788,7 +778,9 @@ declare @retorno bit
 if	((select count(*)
 	from DDG.Autos
 	where auto_chofer = @idchofer
-	and auto_habilitado = 1) > 0)
+	and @idAuto is null or (@idAuto != auto_id)
+	and auto_habilitado = 1
+	and auto_turno = @idTurno) > 0)
 
 	set @retorno = 1
 
@@ -997,17 +989,17 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_automovil' AND type='
 	DROP PROCEDURE [DDG].sp_alta_automovil
 GO
 
-create procedure [DDG].sp_alta_automovil (@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10))
+create procedure [DDG].sp_alta_automovil (@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10), @idTurno numeric(10,0))
 as
 begin
 
-if (ddg.choferYaAsignado (@idchofer)=1)
+if (ddg.choferYaAsignado (@idchofer, @idTurno, null)=1)
 	
-	THROW 51000, 'El chofer ya esta asignado.', 1;														
+	THROW 51000, 'El chofer ya tiene un auto asignado en el turno seleccionado', 1;														
 
 else
-	insert into DDG.Autos(auto_chofer,auto_modelo,auto_patente,auto_licencia,auto_rodado)
-	values(@idchofer, @idmodelo, @patente, @licencia, @rodado)
+	insert into DDG.Autos(auto_chofer,auto_modelo,auto_patente,auto_licencia,auto_rodado, auto_turno)
+	values(@idchofer, @idmodelo, @patente, @licencia, @rodado,  @idTurno)
 
 end
 GO
@@ -1024,12 +1016,12 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_automovil' AND type
 	DROP PROCEDURE [DDG].sp_update_automovil
 GO
 
-create procedure [DDG].sp_update_automovil (@id numeric(10,0),@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10),@habilitado numeric(1,0)) as
+create procedure [DDG].sp_update_automovil (@id numeric(10,0),@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10),@habilitado numeric(1,0), @idTurno numeric(10,0)) as
 begin
 	
-if (ddg.choferYaAsignado (@idchofer)=1)
+if (ddg.choferYaAsignado (@idchofer,  @idTurno, @id)=1)
 	
-	THROW 51000, 'El chofer ya esta asignado.', 1;												
+	THROW 51000, 'El chofer ya tiene un auto asignado en el turno seleccionado.', 1;												
 
 else
 
@@ -1039,7 +1031,8 @@ else
 		auto_patente = @patente,
 		auto_licencia = @licencia,
 		auto_rodado = @rodado,
-		auto_habilitado = @habilitado
+		auto_habilitado = @habilitado,
+		auto_turno = @idTurno
 	where	auto_id = @id;
 end
 GO
@@ -1637,3 +1630,23 @@ where (@descripcion is null or (@descripcion = turno_descripcion))
 OPTION(RECOMPILE)
 end
 go
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_get_automovilDetalles																										                       
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_automovilDetalles' AND type='p')
+	DROP PROCEDURE [DDG].sp_get_automovilDetalles
+GO
+
+create procedure [ddg].sp_get_automovilDetalles(@idAuto numeric(10,0)) as
+begin
+
+select ma.marca_descripcion, mo.modelo_descripcion, a.auto_patente, c.chofer_nombre, c.chofer_apellido, t.turno_descripcion, a.auto_licencia, a.auto_rodado, a.auto_habilitado
+from ddg.Autos a, ddg.Marcas ma, ddg.Modelos mo, ddg.Choferes c, ddg.Turnos t
+where a.auto_chofer = c.chofer_id
+and a.auto_modelo = mo.modelo_id
+and mo.modelo_marca = marca_id
+and a.auto_turno = t.turno_id
+
+end
