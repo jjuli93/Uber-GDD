@@ -464,21 +464,29 @@ end
 													/* Stored procedures*/
 	/*ABM ROL*/
 
+
+create type funcionalidadesList as table (funcionalidadID int);
+
 --=============================================================================================================
 --TIPO		: Stored procedure
---NOMBRE	: sp_alta_rol						------------TODO falta pasarle la lista de funcionalidades---------------
+--NOMBRE	: sp_alta_rol						
 --OBJETIVO  : dar de alta un rol                                 
 --=============================================================================================================
 IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_rol' AND type='p')
 	DROP PROCEDURE [DDG].sp_alta_rol
 GO
 
-create procedure [DDG].sp_alta_rol (@nombre varchar(255), @habilitado  bit)
+create procedure [DDG].sp_alta_rol (@nombre varchar(255), @habilitado  bit, @listaFuncionalidades funcionalidadesList readonly)
 as
 begin
 
 insert into DDG.Roles (rol_nombre, rol_habilitado)
 values(@nombre, @habilitado)
+
+insert into ddg.RolesXFuncionalidades (rolXFuncionalidad_rol, rolXFuncionalidad_funcionalidad)
+select  rol_ID, funcionalidadID
+from @listaFuncionalidades, ddg.Roles
+where @nombre = rol_nombre
 
 end
 GO
@@ -506,20 +514,29 @@ GO
 
 --=============================================================================================================
 --TIPO		: Stored procedure
---NOMBRE	: sp_update_rol							------------TODO falta pasarle la lista de funcionalidades---------------
+--NOMBRE	: sp_update_rol							
 --OBJETIVO  : modificar un rol existente     (tambien sirve para la baja logica)                           
 --=============================================================================================================
 IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_rol' AND type='p')
 	DROP PROCEDURE [DDG].sp_update_rol
 GO											
 
-create procedure [DDG].sp_update_rol (@id numeric(10,0), @nombre varchar(255), @habilitado bit)	
+create procedure [DDG].sp_update_rol (@id numeric(10,0), @nombre varchar(255), @habilitado bit, @listaFuncionalidades funcionalidadesList readonly)	
 as
 begin
 
 update DDG.Roles
 set rol_nombre = @nombre, rol_habilitado = @habilitado
 where rol_ID = @id
+
+delete from ddg.RolesXFuncionalidades
+where rolXFuncionalidad_rol = @id
+
+insert into ddg.RolesXFuncionalidades (rolXFuncionalidad_rol, rolXFuncionalidad_funcionalidad)
+select  @id, funcionalidadID
+from @listaFuncionalidades
+
+
 
 end
 GO												
