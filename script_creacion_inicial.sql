@@ -1255,6 +1255,79 @@ declare @idfactura int
 end
 GO
 
+
+/* ABM de turno */
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_alta_turno							
+--OBJETIVO  : dar de alta un turno                             
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_turno' AND type='p')
+	DROP PROCEDURE [DDG].sp_alta_turno
+GO
+
+create procedure [ddg].sp_alta_turno (@horaInicio time(7), @horaFin time(7), @descripcion varchar(250), @valorKM numeric(10,2), @precioBase numeric(10,2)) as
+begin
+	
+	if(ddg.turno_horario_valido(@horaInicio, @horaFin) = 0) THROW 53000, 'Horario invalido', 1;
+
+	insert into ddg.turnos(turno_hora_inicio, turno_hora_fin, turno_descripcion, turno_valor_km, turno_precio_base) 
+	values (@horaInicio, @horaFin, @descripcion, @valorKM, @precioBase)
+end
+GO
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_update_turno							
+--OBJETIVO  : modificar un turno                             
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_turno' AND type='p')
+	DROP PROCEDURE [DDG].sp_update_turno
+GO
+
+create procedure [ddg].sp_update_turno (@idTurno, @horaInicio time(7), @horaFin time(7), @descripcion varchar(250), @valorKM numeric(10,2), @precioBase numeric(10,2)) as
+begin
+	
+	if(ddg.turno_horario_valido(@horaInicio, @horaFin) = 0) THROW 53000, 'Horario invalido', 1;
+
+	update 	ddg.turnos
+	set 	turno_hora_inicio = @horaInicio,
+		turno_hora_fin = @horaFin,
+		turno_descripcion = @descripcion,
+		turno_valor_km = @valorKM,
+		turno_precio_base = @precioBase
+	where 	turno_id = @idTurno;
+end
+GO
+
+
+
+--=============================================================================================================
+--TIPO		: Stored procedure
+--NOMBRE	: sp_baja_turno							
+--OBJETIVO  : dar de baja un turno                             
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_baja_turno' AND type='p')
+	DROP PROCEDURE [DDG].sp_baja_turno
+GO
+
+create procedure [ddg].sp_baja_turno (@idTurno numeric (10,0)) as
+begin
+	
+	update 	ddg.turnos
+	set 	turno_habilitado = 0
+	where 	turno_id = @idTurno;
+end
+GO
+
+
+/* Fin ABM turno */
+
 --=============================================================================================================
 --TIPO		: stored procedure
 --NOMBRE	: sp_get_importe_rendicion						
@@ -1412,7 +1485,7 @@ end
 GO
 
 --=============================================================================================================
---TIPO		: funcion
+--TIPO		: stored procedure
 --NOMBRE	: sp_get_importe_factura					
 --OBJETIVO  : obtiene importe total de una factura                          
 --=============================================================================================================
@@ -1667,3 +1740,32 @@ and mo.modelo_marca = marca_id
 and a.auto_turno = t.turno_id
 
 end
+GO
+
+
+
+
+
+--=============================================================================================================
+--TIPO		: Funcion
+--NOMBRE	: turno_horario_valido
+--OBJETIVO  : determinar si el rango horario de un turno es valido                                   
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='turno_horario_valido' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
+DROP FUNCTION [ddg].turno_horario_valido
+GO
+
+create function [DDG].turno_horario_valido(@horaInicio time(7), @horaFin time(7))
+returns bit
+begin
+declare @retorno bit
+
+	if	(@horaFin > @horaInicio) 
+		set @retorno = 1
+	else 
+		set @retorno = 0
+
+return @retorno
+
+end
+GO
