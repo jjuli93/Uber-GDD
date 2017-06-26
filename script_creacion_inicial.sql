@@ -892,12 +892,17 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_usuario' AND type='p'
 	DROP PROCEDURE [DDG].sp_alta_usuario
 GO
 
-create procedure [DDG].sp_alta_usuario (@username varchar(255), @contrasenia varchar(255))
+create procedure [DDG].sp_alta_usuario (@username varchar(255), @contrasenia varchar(255), @idRol numeric(10,0))
 as
 begin
 
 insert into DDG.Usuarios (usuario_username, usuario_password)
 values(@username, HASHBYTES('SHA2_256',cast(@contrasenia as varchar(16))))
+
+insert into ddg.UsuariosXRoles (usuarioXRol_usuario, usuarioXRol_rol)
+select usuario_ID, @idRol
+from ddg.Usuarios
+where usuario_username = @username
 
 end
 GO
@@ -930,7 +935,7 @@ begin
 	set @usuario =   convert(varchar(255), @dni)
 	set @contraseña =   convert(varchar(255), @dni)
 
-	exec [DDG].sp_alta_usuario @usuario, @contraseña
+	exec [DDG].sp_alta_usuario @usuario, @contraseña, 3
 
 	insert into DDG.Clientes(cliente_usuario,cliente_nombre,cliente_apellido,cliente_fecha_nacimiento,cliente_dni,cliente_direccion,cliente_codigo_postal,cliente_telefono,cliente_email)
 	values((select usuario_id from ddg.usuarios where usuario_username=@dni), @nombre, @apellido, @fechanac, @dni, @direccion, @codpost, @telefono, @email)
@@ -1098,7 +1103,7 @@ begin
 	set @usuario =   convert(varchar(255), @dni)
 	set @contraseña =   convert(varchar(255), @dni)
 
-	exec [DDG].sp_alta_usuario @usuario, @contraseña
+	exec [DDG].sp_alta_usuario @usuario, @contraseña, 2
 
 	insert into DDG.Choferes(chofer_usuario ,chofer_nombre ,chofer_apellido, chofer_fecha_nacimiento ,chofer_dni, chofer_direccion,chofer_telefono ,chofer_email)
 	values((select usuario_id from ddg.usuarios where usuario_username=@dni), @nombre, @apellido, @fechanac, @dni, @direccion, @telefono, @email)
@@ -1197,7 +1202,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_rendicion' AND type='
 	DROP PROCEDURE [DDG].sp_alta_rendicion
 GO
 
-create procedure [ddg].sp_alta_rendicion (@idChofer numeric(10,0), @fecha date, @idTurno numeric(10,0)) as
+create procedure [ddg].sp_alta_rendicion (@idChofer numeric(10,0), @fecha date, @idTurno numeric(10,0),  @retorno int output) as
 begin
 declare @idRendicion int
 
@@ -1219,6 +1224,8 @@ declare @idRendicion int
 	set viaje_rendicion = @idRendicion
 	where viaje_chofer = @idChofer and viaje_fecha_viaje = @fecha and viaje_turno = @idTurno
 
+	set @retorno = @idRendicion
+	return @retorno
 end
 GO
 
@@ -1231,7 +1238,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_factura' AND type='p'
 	DROP PROCEDURE [DDG].sp_alta_factura
 GO
 
-create procedure [DDG].sp_alta_factura (@idCliente numeric(10,0), @fechaDesde date, @fechaHasta date) as
+create procedure [DDG].sp_alta_factura (@idCliente numeric(10,0), @fechaDesde date, @fechaHasta date, @retorno int output) as
 begin
 declare @idfactura int
 
@@ -1251,6 +1258,9 @@ declare @idfactura int
 	update DDG.Viajes
 	set viaje_factura = @idfactura
 	where viaje_cliente = @idCliente and viaje_fecha_viaje between @fechaDesde and @fechaHasta
+
+	set @retorno = @idfactura
+	return @retorno
 
 end
 GO
@@ -1514,7 +1524,7 @@ GO
 create procedure [ddg].sp_get_viajes_rendicion(@idRendicion numeric(10,0)) as
 begin
 
-select v.*, (ddg.calcularimporteViaje(v.viaje_id) * (select top 1 porcentaje_valor from [ddg].Porcentajes order by porcentaje_id desc))
+select v.*, (ddg.calcularimporteViaje(v.viaje_id) * (select top 1 porcentaje_valor from [ddg].Porcentajes order by porcentaje_id desc)) as montoChofer
 from ddg.Viajes v, ddg.RendicionesDetalle rd
 where rd.rendicionDetalle_rendicion = @idRendicion
 and v.viaje_rendicion = rd.rendicionDetalle_id
