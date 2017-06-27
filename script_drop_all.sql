@@ -56,6 +56,11 @@ DROP PROCEDURE [DDG].sp_get_turnos
 DROP PROCEDURE [DDG].sp_get_automovilesHabilitados
 DROP PROCEDURE [DDG].sp_get_choferesHabilitados
 DROP PROCEDURE [DDG].sp_get_clientesHabilitados
+DROP PROCEDURE [DDG].sp_get_automovilDetalles
+DROP PROCEDURE [DDG].sp_alta_turno
+DROP PROCEDURE [DDG].sp_update_turno
+DROP PROCEDURE [DDG].sp_baja_turno
+DROP PROCEDURE [DDG].validar_datos_turno
 
 
 
@@ -70,6 +75,8 @@ DROP FUNCTION [ddg].choferYaAsignado
 DROP FUNCTION [ddg].calcularimporteViaje
 DROP FUNCTION [ddg].existeClienteConMismoTelefono
 DROP FUNCTION [ddg].ExisteRendicion
+DROP FUNCTION [ddg].ExisteFacturacion
+DROP FUNCTION [ddg].turno_horario_valido
 
 
 -- Eliminacion de tablas
@@ -96,5 +103,3 @@ drop table [DDG].Funcionalidades
 -- Eliminacion del schema
 
 drop schema DDG
-
-
