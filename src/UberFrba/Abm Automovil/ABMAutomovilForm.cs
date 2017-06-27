@@ -29,7 +29,7 @@ namespace UberFrba.Abm_Automovil
             formAnterior = _menu;
             objController = ObjetosFormCTRL.Instance;
             objController.inicializar_Marcas(this.marcaComboBox);
-            camposObligatorios = new List<Control>() { marcaComboBox, modeloComboBox, patenteTextBox, nombreChoferTB, turnoComboBox };
+            camposObligatorios = new List<Control>() { marcaComboBox, modeloComboBox, patenteTextBox, nombreChoferTB, turnoComboBox, licenciaTextBox, rodadoTextBox };
             objController.setCBTurno(this.turnoComboBox);
             
             this.FormClosing += ABMAutomovilForm_FormClosing;

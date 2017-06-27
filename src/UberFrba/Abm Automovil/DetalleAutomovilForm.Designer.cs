@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.rodadoTextBox = new System.Windows.Forms.TextBox();
+            this.licenciaTextBox = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.habilitadoCheckBox = new System.Windows.Forms.CheckBox();
             this.turnoTextBox = new System.Windows.Forms.TextBox();
             this.choferTextBox = new System.Windows.Forms.TextBox();
@@ -46,6 +50,10 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.rodadoTextBox);
+            this.groupBox1.Controls.Add(this.licenciaTextBox);
+            this.groupBox1.Controls.Add(this.label7);
+            this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.habilitadoCheckBox);
             this.groupBox1.Controls.Add(this.turnoTextBox);
             this.groupBox1.Controls.Add(this.choferTextBox);
@@ -59,16 +67,50 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(352, 239);
+            this.groupBox1.Size = new System.Drawing.Size(352, 301);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Datos de un automovil";
+            // 
+            // rodadoTextBox
+            // 
+            this.rodadoTextBox.Location = new System.Drawing.Point(101, 231);
+            this.rodadoTextBox.Name = "rodadoTextBox";
+            this.rodadoTextBox.ReadOnly = true;
+            this.rodadoTextBox.Size = new System.Drawing.Size(223, 20);
+            this.rodadoTextBox.TabIndex = 33;
+            // 
+            // licenciaTextBox
+            // 
+            this.licenciaTextBox.Location = new System.Drawing.Point(101, 195);
+            this.licenciaTextBox.Name = "licenciaTextBox";
+            this.licenciaTextBox.ReadOnly = true;
+            this.licenciaTextBox.Size = new System.Drawing.Size(223, 20);
+            this.licenciaTextBox.TabIndex = 32;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(29, 234);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(48, 13);
+            this.label7.TabIndex = 31;
+            this.label7.Text = "Rodado:";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(29, 198);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(50, 13);
+            this.label6.TabIndex = 30;
+            this.label6.Text = "Licencia:";
             // 
             // habilitadoCheckBox
             // 
             this.habilitadoCheckBox.AutoSize = true;
             this.habilitadoCheckBox.Enabled = false;
-            this.habilitadoCheckBox.Location = new System.Drawing.Point(29, 202);
+            this.habilitadoCheckBox.Location = new System.Drawing.Point(29, 268);
             this.habilitadoCheckBox.Name = "habilitadoCheckBox";
             this.habilitadoCheckBox.Size = new System.Drawing.Size(71, 17);
             this.habilitadoCheckBox.TabIndex = 29;
@@ -77,7 +119,7 @@
             // 
             // turnoTextBox
             // 
-            this.turnoTextBox.Location = new System.Drawing.Point(101, 160);
+            this.turnoTextBox.Location = new System.Drawing.Point(101, 158);
             this.turnoTextBox.Name = "turnoTextBox";
             this.turnoTextBox.ReadOnly = true;
             this.turnoTextBox.Size = new System.Drawing.Size(223, 20);
@@ -118,7 +160,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(26, 163);
+            this.label5.Location = new System.Drawing.Point(26, 161);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(41, 13);
             this.label5.TabIndex = 23;
@@ -162,7 +204,7 @@
             // 
             // volverButton
             // 
-            this.volverButton.Location = new System.Drawing.Point(42, 268);
+            this.volverButton.Location = new System.Drawing.Point(42, 330);
             this.volverButton.Name = "volverButton";
             this.volverButton.Size = new System.Drawing.Size(75, 23);
             this.volverButton.TabIndex = 1;
@@ -174,7 +216,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(377, 309);
+            this.ClientSize = new System.Drawing.Size(377, 365);
             this.Controls.Add(this.volverButton);
             this.Controls.Add(this.groupBox1);
             this.Name = "DetalleAutomovilForm";
@@ -201,5 +243,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button volverButton;
+        private System.Windows.Forms.TextBox rodadoTextBox;
+        private System.Windows.Forms.TextBox licenciaTextBox;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
     }
 }

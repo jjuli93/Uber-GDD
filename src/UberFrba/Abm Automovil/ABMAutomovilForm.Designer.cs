@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.modeloComboBox = new System.Windows.Forms.ComboBox();
             this.crearButton = new System.Windows.Forms.Button();
             this.cancelarButton = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
@@ -52,13 +53,24 @@
             this.buscarAutoButton = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.cerrarSesionLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.modeloComboBox = new System.Windows.Forms.ComboBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.licenciaTextBox = new System.Windows.Forms.TextBox();
+            this.rodadoTextBox = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label15);
+            this.groupBox1.Controls.Add(this.label14);
+            this.groupBox1.Controls.Add(this.rodadoTextBox);
+            this.groupBox1.Controls.Add(this.licenciaTextBox);
+            this.groupBox1.Controls.Add(this.label13);
+            this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Controls.Add(this.modeloComboBox);
             this.groupBox1.Controls.Add(this.crearButton);
             this.groupBox1.Controls.Add(this.cancelarButton);
@@ -80,14 +92,22 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(13, 51);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(342, 310);
+            this.groupBox1.Size = new System.Drawing.Size(342, 362);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Nuevo automovil";
             // 
+            // modeloComboBox
+            // 
+            this.modeloComboBox.FormattingEnabled = true;
+            this.modeloComboBox.Location = new System.Drawing.Point(104, 62);
+            this.modeloComboBox.Name = "modeloComboBox";
+            this.modeloComboBox.Size = new System.Drawing.Size(190, 21);
+            this.modeloComboBox.TabIndex = 22;
+            // 
             // crearButton
             // 
-            this.crearButton.Location = new System.Drawing.Point(219, 271);
+            this.crearButton.Location = new System.Drawing.Point(220, 330);
             this.crearButton.Name = "crearButton";
             this.crearButton.Size = new System.Drawing.Size(97, 23);
             this.crearButton.TabIndex = 21;
@@ -97,7 +117,7 @@
             // 
             // cancelarButton
             // 
-            this.cancelarButton.Location = new System.Drawing.Point(32, 271);
+            this.cancelarButton.Location = new System.Drawing.Point(33, 330);
             this.cancelarButton.Name = "cancelarButton";
             this.cancelarButton.Size = new System.Drawing.Size(75, 23);
             this.cancelarButton.TabIndex = 19;
@@ -111,7 +131,7 @@
             this.label11.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label11.Font = new System.Drawing.Font("Dutch801 XBd BT", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.Color.Red;
-            this.label11.Location = new System.Drawing.Point(29, 233);
+            this.label11.Location = new System.Drawing.Point(29, 302);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(132, 14);
             this.label11.TabIndex = 18;
@@ -300,19 +320,67 @@
             this.cerrarSesionLinkLabel.Text = "cerrar sesión";
             this.cerrarSesionLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cerrarSesionLinkLabel_LinkClicked);
             // 
-            // modeloComboBox
+            // label12
             // 
-            this.modeloComboBox.FormattingEnabled = true;
-            this.modeloComboBox.Location = new System.Drawing.Point(104, 62);
-            this.modeloComboBox.Name = "modeloComboBox";
-            this.modeloComboBox.Size = new System.Drawing.Size(190, 21);
-            this.modeloComboBox.TabIndex = 22;
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(29, 232);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(76, 13);
+            this.label12.TabIndex = 23;
+            this.label12.Text = "Licencia Nro. :";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(30, 268);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(48, 13);
+            this.label13.TabIndex = 24;
+            this.label13.Text = "Rodado:";
+            // 
+            // licenciaTextBox
+            // 
+            this.licenciaTextBox.Location = new System.Drawing.Point(112, 229);
+            this.licenciaTextBox.Name = "licenciaTextBox";
+            this.licenciaTextBox.Size = new System.Drawing.Size(182, 20);
+            this.licenciaTextBox.TabIndex = 25;
+            // 
+            // rodadoTextBox
+            // 
+            this.rodadoTextBox.Location = new System.Drawing.Point(104, 265);
+            this.rodadoTextBox.Name = "rodadoTextBox";
+            this.rodadoTextBox.Size = new System.Drawing.Size(190, 20);
+            this.rodadoTextBox.TabIndex = 26;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.label14.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.ForeColor = System.Drawing.Color.Red;
+            this.label14.Location = new System.Drawing.Point(300, 265);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(17, 20);
+            this.label14.TabIndex = 27;
+            this.label14.Text = "*";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.label15.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.ForeColor = System.Drawing.Color.Red;
+            this.label15.Location = new System.Drawing.Point(300, 229);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(17, 20);
+            this.label15.TabIndex = 28;
+            this.label15.Text = "*";
             // 
             // ABMAutomovilForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(367, 373);
+            this.ClientSize = new System.Drawing.Size(367, 425);
             this.Controls.Add(this.cerrarSesionLinkLabel);
             this.Controls.Add(this.buscarAutoButton);
             this.Controls.Add(this.limpiarButton);
@@ -354,5 +422,11 @@
         private System.Windows.Forms.ErrorProvider errorProvider;
         private System.Windows.Forms.LinkLabel cerrarSesionLinkLabel;
         private System.Windows.Forms.ComboBox modeloComboBox;
+        private System.Windows.Forms.TextBox rodadoTextBox;
+        private System.Windows.Forms.TextBox licenciaTextBox;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label14;
     }
 }

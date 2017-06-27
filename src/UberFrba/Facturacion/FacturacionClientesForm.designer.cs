@@ -182,7 +182,6 @@
             this.datosClienteTB.ReadOnly = true;
             this.datosClienteTB.Size = new System.Drawing.Size(290, 20);
             this.datosClienteTB.TabIndex = 25;
-            this.datosClienteTB.Text = "Nombre y Apellido del cliente";
             // 
             // buscarClienteBtn
             // 

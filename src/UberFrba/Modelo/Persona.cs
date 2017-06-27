@@ -18,14 +18,14 @@ namespace UberFrba.Modelo
         public int id { get; private set; }
         public string nombre { get; set; }
         public string apellido { get; set; }
-        public double dni { get; set; }
+        public UInt32 dni { get; set; }
         public string mail { get; set; }
-        public double telefono { get; set; }
+        public UInt32 telefono { get; set; }
         public string direccion { get; set; }
         public DateTime fecha_nacimiento { get; set; }
         public bool habilitado { get; set; }
 
-        public void set_datos_principales(string _nombre, string _apellido, double _dni, DateTime _fechaNac)
+        public void set_datos_principales(string _nombre, string _apellido, UInt32 _dni, DateTime _fechaNac)
         {
             this.nombre = _nombre;
             this.apellido = _apellido;
@@ -33,7 +33,7 @@ namespace UberFrba.Modelo
             this.fecha_nacimiento = _fechaNac;
         }
 
-        public void set_datos_secundarios(string _mail, double _telefono, string _direccion)
+        public void set_datos_secundarios(string _mail, UInt32 _telefono, string _direccion)
         {
             this.mail = _mail;
             this.telefono = _telefono;

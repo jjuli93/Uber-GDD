@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using UberFrba.Modelo;
 using UberFrba.Controllers;
+using UberFrba.Abm_Chofer;
 
 namespace UberFrba.Abm_Automovil
 {
@@ -18,6 +19,7 @@ namespace UberFrba.Abm_Automovil
         ObjetosFormCTRL objController;
         AutomovilDAO autoDAO;
         Form formAnterior;
+        Chofer chofer_seleccionado;
 
         public ModificarAutomovilForm(Automovil _auto, Form _formAnterior)
         {
@@ -44,7 +46,9 @@ namespace UberFrba.Abm_Automovil
             modeloTextBox.Text = auto.modelo;
             patenteTextBox.Text = auto.patente;
             nombreChoferTB.Text = auto.chofer_id.ToString();
-            objController.cargar_valor_comboBox(turnoComboBox, auto.turno);
+            objController.cargar_valor_comboBox(turnoComboBox, auto.turno); //VER ESTO QUE ESTA MAL
+            licenciaTextBox.Text = auto.licencia.ToString();
+            rodadoTextBox.Text = auto.rodado;
             habilitarCheckBox.Checked = auto.habilitado;
         }
 
@@ -52,6 +56,13 @@ namespace UberFrba.Abm_Automovil
         {
             this.Owner.Show();
             this.Dispose();
+        }
+
+        private void buscarChoferButton_Click(object sender, EventArgs e)
+        {
+            var buscador = new ListadoChoferesForm(this, false);
+            buscador.Show(this);
+            this.Hide();
         }
 
     }

@@ -71,7 +71,7 @@ namespace UberFrba.Abm_Rol
                 }
                 else
                 {
-                    MessageBox.Show(string.Format("No se ha podido eliminar el rol {0}?", nombre_rol), "Error en Eliminar Rol", MessageBoxButtons.OK);
+                    MessageBox.Show(string.Format("No se ha podido eliminar el rol {0}", nombre_rol), "Error en Eliminar Rol", MessageBoxButtons.OK);
                 }
             }
         }

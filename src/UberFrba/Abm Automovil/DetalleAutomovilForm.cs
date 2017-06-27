@@ -42,6 +42,8 @@ namespace UberFrba.Abm_Automovil
             patenteTextBox.Text = auto.patente;
             choferTextBox.Text = auto.chofer_id.ToString();
             turnoTextBox.Text = auto.turno;
+            licenciaTextBox.Text = auto.licencia.ToString();
+            rodadoTextBox.Text = auto.rodado;
             habilitadoCheckBox.Checked = auto.habilitado;
         }
 
@@ -50,5 +52,6 @@ namespace UberFrba.Abm_Automovil
             this.Owner.Show();
             this.Dispose();
         }
+
     }
 }

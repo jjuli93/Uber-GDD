@@ -56,7 +56,15 @@ namespace UberFrba.Abm_Turno
         {
             if (objController.cumpleCamposObligatorios(camposObligatorios, errorProvider))
             {
-                MessageBox.Show("Turno creado", "Nuevo Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (turnoDAO.crear_turno(crear_nuevo_turno()))
+                {
+                    MessageBox.Show("Turno creado", "Nuevo Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    limpiar_form();
+                }
+                else
+                {
+                    MessageBox.Show("No se ha podido crear el turno", "Alta Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             else
             {
@@ -65,11 +73,28 @@ namespace UberFrba.Abm_Turno
                     objController.borrarMensajeDeError(camposObligatorios, errorProvider);
                     return;
                 }
-                    
             }
         }
 
+        private Turno crear_nuevo_turno()
+        {
+            Turno nuevo = null;
+
+            nuevo.descripcion = descripcionTextBox.Text;
+            nuevo.hora_inicio = beginDateTimePicker.Value.ToString();
+            nuevo.hora_fin = beginDateTimePicker.Value.ToString();
+            nuevo.valor_km = Convert.ToDouble(precioNumericUpDown.Value);
+            nuevo.precio_base = Convert.ToDouble(kmNumericUpDown.Value);
+
+            return nuevo;
+        }
+
         private void limpiarButton_Click(object sender, EventArgs e)
+        {
+            limpiar_form();
+        }
+
+        private void limpiar_form()
         {
             objController.borrarMensajeDeError(camposObligatorios, errorProvider);
             objController.limpiarControles(this);

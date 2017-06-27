@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.filtrosGroupBox = new System.Windows.Forms.GroupBox();
+            this.modeloComboBox = new System.Windows.Forms.ComboBox();
             this.choferTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.modeloTextBox = new System.Windows.Forms.TextBox();
             this.patenteTextBox = new System.Windows.Forms.TextBox();
             this.marcaComboBox = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -53,9 +53,9 @@
             // 
             // filtrosGroupBox
             // 
+            this.filtrosGroupBox.Controls.Add(this.modeloComboBox);
             this.filtrosGroupBox.Controls.Add(this.choferTextBox);
             this.filtrosGroupBox.Controls.Add(this.label3);
-            this.filtrosGroupBox.Controls.Add(this.modeloTextBox);
             this.filtrosGroupBox.Controls.Add(this.patenteTextBox);
             this.filtrosGroupBox.Controls.Add(this.marcaComboBox);
             this.filtrosGroupBox.Controls.Add(this.label4);
@@ -68,11 +68,19 @@
             this.filtrosGroupBox.TabStop = false;
             this.filtrosGroupBox.Text = "Filtros de busqueda";
             // 
+            // modeloComboBox
+            // 
+            this.modeloComboBox.FormattingEnabled = true;
+            this.modeloComboBox.Location = new System.Drawing.Point(228, 25);
+            this.modeloComboBox.Name = "modeloComboBox";
+            this.modeloComboBox.Size = new System.Drawing.Size(207, 21);
+            this.modeloComboBox.TabIndex = 8;
+            // 
             // choferTextBox
             // 
-            this.choferTextBox.Location = new System.Drawing.Point(228, 62);
+            this.choferTextBox.Location = new System.Drawing.Point(246, 62);
             this.choferTextBox.Name = "choferTextBox";
-            this.choferTextBox.Size = new System.Drawing.Size(207, 20);
+            this.choferTextBox.Size = new System.Drawing.Size(189, 20);
             this.choferTextBox.TabIndex = 7;
             // 
             // label3
@@ -83,13 +91,6 @@
             this.label3.Size = new System.Drawing.Size(47, 13);
             this.label3.TabIndex = 2;
             this.label3.Text = "Patente:";
-            // 
-            // modeloTextBox
-            // 
-            this.modeloTextBox.Location = new System.Drawing.Point(228, 25);
-            this.modeloTextBox.Name = "modeloTextBox";
-            this.modeloTextBox.Size = new System.Drawing.Size(207, 20);
-            this.modeloTextBox.TabIndex = 6;
             // 
             // patenteTextBox
             // 
@@ -105,15 +106,16 @@
             this.marcaComboBox.Name = "marcaComboBox";
             this.marcaComboBox.Size = new System.Drawing.Size(110, 21);
             this.marcaComboBox.TabIndex = 4;
+            this.marcaComboBox.SelectedIndexChanged += new System.EventHandler(this.marcaComboBox_SelectedIndexChanged);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(177, 65);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(41, 13);
+            this.label4.Size = new System.Drawing.Size(63, 13);
             this.label4.TabIndex = 3;
-            this.label4.Text = "Chofer:";
+            this.label4.Text = "DNI Chofer:";
             // 
             // label2
             // 
@@ -193,6 +195,7 @@
             this.eliminarButton.TabIndex = 2;
             this.eliminarButton.Text = "Eliminar";
             this.eliminarButton.UseVisualStyleBackColor = true;
+            this.eliminarButton.Click += new System.EventHandler(this.eliminarButton_Click);
             // 
             // modificarButton
             // 
@@ -253,7 +256,6 @@
         private System.Windows.Forms.GroupBox filtrosGroupBox;
         private System.Windows.Forms.TextBox choferTextBox;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox modeloTextBox;
         private System.Windows.Forms.TextBox patenteTextBox;
         private System.Windows.Forms.ComboBox marcaComboBox;
         private System.Windows.Forms.Label label4;
@@ -268,5 +270,6 @@
         private System.Windows.Forms.Button modificarButton;
         private System.Windows.Forms.Button verButton;
         private System.Windows.Forms.Button volverButton;
+        private System.Windows.Forms.ComboBox modeloComboBox;
     }
 }

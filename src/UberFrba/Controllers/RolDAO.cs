@@ -27,19 +27,29 @@ namespace UberFrba.Controllers
 
         public DataTable get_roles()
         {
-            DataTable roles = new DataTable();
+            DataTable roles = null;
 
-            using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
-            using (SqlCommand cmd = new SqlCommand("DDG.sp_get_roles", conn))
+            try
             {
-                cmd.CommandType = CommandType.StoredProcedure;
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_get_roles", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                conn.Open();
-                SqlDataReader lector = cmd.ExecuteReader();
+                    conn.Open();
+                    SqlDataReader lector = cmd.ExecuteReader();
 
-                roles.Load(lector);
+                    roles = new DataTable();
 
-                lector.Close();
+                    roles.Load(lector);
+
+                    lector.Close();
+                }    
+            }
+            catch (SqlException)
+            {
+                
+                //throw;
             }
 
             return roles;

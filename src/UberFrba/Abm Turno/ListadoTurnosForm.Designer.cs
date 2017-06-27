@@ -33,7 +33,7 @@
             this.limpiarButton = new System.Windows.Forms.Button();
             this.buscarButton = new System.Windows.Forms.Button();
             this.turnosDataGridView = new System.Windows.Forms.DataGridView();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.descripcionTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.verButton = new System.Windows.Forms.Button();
             this.modificarButton = new System.Windows.Forms.Button();
@@ -51,7 +51,7 @@
             this.groupBox1.Controls.Add(this.limpiarButton);
             this.groupBox1.Controls.Add(this.buscarButton);
             this.groupBox1.Controls.Add(this.turnosDataGridView);
-            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Controls.Add(this.descripcionTextBox);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(13, 7);
             this.groupBox1.Name = "groupBox1";
@@ -103,12 +103,12 @@
             this.turnosDataGridView.TabIndex = 2;
             this.turnosDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.turnosDataGridView_CellContentClick);
             // 
-            // textBox1
+            // descripcionTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(27, 52);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(187, 20);
-            this.textBox1.TabIndex = 1;
+            this.descripcionTextBox.Location = new System.Drawing.Point(27, 52);
+            this.descripcionTextBox.Name = "descripcionTextBox";
+            this.descripcionTextBox.Size = new System.Drawing.Size(187, 20);
+            this.descripcionTextBox.TabIndex = 1;
             // 
             // label1
             // 
@@ -196,7 +196,7 @@
 
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView turnosDataGridView;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox descripcionTextBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button verButton;
         private System.Windows.Forms.Button modificarButton;

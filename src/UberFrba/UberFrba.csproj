@@ -171,12 +171,13 @@
     <Compile Include="Controllers\ChoferDAO.cs" />
     <Compile Include="Controllers\ClienteDAO.cs" />
     <Compile Include="Controllers\Conexion.cs" />
-    <Compile Include="Controllers\Context.cs" />
     <Compile Include="Controllers\FuncionalidadDAO.cs" />
     <Compile Include="Controllers\LoginDAO.cs" />
     <Compile Include="Controllers\ObjetosFormCTRL.cs" />
     <Compile Include="Controllers\RolDAO.cs" />
+    <Compile Include="Controllers\TopDAO.cs" />
     <Compile Include="Controllers\TurnoDAO.cs" />
+    <Compile Include="Controllers\ViajeDAO.cs" />
     <Compile Include="Facturacion\FacturacionClientesForm.cs">
       <SubType>Form</SubType>
     </Compile>

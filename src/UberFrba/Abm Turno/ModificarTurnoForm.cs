@@ -48,8 +48,8 @@ namespace UberFrba.Abm_Turno
 
         private void cargar_datos_form(Turno _turno)
         {
-            beginDateTimePicker.Value = _turno.hora_inicio;
-            endDateTimePicker.Value = _turno.hora_fin;
+            beginDateTimePicker.Value = Convert.ToDateTime(_turno.hora_inicio);
+            endDateTimePicker.Value = Convert.ToDateTime(_turno.hora_fin);
             descripcionTextBox.Text = _turno.descripcion;
             kmNumericUpDown.Value = (decimal)_turno.valor_km;
             precioNumericUpDown.Value = (decimal)_turno.precio_base;
@@ -64,7 +64,22 @@ namespace UberFrba.Abm_Turno
 
         private void guardarButton_Click(object sender, EventArgs e)
         {
-            //turnoDAO hace la magia
+            var campos = new List<Control>() { beginDateTimePicker, endDateTimePicker, descripcionTextBox, kmNumericUpDown, precioNumericUpDown };
+
+            if (objController.cumpleCamposObligatorios(campos, errorProvider))
+            {
+                if (MessageBox.Show("¿Está seguro de querer modificar los datos del turno?", "Modificar Turno", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    if (turnoDAO.modificar_turno(turnoSeleccionado))
+                    {
+                        MessageBox.Show("Los datos del turno han sido modificados.", "Modificar Turno", MessageBoxButtons.OK);
+                    }
+                    else
+                    {
+                        MessageBox.Show("No se ha podido modificar los datos del turno", "Error en Modificar Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
     }
 }

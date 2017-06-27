@@ -17,6 +17,7 @@ namespace UberFrba.Abm_Chofer
     {
         private Form formAnterior;
         private ObjetosFormCTRL objController;
+        private int chofer_index = -1;
 
         public ListadoChoferesForm(Form _formAnterior, bool _fromABM)
         {
@@ -46,17 +47,26 @@ namespace UberFrba.Abm_Chofer
         {
             ABMAutomovilForm abmAuto = this.Owner as ABMAutomovilForm;
 
-            Chofer driver = new Chofer(-1/*sale del datagridview*/);
-            driver.nombre = "asd";
-            driver.apellido = "zxc";
-
-            // Los datos que se muestren en el dialogo se sacaran de lo seleccionado de la row
-            // recien dentro del if creo el chofer
-            if (MessageBox.Show("Está seguro de seleccionar al chofer: <" + driver.nombre + " " + driver.apellido + ">?", "Seleccionar Chofer", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Está seguro de seleccionar al chofer seleccionado", "Seleccionar Chofer", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                abmAuto.setChoferSeleccionado(driver);
-                abmAuto.Show();
-                this.Dispose();
+                var driver = ChoferDAO.Instance.obtener_cliente_from_row(choferesDataGridView.Rows[chofer_index]);
+
+                if (driver != null)
+                {
+                    abmAuto.setChoferSeleccionado(driver);
+                    abmAuto.Show();
+                    this.Dispose();
+                }
+                else
+                {
+                    MessageBox.Show("Ha ocurrido un error en la selección de un chofer.", "Error en chofer seleccionado", MessageBoxButtons.OK);
+                }
+            }
+            else
+            {
+                chofer_index = -1;
+                choferesDataGridView.ClearSelection();
+                habilitar_botones(false);
             }
         }
 
@@ -68,7 +78,7 @@ namespace UberFrba.Abm_Chofer
 
         private void verButtonSelected_Click(object sender, EventArgs e)
         {
-            DetalleChoferForm detalle_form = new DetalleChoferForm(null);
+            DetalleChoferForm detalle_form = new DetalleChoferForm(ChoferDAO.Instance.obtener_cliente_from_row(choferesDataGridView.Rows[chofer_index]));
             this.Hide();
             detalle_form.Show(this);
         }
@@ -77,11 +87,6 @@ namespace UberFrba.Abm_Chofer
         private void limpiarButton_Click(object sender, EventArgs e)
         {
             objController.limpiarControles(this);
-        }
-
-        private void choferesDataGridView_MouseClick(object sender, MouseEventArgs e)
-        {
-            habilitar_botones(true);
         }
 
         private void habilitar_botones(bool valor)
@@ -94,23 +99,38 @@ namespace UberFrba.Abm_Chofer
         //BOTONES DESDE LA ABM DE CHOFERES
         private void verButton_Click(object sender, EventArgs e)
         {
-            DetalleChoferForm detalle_form = new DetalleChoferForm(null);
+            DetalleChoferForm detalle_form = new DetalleChoferForm(ChoferDAO.Instance.obtener_cliente_from_row(choferesDataGridView.Rows[chofer_index]));
             this.Hide();
             detalle_form.Show(this);
         }
 
         private void modificarButton_Click(object sender, EventArgs e)
         {
-            ModificarChoferForm modificar_form = new ModificarChoferForm(null);
+            ModificarChoferForm modificar_form = new ModificarChoferForm(ChoferDAO.Instance.obtener_cliente_from_row(choferesDataGridView.Rows[chofer_index]));
             this.Hide();
             modificar_form.Show(this);
         }
 
         private void eliminarButton_Click(object sender, EventArgs e)
         {
-            /*
-             * llama al metodo "eliminar_chofer" de la instancia de ChoferDAO
-             */
+            if (MessageBox.Show("Esta seguro de querer eliminar el chofer seleccionado", "Baja Chofer", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+            {
+                var id = Convert.ToInt32(choferesDataGridView.Rows[chofer_index].Cells[0].Value);
+
+                if (ChoferDAO.Instance.eliminar_chofer(id))
+                {
+                    MessageBox.Show("Chofer eliminado", "Baja Chofer", MessageBoxButtons.OK);
+                    choferesDataGridView.Rows[chofer_index].Cells[9].Value = 0;
+                }
+                else
+                {
+                    MessageBox.Show("Ha ocurrido un error al intentar elminar el chofer seleccionado", "Error Baja Chofer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            chofer_index = -1;
+            choferesDataGridView.ClearSelection();
+            habilitar_botones(false);
         }
 
         private void volverButton_Click(object sender, EventArgs e)
@@ -123,9 +143,34 @@ namespace UberFrba.Abm_Chofer
 
         private void buscarButton_Click(object sender, EventArgs e)
         {
-            /*
-             * llama al metodo "buscar_chofer" de la instancia de ChoferDAO
-             */
+            string nombre_filtro = null;
+            string apellido_filtro = null;
+            string dni_filtro = null;
+
+            if (!string.IsNullOrEmpty(nombreTextBox.Text))
+                nombre_filtro = nombreTextBox.Text;
+
+            if (!string.IsNullOrEmpty(apellidoTextBox.Text))
+                apellido_filtro = apellidoTextBox.Text;
+
+            if (!string.IsNullOrEmpty(dniTextBox.Text))
+                dni_filtro = dniTextBox.Text;
+
+            DataTable resultados = ChoferDAO.Instance.get_choferes(nombre_filtro, apellido_filtro, dni_filtro);
+
+            if (resultados != null)
+                choferesDataGridView.DataSource = resultados;
+            else
+                MessageBox.Show("Ha ocurrido un error en la busqueda de choferes", "Buscador de choferes", MessageBoxButtons.OK, MessageBoxIcon.Error); 
+        }
+
+        private void choferesDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {            
+            if (choferesDataGridView.SelectedRows[0].Cells[0].Value != null)
+            {
+                habilitar_botones(true);
+                chofer_index = e.RowIndex;
+            }
         }
     }
 }

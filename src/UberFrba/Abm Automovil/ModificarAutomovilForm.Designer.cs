@@ -43,17 +43,25 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.rodadoTextBox = new System.Windows.Forms.TextBox();
+            this.licenciaTextBox = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.rodadoTextBox);
+            this.groupBox1.Controls.Add(this.licenciaTextBox);
+            this.groupBox1.Controls.Add(this.label13);
+            this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Controls.Add(this.habilitarCheckBox);
             this.groupBox1.Controls.Add(this.cancelarButton);
             this.groupBox1.Controls.Add(this.guardarButton);
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(340, 321);
+            this.groupBox1.Size = new System.Drawing.Size(340, 390);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Modificar automovil";
@@ -61,7 +69,7 @@
             // habilitarCheckBox
             // 
             this.habilitarCheckBox.AutoSize = true;
-            this.habilitarCheckBox.Location = new System.Drawing.Point(37, 237);
+            this.habilitarCheckBox.Location = new System.Drawing.Point(37, 306);
             this.habilitarCheckBox.Name = "habilitarCheckBox";
             this.habilitarCheckBox.Size = new System.Drawing.Size(64, 17);
             this.habilitarCheckBox.TabIndex = 3;
@@ -70,7 +78,7 @@
             // 
             // cancelarButton
             // 
-            this.cancelarButton.Location = new System.Drawing.Point(27, 278);
+            this.cancelarButton.Location = new System.Drawing.Point(26, 349);
             this.cancelarButton.Name = "cancelarButton";
             this.cancelarButton.Size = new System.Drawing.Size(75, 23);
             this.cancelarButton.TabIndex = 2;
@@ -80,7 +88,7 @@
             // 
             // guardarButton
             // 
-            this.guardarButton.Location = new System.Drawing.Point(195, 278);
+            this.guardarButton.Location = new System.Drawing.Point(194, 349);
             this.guardarButton.Name = "guardarButton";
             this.guardarButton.Size = new System.Drawing.Size(116, 23);
             this.guardarButton.TabIndex = 1;
@@ -111,6 +119,7 @@
             this.buscarChoferButton.TabIndex = 19;
             this.buscarChoferButton.Text = "Buscar";
             this.buscarChoferButton.UseVisualStyleBackColor = true;
+            this.buscarChoferButton.Click += new System.EventHandler(this.buscarChoferButton_Click);
             // 
             // patenteTextBox
             // 
@@ -179,11 +188,43 @@
             this.label1.TabIndex = 11;
             this.label1.Text = "Marca: ";
             // 
+            // rodadoTextBox
+            // 
+            this.rodadoTextBox.Location = new System.Drawing.Point(109, 265);
+            this.rodadoTextBox.Name = "rodadoTextBox";
+            this.rodadoTextBox.Size = new System.Drawing.Size(190, 20);
+            this.rodadoTextBox.TabIndex = 30;
+            // 
+            // licenciaTextBox
+            // 
+            this.licenciaTextBox.Location = new System.Drawing.Point(117, 229);
+            this.licenciaTextBox.Name = "licenciaTextBox";
+            this.licenciaTextBox.Size = new System.Drawing.Size(182, 20);
+            this.licenciaTextBox.TabIndex = 29;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(35, 268);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(48, 13);
+            this.label13.TabIndex = 28;
+            this.label13.Text = "Rodado:";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(34, 232);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(76, 13);
+            this.label12.TabIndex = 27;
+            this.label12.Text = "Licencia Nro. :";
+            // 
             // ModificarAutomovilForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(367, 346);
+            this.ClientSize = new System.Drawing.Size(367, 415);
             this.Controls.Add(this.turnoComboBox);
             this.Controls.Add(this.nombreChoferTB);
             this.Controls.Add(this.buscarChoferButton);
@@ -223,5 +264,9 @@
         private System.Windows.Forms.Button cancelarButton;
         private System.Windows.Forms.Button guardarButton;
         private System.Windows.Forms.CheckBox habilitarCheckBox;
+        private System.Windows.Forms.TextBox rodadoTextBox;
+        private System.Windows.Forms.TextBox licenciaTextBox;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
     }
 }

@@ -32,6 +32,11 @@ namespace UberFrba.Modelo
         public int chofer_id { get; set; }
         public string turno { get; set; }
         public bool habilitado { get; set; }
+        public int idmodelo { get; set; }
+        public int idmarca { get; set; }
+        public int idturno { get; set; }
+        public int licencia { get; set; }
+        public string rodado { get; set; }
 
         public string[] get_Marcas_AsArray()
         {

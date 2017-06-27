@@ -58,11 +58,24 @@ namespace UberFrba.Facturacion
 
         private void facturarButton_Click(object sender, EventArgs e)
         {
-            if (objController.cumpleCamposObligatorios(camposObligatorios, errorProvider) && (id_cliente != -1))
+            if (cumple_campos())
             {
-                //fumo porro y meto caño (?
-                // importeTextBox = clienteDAO.realizarFacturacion(id_cliente);
-                // viajesDataGridView <- clienteDAO.obtenerViajes(id_cliente);
+                var importe = clienteDAO.realizarFacturacion(id_cliente);
+
+                if (importe == -1)
+                {
+                    MessageBox.Show("Ha ocurrido un error al intentar facturar los viajes realizados por el cliente", "Error en Facturación Clientes", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    if (importe == 0)
+                        MessageBox.Show("No se han encontrado viajes realizados por el cliente", "Facturación Clientes", MessageBoxButtons.OK);
+                    else
+                    {
+                        importeTextBox.Text = " $ " + importe.ToString();
+                        viajesDataGridView.DataSource = clienteDAO.obtenerViajes(id_cliente);
+                    }
+                }
             }
             else
             {

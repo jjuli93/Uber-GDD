@@ -28,6 +28,11 @@ namespace UberFrba.Abm_Automovil
             autoDAO = AutomovilDAO.Instance;
             objController.habilitarContenidoPanel(autoSelectedPanelBtns, false);
             this.FormClosing += ListadoAutomovilesForm_FormClosing;
+
+            marcaComboBox.SelectedIndex = -1;
+            modeloComboBox.SelectedIndex = -1;
+            marcaComboBox.Items.Add(new ObjetosFormCTRL.itemComboBox("", -1));
+            modeloComboBox.Items.Add(new ObjetosFormCTRL.itemComboBox("", -1));
         }
 
         private void ListadoAutomovilesForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -37,34 +42,26 @@ namespace UberFrba.Abm_Automovil
 
         private void autosDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            /*
-             * con la instancia de AutomovilDAO, llama su metodo obtener_automovil
-             * el metodo deberia recibir el id de la row seleccionada
-             * y llama el SP de la BD para obtener el automovil correspondiente
-             */
-
             objController.habilitarContenidoPanel(autoSelectedPanelBtns, true);
 
-            //DESPUES VUELA
-            AutomovilSeleccionado = 1;
-        }
-
-        //DESPUES VUELA
-        private Automovil crear_Auto_test()
-        {
-            Automovil auto = new Automovil(1, "TKB 999");
-            auto.set_Marca_from_String("Chevrolet");
-            auto.modelo = "Camaro 2017";
-            auto.turno = "Noche";
-            auto.chofer_id = 123;
-            auto.habilitado = true;
-
-            return auto;
+            AutomovilSeleccionado = Convert.ToInt32(autosDataGridView.Rows[e.RowIndex].Cells[0].Value);
         }
 
         private void verButton_Click(object sender, EventArgs e)
         {
-            var detalle_form = new DetalleAutomovilForm(this.crear_Auto_test(), this);
+            var row = autosDataGridView.Rows[AutomovilSeleccionado];
+
+            if (row.Cells[0].Value == null) 
+            {
+                MessageBox.Show("Seleccione una fila válida de la tabla", "Error", MessageBoxButtons.OK);
+                objController.habilitarContenidoPanel(autoSelectedPanelBtns, false);
+                AutomovilSeleccionado = -1;
+                return;
+            }
+
+            var auto = autoDAO.obtener_auto_from_row(row);
+
+            var detalle_form = new DetalleAutomovilForm(auto, this);
 
             this.Hide();
             detalle_form.Show(this);
@@ -72,7 +69,19 @@ namespace UberFrba.Abm_Automovil
 
         private void modificarButton_Click(object sender, EventArgs e)
         {
-            var modificar_form = new ModificarAutomovilForm(this.crear_Auto_test(), this);
+            var row = autosDataGridView.Rows[AutomovilSeleccionado];
+
+            if (row.Cells[0].Value == null)
+            {
+                MessageBox.Show("Seleccione una fila válida de la tabla", "Error", MessageBoxButtons.OK);
+                objController.habilitarContenidoPanel(autoSelectedPanelBtns, false);
+                AutomovilSeleccionado = -1;
+                return;
+            }
+
+            var auto = autoDAO.obtener_auto_from_row(row);
+
+            var modificar_form = new ModificarAutomovilForm(auto, this);
 
             this.Hide();
             modificar_form.Show(this);
@@ -80,26 +89,24 @@ namespace UberFrba.Abm_Automovil
 
         private void buscarButton_Click(object sender, EventArgs e)
         {
-            this.autosDataGridView.DataSource = autoDAO.obtenerAutomoviles(this.obtener_filtros_asList());
-        }
+            ObjetosFormCTRL.itemComboBox marca = null;
+            ObjetosFormCTRL.itemComboBox modelo = null;
+            string patente = null;
+            string chofer = null;
 
-        private List<string> obtener_filtros_asList()
-        {
-            List<string> filtros = new List<string>();
+            if (marcaComboBox.SelectedIndex != -1 || ((marcaComboBox.SelectedItem as ObjetosFormCTRL.itemComboBox).id_item != -1))
+                marca = (ObjetosFormCTRL.itemComboBox)marcaComboBox.SelectedItem;
 
-            if (marcaComboBox.SelectedIndex != -1)
-                filtros.Add(marcaComboBox.SelectedItem.ToString());
+            if (modeloComboBox.SelectedIndex != -1 || ((modeloComboBox.SelectedItem as ObjetosFormCTRL.itemComboBox).id_item != -1))
+                modelo = (ObjetosFormCTRL.itemComboBox)modeloComboBox.SelectedItem;
 
             if (!string.IsNullOrEmpty(patenteTextBox.Text))
-                filtros.Add(patenteTextBox.Text);
-
-            if (!string.IsNullOrEmpty(modeloTextBox.Text))
-                filtros.Add(modeloTextBox.Text);
+                patente = patenteTextBox.Text;
 
             if (!string.IsNullOrEmpty(choferTextBox.Text))
-                filtros.Add(choferTextBox.Text);
+                chofer = choferTextBox.Text;
 
-            return filtros;
+            this.autosDataGridView.DataSource = autoDAO.obtenerAutomoviles(marca.id_item, modelo.id_item, patente, chofer);
         }
 
         private void limpiarButton_Click(object sender, EventArgs e)
@@ -112,6 +119,40 @@ namespace UberFrba.Abm_Automovil
             //formAnterior.Show();
             this.Owner.Show();
             this.Dispose();
+        }
+
+        private void marcaComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var marca_index = (ObjetosFormCTRL.itemComboBox)marcaComboBox.SelectedItem;
+
+            modeloComboBox.Items.Clear();
+            autoDAO.setModelos(modeloComboBox, marca_index.id_item);
+        }
+
+        private void eliminarButton_Click(object sender, EventArgs e)
+        {
+            var row = autosDataGridView.Rows[AutomovilSeleccionado];
+
+            if (row.Cells[0].Value == null)
+            {
+                MessageBox.Show("Seleccione una fila válida de la tabla", "Error", MessageBoxButtons.OK);
+                objController.habilitarContenidoPanel(autoSelectedPanelBtns, false);
+                AutomovilSeleccionado = -1;
+                return;
+            }
+
+            if (MessageBox.Show("¿Está seguro de querer eliminar el automovil seleccionado?", "Eliminar Automovil", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                if (autoDAO.baja_automovil(Convert.ToInt32(row.Cells[0].Value)))
+                {
+                    MessageBox.Show("Se ha eliminado el automovil selccionado?", "Automovil eliminado", MessageBoxButtons.OK);
+                    row.Cells[6].Value = "0";
+                }
+                else
+                {
+                    MessageBox.Show("No se ha podido eliminar el automovil selccionado", "Error en Eliminar Automovil", MessageBoxButtons.OK);
+                }
+            }
         }
 
     }

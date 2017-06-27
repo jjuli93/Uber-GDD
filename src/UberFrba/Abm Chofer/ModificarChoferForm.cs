@@ -58,5 +58,25 @@ namespace UberFrba.Abm_Chofer
             this.Owner.Show();
             this.Dispose();
         }
+
+        private void guardarButton_Click(object sender, EventArgs e)
+        {
+            var campos = new List<Control>() { nombreTextBox, apeliidoTextBox, dniTextBox, telefonoTextBox, direccionTextBox, dayComboBox, monthComboBox, yearComboBox };
+
+            if (objController.cumpleCamposObligatorios(campos, errorProvider))
+            {
+                if (MessageBox.Show("¿Está seguro de querer modificar los datos del chofer?", "Modificar Chofer", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    if (choferDAO.modificar_chofer(chofer_seleccionado))
+                    {
+                        MessageBox.Show("Los datos del chofer han sido modificados.", "Modificar Chofer", MessageBoxButtons.OK);
+                    }
+                    else
+                    {
+                        MessageBox.Show("No se ha podido modificar los datos del chofer", "Error en Modificar Chofer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
     }
 }

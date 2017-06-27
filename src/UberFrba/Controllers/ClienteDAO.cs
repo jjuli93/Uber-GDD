@@ -160,16 +160,6 @@ namespace UberFrba.Controllers
             {
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                /*
-                 * select [columns]
-                 * from DDG.Clientes
-                 * where cliente_nombre like @nombre
-                 *      and cliente_apellido like @apellido
-                 *      and cliente_dni = @dni
-                 */
-
-                // BUILD SOMEHOW THE PARAMETERS
-
                 conn.Open();
                 SqlDataReader lector = cmd.ExecuteReader();
 
@@ -179,6 +169,64 @@ namespace UberFrba.Controllers
             }
 
             return clientes;
+        }
+
+        public int realizarFacturacion(int id_cliente)
+        {
+            int importe = 0;
+
+            /*
+             * Creo que lo mejor es hacer lo siguiente:
+             * 
+             * 1) llamar esta funcion, que realice la facturacion (sp_alta_factura) 
+             *      y que devuelva el id de factura
+             *      
+             * 2) luego llamar otra funcion (ej: obtenerImporte(id_factura)) 
+             *      -> (sp_calcular_importe @id_factura) -> devuelve el importe
+             *      
+             * 3) finalmente llamar obtenerViajes donde tambien le paso el id_factura
+             *      -> (sp_get_viajes_facturados @id_factura)
+             */
+
+            try
+            {
+
+            }
+            catch (SqlException)
+            {
+                importe = -1;
+                //throw;
+            }
+
+            return importe;
+        }
+
+        public DataTable obtenerViajes(int id_cliente)
+        {
+            DataTable viajes = new DataTable();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    
+                    conn.Open();
+                    SqlDataReader lector = cmd.ExecuteReader();
+
+                    viajes.Load(lector);
+
+                    lector.Close();
+                }
+            }
+            catch (SqlException)
+            {
+                return null;
+                //throw;
+            }
+
+            return viajes;
         }
     }
 }

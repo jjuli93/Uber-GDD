@@ -16,6 +16,7 @@ namespace UberFrba.Abm_Turno
     {
         ObjetosFormCTRL objController;
         TurnoDAO turnoDAO;
+        int turno_index = -1;
 
         public ListadoTurnosForm()
         {
@@ -34,14 +35,18 @@ namespace UberFrba.Abm_Turno
         private void turnosDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             objController.habilitarContenidoPanel(turnoSeleccionadoPanel, true);
-
-            // y setear en algun lado la row seleccionada para obtener, a traves de 
-            // turnoDAO el turno correspondiente
+            turno_index = e.RowIndex;
         }
 
         private void limpiarButton_Click(object sender, EventArgs e)
         {
+            limpiar_form();
+        }
+
+        private void limpiar_form()
+        {
             objController.limpiarControles(this);
+            turnosDataGridView.Rows.Clear();
         }
 
         private void volverButton_Click(object sender, EventArgs e)
@@ -57,12 +62,22 @@ namespace UberFrba.Abm_Turno
 
         private void buscarButton_Click(object sender, EventArgs e)
         {
-            //busca a traves de turnoDAO
+            string descripcion_filtro = null;
+
+            if (!string.IsNullOrEmpty(descripcionTextBox.Text))
+                descripcion_filtro = descripcionTextBox.Text;
+
+            DataTable resultados = turnoDAO.search_turnos(descripcion_filtro);
+
+            if (resultados != null)
+                turnosDataGridView.DataSource = resultados;
+            else
+                MessageBox.Show("Ha ocurrido un error en el buscador de turnos.", "Buscar Turnos", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void verButton_Click(object sender, EventArgs e)
         {
-            var detalle = new DetalleTurnoForm(null);
+            var detalle = new DetalleTurnoForm(turnoDAO.obtener_turno_from_row(turnosDataGridView.Rows[turno_index]));
 
             detalle.Show(this);
             this.Hide();
@@ -70,7 +85,7 @@ namespace UberFrba.Abm_Turno
 
         private void modificarButton_Click(object sender, EventArgs e)
         {
-            var modificar = new ModificarTurnoForm(null);
+            var modificar = new ModificarTurnoForm(turnoDAO.obtener_turno_from_row(turnosDataGridView.Rows[turno_index]));
 
             modificar.Show(this);
             this.Hide();
@@ -78,7 +93,26 @@ namespace UberFrba.Abm_Turno
 
         private void eliminarButton_Click(object sender, EventArgs e)
         {
+            if (MessageBox.Show("Esta seguro de querer eliminar el turno seleccionado", "Baja Turno", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+            {
+                var id = Convert.ToInt32(turnosDataGridView.Rows[turno_index].Cells[0].Value);
 
+                if (turnoDAO.baja_turno(id))
+                {
+                    MessageBox.Show("Turno eliminado", "Baja Turno", MessageBoxButtons.OK);
+                    turnosDataGridView.Rows[turno_index].Cells["turno_habilitado"].Value = 0;
+                }
+                else
+                {
+                    MessageBox.Show("Ha ocurrido un error al intentar elminar el turno seleccionado", "Error Baja Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            turno_index = -1;
+            turnosDataGridView.ClearSelection();
+            objController.habilitarContenidoPanel(turnoSeleccionadoPanel, false);
         }
+
+
     }
 }

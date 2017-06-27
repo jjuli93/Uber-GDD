@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using UberFrba.Controllers;
 using UberFrba.Login;
+using UberFrba.Modelo;
 
 namespace UberFrba.Abm_Chofer
 {
@@ -46,6 +47,7 @@ namespace UberFrba.Abm_Chofer
         private void limpiar_form()
         {
             objController.limpiarControles(this);
+            objController.borrarMensajeDeError(campos_obligatorios, errorProvider);
         }
 
         private void ABMChoferForm_Load(object sender, EventArgs e)
@@ -74,8 +76,22 @@ namespace UberFrba.Abm_Chofer
             }
             else
             {
-                MessageBox.Show("Cliente creado");
-                limpiar_form();
+                var nuevo = get_nuevo_chofer();
+
+                if (nuevo == null)
+                    MessageBox.Show("Verifique los datos ingresados.", "Datos incorrectos", MessageBoxButtons.OK);
+                else
+                {
+                    if (ChoferDAO.Instance.crear_chofer(nuevo))
+                    {
+                        MessageBox.Show("Cliente creado");
+                        limpiar_form();
+                    }
+                    else
+                    {
+                        MessageBox.Show("No se podido crear el chofer.", "Error en Alta Chofer", MessageBoxButtons.OK);
+                    }
+                }
             }
         }
 
@@ -89,6 +105,36 @@ namespace UberFrba.Abm_Chofer
         private void cerrarSesionLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             objController.cerrar_sesion();
+        }
+
+        private Chofer get_nuevo_chofer()
+        {            
+            UInt32 dni = 11111111;
+            UInt32 telefono = 1000001;
+            int year = Convert.ToInt32(yearComboBox.SelectedItem.ToString());
+            int month = Convert.ToInt32(monthComboBox.SelectedItem.ToString());
+            int day = Convert.ToInt32(dayComboBox.SelectedItem.ToString());
+            DateTime fecha = new DateTime(year, month, day);
+
+            if (!UInt32.TryParse(dniTextBox.Text, out dni))
+            {
+                errorProvider.SetError(dniTextBox, "Formato incorrecto, debe ser solo números.");
+                return null;
+            }
+
+
+            if (!UInt32.TryParse(telefonoTextBox.Text, out telefono))
+            {
+                errorProvider.SetError(telefonoTextBox, "Formato incorrecto, debe ser solo números.");
+                return null;
+            }
+
+            var nuevo = new Chofer(0);
+
+            nuevo.set_datos_principales(nombreTextBox.Text, apeliidoTextBox.Text, dni, fecha);
+            nuevo.set_datos_secundarios(mailTextBox.Text, telefono, direccionTextBox.Text);
+
+            return nuevo;
         }
     }
 }
