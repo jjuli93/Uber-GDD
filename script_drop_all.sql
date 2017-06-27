@@ -60,6 +60,7 @@ DROP PROCEDURE [DDG].sp_get_automovilDetalles
 DROP PROCEDURE [DDG].sp_alta_turno
 DROP PROCEDURE [DDG].sp_update_turno
 DROP PROCEDURE [DDG].sp_baja_turno
+DROP PROCEDURE [DDG].validar_datos_turno
 
 
 

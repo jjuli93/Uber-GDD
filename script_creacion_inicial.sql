@@ -1769,3 +1769,28 @@ return @retorno
 
 end
 GO
+
+
+
+--=============================================================================================================
+--TIPO		: Stored Procedure
+--NOMBRE	: validar_datos_turno
+--OBJETIVO  : determinar si los datos de un turno son validos                                   
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='validar_datos_turno' AND type = 'p')
+DROP PROCEDURE [ddg].validar_datos_turno
+GO
+
+create procedure [ddg].validar_datos_turno(@horaInicio time(7), @horaFin time(7), @descripcion varchar(250)) as
+
+begin
+
+
+	if	(@horaFin > @horaInicio) THROW 53000, 'Horario invalido', 1;
+
+	if 	((select count (*) from ddg.turnos where turno_descripcion = @descripcion) > 1) THROW 5400, 'Ya existe un turno con esta descripcion', 1;
+
+	--if	() THROW 5500, 'El turno se superpone con otro ya habilitado', 1;
+
+end
+GO
