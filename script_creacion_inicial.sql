@@ -1788,7 +1788,7 @@ begin
 
 	if	(@horaFin > @horaInicio) THROW 53000, 'Horario invalido', 1;
 
-	if 	((select count (*) from ddg.turnos where turno_descripcion = @descripcion) > 1) THROW 5400, 'Ya existe un turno con esta descripcion', 1;
+	if 	((select count (*) from ddg.turnos where turno_descripcion = @descripcion) > 0) THROW 5400, 'Ya existe un turno con esta descripcion', 1;
 
 	--if	() THROW 5500, 'El turno se superpone con otro ya habilitado', 1;
 
