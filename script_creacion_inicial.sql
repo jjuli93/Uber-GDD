@@ -11,27 +11,27 @@ go
 
 
 create table [DDG].Funcionalidades(
-funcionalidad_ID numeric(10,0) primary key identity,
+funcionalidad_ID numeric(10) primary key identity,
 funcionalidad_descripcion varchar(255) not null,
 )
 GO
 
 create table [DDG].Roles(
-rol_ID numeric(10,0) primary key identity,
+rol_ID numeric(10) primary key identity,
 rol_nombre varchar(255) not null unique,
 rol_habilitado bit default 1
 )
 GO
 
 create table [DDG].RolesXFuncionalidades(
-rolXFuncionalidad_ID numeric(10,0) primary key identity,
-rolXFuncionalidad_rol numeric(10,0) not null references [DDG].Roles,
-rolXFuncionalidad_funcionalidad numeric(10,0) not null references [DDG].Funcionalidades ,
+rolXFuncionalidad_ID numeric(10) primary key identity,
+rolXFuncionalidad_rol numeric(10) not null references [DDG].Roles,
+rolXFuncionalidad_funcionalidad numeric(10) not null references [DDG].Funcionalidades ,
 )
 GO
 
 create table [DDG].Usuarios(
-usuario_ID numeric(10,0) primary key identity,
+usuario_ID numeric(10) primary key identity,
 usuario_username varchar(255) unique not null,
 usuario_password varchar(255) not null,
 usuario_intentosFallidos int default 0,
@@ -39,45 +39,45 @@ usuario_intentosFallidos int default 0,
 GO
 
 create table [DDG].UsuariosXRoles(
-usuarioXRol_ID numeric(10,0) primary key identity,
-usuarioXRol_usuario numeric(10,0) not null references [DDG].Usuarios,
-usuarioXRol_rol numeric(10,0) not null references [DDG].Roles,
+usuarioXRol_ID numeric(10) primary key identity,
+usuarioXRol_usuario numeric(10) not null references [DDG].Usuarios,
+usuarioXRol_rol numeric(10) not null references [DDG].Roles,
 )
 GO
 
 create table [DDG].Clientes (
-cliente_id numeric(10,0) primary key identity,
-cliente_usuario numeric(10,0) unique not null references [DDG].Usuarios,
+cliente_id numeric(10) primary key identity,
+cliente_usuario numeric(10) unique not null references [DDG].Usuarios,
 cliente_nombre varchar(250) not null,
 cliente_apellido varchar(250) not null,
 cliente_fecha_nacimiento date not null,
-cliente_dni numeric(18,0)  not null,
+cliente_dni numeric(18)  not null,
 cliente_direccion varchar(250) not null,
 cliente_codigo_postal numeric  /*not null*/,		/*saco el not null porque en la base de datos ningun cliente tiene cod postal)*/
-cliente_telefono numeric(18,0) unique not null,
+cliente_telefono numeric(18) unique not null,
 cliente_email varchar(250),
-cliente_habilitado numeric(1,0) not null default 1
+cliente_habilitado bit not null default 1
 )
 GO
 
 create table [DDG].Choferes (
-chofer_id numeric(10,0) primary key identity,
-chofer_usuario numeric(10,0) unique not null references [DDG].Usuarios,
+chofer_id numeric(10) primary key identity,
+chofer_usuario numeric(10) unique not null references [DDG].Usuarios,
 chofer_nombre varchar(250) not null,
 chofer_apellido varchar(250) not null,
 chofer_fecha_nacimiento date not null,
-chofer_dni numeric(18,0) not null,
+chofer_dni numeric(18) not null,
 chofer_direccion varchar(250) not null,
-chofer_telefono numeric(18,0) not null,
+chofer_telefono numeric(18) not null,
 chofer_email varchar(250),
-chofer_habilitado numeric(1,0) not null default 1
+chofer_habilitado bit not null default 1
 )
 GO
 
 create table [DDG].Facturas (
-factura_id numeric(18,0) primary key identity,
-factura_cliente numeric(10,0) not null references [DDG].Clientes,
-factura_numero numeric(18,0) unique not null,
+factura_id numeric(18) primary key identity,
+factura_cliente numeric(10) not null references [DDG].Clientes,
+factura_numero numeric(18) unique not null,
 factura_fecha_inicio datetime not null,
 factura_fecha_fin datetime not null,
 factura_importe decimal(7,2) not null default 0
@@ -85,82 +85,82 @@ factura_importe decimal(7,2) not null default 0
 GO
 
 create table [DDG].FacturasDetalle (
-facturaDetalle_id numeric(18,0) primary key identity,
-facturaDetalle_factura numeric(18,0) not null references [DDG].Facturas
+facturaDetalle_id numeric(18) primary key identity,
+facturaDetalle_factura numeric(18) not null references [DDG].Facturas
 )
 GO
 
 create table [DDG].Turnos (
-turno_id numeric(10,0) primary key identity,
-turno_hora_inicio numeric(18,0) not null,
-turno_hora_fin numeric(18,0) not null,
+turno_id numeric(10) primary key identity,
+turno_hora_inicio time(7) not null,
+turno_hora_fin time(7) not null,
 turno_descripcion varchar(255),
 turno_valor_km decimal(5,2) not null,
 turno_precio_base decimal(5,2) not null,
-turno_habilitado numeric(1,0) not null default 1
+turno_habilitado bit not null default 1
 )
 GO
 
 create table [DDG].Marcas (
-marca_id numeric(10,0) primary key identity,
+marca_id numeric(10) primary key identity,
 marca_descripcion varchar(255) not null
 )
 GO
 
 create table [DDG].Modelos (
-modelo_id numeric(10,0) primary key identity,
+modelo_id numeric(10) primary key identity,
 modelo_descripcion varchar(255) not null,
-modelo_marca numeric(10,0) not null references [DDG].Marcas
+modelo_marca numeric(10) not null references [DDG].Marcas
 )
 GO
 
 create table [DDG].Autos (
-auto_id numeric(10,0) primary key identity,
-auto_chofer numeric(10,0) not null references [DDG].Choferes,
-auto_modelo numeric(10,0) not null references [DDG].Modelos,
+auto_id numeric(10) primary key identity,
+auto_chofer numeric(10) not null references [DDG].Choferes,
+auto_modelo numeric(10) not null references [DDG].Modelos,
 auto_patente varchar(10)  not null unique,
 auto_licencia varchar(26) not null,
 auto_rodado varchar(10) not null,
-auto_turno numeric(10,0) not null references [DDG].Turnos,
-auto_habilitado numeric(1,0) not null default 1
+auto_turno numeric(10) not null references [DDG].Turnos,
+auto_habilitado bit not null default 1
 )
 GO
 
 
 create table [DDG].Porcentajes(
-porcentaje_id numeric(10,0) primary key identity,
+porcentaje_id numeric(10) primary key identity,
 porcentaje_valor numeric(10,4) not null,
 porcentaje_fecha date not null,
-porcentaje_impuestoPor numeric(10,0)  references [DDG].Usuarios
+porcentaje_impuestoPor numeric(10)  references [DDG].Usuarios
 )
 GO
 
 create table [DDG].Rendiciones (
-rendicion_id numeric(10,0) primary key identity,
-rendicion_chofer numeric(10,0) not null references [DDG].Choferes,
-rendicion_turno numeric(10,0) not null references [DDG].Turnos,
+rendicion_id numeric(10) primary key identity,
+rendicion_chofer numeric(10) not null references [DDG].Choferes,
+rendicion_turno numeric(10) not null references [DDG].Turnos,
 rendicion_importe decimal(7,2) not null default 0,
-rendicion_numero numeric(18,0) not null,
-rendicion_porcentaje numeric(10,0) not null references [DDG].Porcentajes,
+rendicion_numero numeric(18) not null,
+rendicion_porcentaje numeric(10) not null references [DDG].Porcentajes,
 rendicion_fecha datetime
 )
 GO
 
 create table [DDG].RendicionesDetalle (
-rendicionDetalle_id numeric(10,0) primary key identity,
-rendicionDetalle_rendicion numeric(10,0) not null references [DDG].Rendiciones
+rendicionDetalle_id numeric(10) primary key identity,
+rendicionDetalle_rendicion numeric(10) not null references [DDG].Rendiciones
 )
 GO
 
 create table [DDG].Viajes (
-viaje_id numeric(18,0) primary key identity,
-viaje_chofer numeric(10,0) not null references [DDG].Choferes,
-viaje_auto numeric(10,0) not null references [DDG].Autos,
-viaje_turno numeric(10,0) not null references [DDG].Turnos,
-viaje_cliente numeric(10,0) not null references [DDG].Clientes,
-viaje_rendicion numeric(10,0) references [DDG].RendicionesDetalle,
-viaje_factura numeric(18,0) references [DDG].FacturasDetalle,
-viaje_cantidad_km numeric(5,0) not null,
+viaje_id numeric(18) primary key identity,
+viaje_chofer numeric(10) not null references [DDG].Choferes,
+viaje_auto numeric(10) not null references [DDG].Autos,
+viaje_turno numeric(10) not null references [DDG].Turnos,
+viaje_cliente numeric(10) not null references [DDG].Clientes,
+viaje_rendicion numeric(10) references [DDG].RendicionesDetalle,
+viaje_factura numeric(18) references [DDG].FacturasDetalle,
+viaje_cantidad_km numeric(5) not null,
 viaje_fecha_viaje datetime not null,
 viaje_hora_inicio time /*not null*/,
 viaje_hora_fin time /*not null*/		/*Datos en la base no tienen estos campos*/
