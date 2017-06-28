@@ -76,6 +76,7 @@
             this.cleanParamsButton.TabIndex = 6;
             this.cleanParamsButton.Text = "Limpiar parámetros";
             this.cleanParamsButton.UseVisualStyleBackColor = true;
+            this.cleanParamsButton.Click += new System.EventHandler(this.cleanParamsButton_Click);
             // 
             // dniFilterTB
             // 
@@ -164,6 +165,7 @@
             this.cleanTableButton.TabIndex = 4;
             this.cleanTableButton.Text = "Limpiar tabla";
             this.cleanTableButton.UseVisualStyleBackColor = true;
+            this.cleanTableButton.Click += new System.EventHandler(this.cleanTableButton_Click);
             // 
             // modificarButton
             // 

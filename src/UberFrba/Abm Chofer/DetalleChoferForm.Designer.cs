@@ -30,9 +30,6 @@
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.habilitadoCheckBox = new System.Windows.Forms.CheckBox();
-            this.yearComboBox = new System.Windows.Forms.ComboBox();
-            this.dayComboBox = new System.Windows.Forms.ComboBox();
-            this.monthComboBox = new System.Windows.Forms.ComboBox();
             this.mailTextBox = new System.Windows.Forms.TextBox();
             this.telefonoTextBox = new System.Windows.Forms.TextBox();
             this.direccionTextBox = new System.Windows.Forms.TextBox();
@@ -47,15 +44,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.volverButton = new System.Windows.Forms.Button();
+            this.fnTextBox = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.fnTextBox);
             this.groupBox1.Controls.Add(this.habilitadoCheckBox);
-            this.groupBox1.Controls.Add(this.yearComboBox);
-            this.groupBox1.Controls.Add(this.dayComboBox);
-            this.groupBox1.Controls.Add(this.monthComboBox);
             this.groupBox1.Controls.Add(this.mailTextBox);
             this.groupBox1.Controls.Add(this.telefonoTextBox);
             this.groupBox1.Controls.Add(this.direccionTextBox);
@@ -79,6 +75,7 @@
             // habilitadoCheckBox
             // 
             this.habilitadoCheckBox.AutoSize = true;
+            this.habilitadoCheckBox.Enabled = false;
             this.habilitadoCheckBox.Location = new System.Drawing.Point(23, 252);
             this.habilitadoCheckBox.Name = "habilitadoCheckBox";
             this.habilitadoCheckBox.Size = new System.Drawing.Size(73, 17);
@@ -86,41 +83,12 @@
             this.habilitadoCheckBox.Text = "Habilitado";
             this.habilitadoCheckBox.UseVisualStyleBackColor = true;
             // 
-            // yearComboBox
-            // 
-            this.yearComboBox.Enabled = false;
-            this.yearComboBox.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.yearComboBox.FormattingEnabled = true;
-            this.yearComboBox.Location = new System.Drawing.Point(261, 216);
-            this.yearComboBox.Name = "yearComboBox";
-            this.yearComboBox.Size = new System.Drawing.Size(65, 21);
-            this.yearComboBox.TabIndex = 31;
-            // 
-            // dayComboBox
-            // 
-            this.dayComboBox.Enabled = false;
-            this.dayComboBox.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.dayComboBox.FormattingEnabled = true;
-            this.dayComboBox.Location = new System.Drawing.Point(139, 216);
-            this.dayComboBox.Name = "dayComboBox";
-            this.dayComboBox.Size = new System.Drawing.Size(54, 21);
-            this.dayComboBox.TabIndex = 30;
-            // 
-            // monthComboBox
-            // 
-            this.monthComboBox.Enabled = false;
-            this.monthComboBox.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.monthComboBox.FormattingEnabled = true;
-            this.monthComboBox.Location = new System.Drawing.Point(200, 216);
-            this.monthComboBox.Name = "monthComboBox";
-            this.monthComboBox.Size = new System.Drawing.Size(54, 21);
-            this.monthComboBox.TabIndex = 29;
-            // 
             // mailTextBox
             // 
             this.mailTextBox.Enabled = false;
             this.mailTextBox.Location = new System.Drawing.Point(88, 184);
             this.mailTextBox.Name = "mailTextBox";
+            this.mailTextBox.ReadOnly = true;
             this.mailTextBox.Size = new System.Drawing.Size(257, 20);
             this.mailTextBox.TabIndex = 28;
             // 
@@ -129,6 +97,7 @@
             this.telefonoTextBox.Enabled = false;
             this.telefonoTextBox.Location = new System.Drawing.Point(88, 153);
             this.telefonoTextBox.Name = "telefonoTextBox";
+            this.telefonoTextBox.ReadOnly = true;
             this.telefonoTextBox.Size = new System.Drawing.Size(257, 20);
             this.telefonoTextBox.TabIndex = 27;
             // 
@@ -138,6 +107,7 @@
             this.direccionTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
             this.direccionTextBox.Location = new System.Drawing.Point(88, 120);
             this.direccionTextBox.Name = "direccionTextBox";
+            this.direccionTextBox.ReadOnly = true;
             this.direccionTextBox.Size = new System.Drawing.Size(257, 20);
             this.direccionTextBox.TabIndex = 26;
             // 
@@ -146,6 +116,7 @@
             this.dniTextBox.Enabled = false;
             this.dniTextBox.Location = new System.Drawing.Point(88, 88);
             this.dniTextBox.Name = "dniTextBox";
+            this.dniTextBox.ReadOnly = true;
             this.dniTextBox.Size = new System.Drawing.Size(257, 20);
             this.dniTextBox.TabIndex = 25;
             // 
@@ -154,6 +125,7 @@
             this.apeliidoTextBox.Enabled = false;
             this.apeliidoTextBox.Location = new System.Drawing.Point(88, 58);
             this.apeliidoTextBox.Name = "apeliidoTextBox";
+            this.apeliidoTextBox.ReadOnly = true;
             this.apeliidoTextBox.Size = new System.Drawing.Size(257, 20);
             this.apeliidoTextBox.TabIndex = 24;
             // 
@@ -162,6 +134,7 @@
             this.nombreTextBox.Enabled = false;
             this.nombreTextBox.Location = new System.Drawing.Point(88, 28);
             this.nombreTextBox.Name = "nombreTextBox";
+            this.nombreTextBox.ReadOnly = true;
             this.nombreTextBox.Size = new System.Drawing.Size(257, 20);
             this.nombreTextBox.TabIndex = 23;
             // 
@@ -238,6 +211,15 @@
             this.volverButton.UseVisualStyleBackColor = true;
             this.volverButton.Click += new System.EventHandler(this.volverButton_Click);
             // 
+            // fnTextBox
+            // 
+            this.fnTextBox.Enabled = false;
+            this.fnTextBox.Location = new System.Drawing.Point(135, 216);
+            this.fnTextBox.Name = "fnTextBox";
+            this.fnTextBox.ReadOnly = true;
+            this.fnTextBox.Size = new System.Drawing.Size(210, 20);
+            this.fnTextBox.TabIndex = 33;
+            // 
             // DetalleChoferForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -258,9 +240,6 @@
 
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox habilitadoCheckBox;
-        private System.Windows.Forms.ComboBox yearComboBox;
-        private System.Windows.Forms.ComboBox dayComboBox;
-        private System.Windows.Forms.ComboBox monthComboBox;
         private System.Windows.Forms.TextBox mailTextBox;
         private System.Windows.Forms.TextBox telefonoTextBox;
         private System.Windows.Forms.TextBox direccionTextBox;
@@ -275,5 +254,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button volverButton;
+        private System.Windows.Forms.TextBox fnTextBox;
     }
 }

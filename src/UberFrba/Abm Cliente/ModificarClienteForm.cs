@@ -55,10 +55,7 @@ namespace UberFrba.Abm_Cliente
             telTextBox.Text = cliente.telefono.ToString();
             dirTextBox.Text = cliente.direccion;
             cpTextBox.Text = cliente.codigoPostal.ToString();
-
-            objController.cargar_valor_comboBox(dayComboBox, cliente.fecha_nacimiento.Day.ToString());
-            objController.cargar_valor_comboBox(monthComboBox, cliente.fecha_nacimiento.Month.ToString());
-            objController.cargar_valor_comboBox(yearComboBox, cliente.fecha_nacimiento.Year.ToString());
+            fnDateTimePicker.Value = cliente.fecha_nacimiento;
 
             habilitarCheckBox.Checked = cliente.habilitado;
         }
@@ -71,7 +68,7 @@ namespace UberFrba.Abm_Cliente
 
         private void guardarButton_Click(object sender, EventArgs e)
         {
-            var campos = new List<Control>() { nombreTextBox, apellidoTextBox, dniTextBox, telTextBox, dirTextBox, cpTextBox, dayComboBox, monthComboBox, yearComboBox };
+            var campos = new List<Control>() { nombreTextBox, apellidoTextBox, dniTextBox, telTextBox, dirTextBox, cpTextBox, fnDateTimePicker };
 
             if (objController.cumpleCamposObligatorios(campos, errorProvider))
             {

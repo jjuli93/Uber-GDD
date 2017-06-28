@@ -48,7 +48,7 @@ namespace UberFrba.Abm_Cliente
             telTextBox.Text = cliente.telefono.ToString();
             dirTextBox.Text = cliente.direccion;
             cpTextBox.Text = cliente.codigoPostal.ToString();
-            fechaNacTextBox.Text = cliente.fecha_nacimiento.Day.ToString() + "/" + cliente.fecha_nacimiento.Month.ToString() + "/" + cliente.fecha_nacimiento.Year.ToString();
+            fechaNacTextBox.Text = cliente.fecha_nacimiento.ToShortDateString();
             habilitadoCheckBox.Checked = cliente.habilitado;
         }
 

@@ -40,9 +40,6 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.yearComboBox = new System.Windows.Forms.ComboBox();
-            this.dayComboBox = new System.Windows.Forms.ComboBox();
-            this.monthComboBox = new System.Windows.Forms.ComboBox();
             this.mailTextBox = new System.Windows.Forms.TextBox();
             this.telefonoTextBox = new System.Windows.Forms.TextBox();
             this.direccionTextBox = new System.Windows.Forms.TextBox();
@@ -60,12 +57,14 @@
             this.buscarButton = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.cerrarSesionLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.fnDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.fnDateTimePicker);
             this.groupBox1.Controls.Add(this.crearButton);
             this.groupBox1.Controls.Add(this.limpiarButton);
             this.groupBox1.Controls.Add(this.label16);
@@ -76,9 +75,6 @@
             this.groupBox1.Controls.Add(this.label11);
             this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.label9);
-            this.groupBox1.Controls.Add(this.yearComboBox);
-            this.groupBox1.Controls.Add(this.dayComboBox);
-            this.groupBox1.Controls.Add(this.monthComboBox);
             this.groupBox1.Controls.Add(this.mailTextBox);
             this.groupBox1.Controls.Add(this.telefonoTextBox);
             this.groupBox1.Controls.Add(this.direccionTextBox);
@@ -123,11 +119,11 @@
             // 
             this.label16.AutoSize = true;
             this.label16.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label16.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label16.ForeColor = System.Drawing.Color.Red;
             this.label16.Location = new System.Drawing.Point(338, 218);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(17, 20);
+            this.label16.Size = new System.Drawing.Size(15, 20);
             this.label16.TabIndex = 78;
             this.label16.Text = "*";
             // 
@@ -135,11 +131,11 @@
             // 
             this.label15.AutoSize = true;
             this.label15.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label15.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label15.ForeColor = System.Drawing.Color.Red;
             this.label15.Location = new System.Drawing.Point(292, 186);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(17, 20);
+            this.label15.Size = new System.Drawing.Size(15, 20);
             this.label15.TabIndex = 72;
             this.label15.Text = "*";
             // 
@@ -147,11 +143,11 @@
             // 
             this.label14.AutoSize = true;
             this.label14.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label14.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.ForeColor = System.Drawing.Color.Red;
             this.label14.Location = new System.Drawing.Point(247, 155);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(17, 20);
+            this.label14.Size = new System.Drawing.Size(15, 20);
             this.label14.TabIndex = 77;
             this.label14.Text = "*";
             // 
@@ -159,11 +155,11 @@
             // 
             this.label13.AutoSize = true;
             this.label13.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label13.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.ForeColor = System.Drawing.Color.Red;
             this.label13.Location = new System.Drawing.Point(338, 122);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(17, 20);
+            this.label13.Size = new System.Drawing.Size(15, 20);
             this.label13.TabIndex = 76;
             this.label13.Text = "*";
             // 
@@ -171,11 +167,11 @@
             // 
             this.label12.AutoSize = true;
             this.label12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label12.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.ForeColor = System.Drawing.Color.Red;
             this.label12.Location = new System.Drawing.Point(247, 90);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(17, 20);
+            this.label12.Size = new System.Drawing.Size(15, 20);
             this.label12.TabIndex = 75;
             this.label12.Text = "*";
             // 
@@ -183,11 +179,11 @@
             // 
             this.label11.AutoSize = true;
             this.label11.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label11.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.Color.Red;
             this.label11.Location = new System.Drawing.Point(292, 60);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(17, 20);
+            this.label11.Size = new System.Drawing.Size(15, 20);
             this.label11.TabIndex = 74;
             this.label11.Text = "*";
             // 
@@ -195,11 +191,11 @@
             // 
             this.label10.AutoSize = true;
             this.label10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label10.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.Color.Red;
             this.label10.Location = new System.Drawing.Point(292, 30);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(17, 20);
+            this.label10.Size = new System.Drawing.Size(15, 20);
             this.label10.TabIndex = 71;
             this.label10.Text = "*";
             // 
@@ -207,43 +203,13 @@
             // 
             this.label9.AutoSize = true;
             this.label9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label9.Font = new System.Drawing.Font("Dutch801 XBd BT", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.Color.Red;
             this.label9.Location = new System.Drawing.Point(19, 260);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(132, 14);
+            this.label9.Size = new System.Drawing.Size(119, 13);
             this.label9.TabIndex = 73;
             this.label9.Text = "[*] : campos obligatorios";
-            // 
-            // yearComboBox
-            // 
-            this.yearComboBox.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.yearComboBox.FormattingEnabled = true;
-            this.yearComboBox.Location = new System.Drawing.Point(260, 218);
-            this.yearComboBox.Name = "yearComboBox";
-            this.yearComboBox.Size = new System.Drawing.Size(65, 21);
-            this.yearComboBox.TabIndex = 15;
-            this.yearComboBox.Text = "Año";
-            // 
-            // dayComboBox
-            // 
-            this.dayComboBox.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.dayComboBox.FormattingEnabled = true;
-            this.dayComboBox.Location = new System.Drawing.Point(138, 218);
-            this.dayComboBox.Name = "dayComboBox";
-            this.dayComboBox.Size = new System.Drawing.Size(54, 21);
-            this.dayComboBox.TabIndex = 14;
-            this.dayComboBox.Text = "Día";
-            // 
-            // monthComboBox
-            // 
-            this.monthComboBox.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.monthComboBox.FormattingEnabled = true;
-            this.monthComboBox.Location = new System.Drawing.Point(199, 218);
-            this.monthComboBox.Name = "monthComboBox";
-            this.monthComboBox.Size = new System.Drawing.Size(54, 21);
-            this.monthComboBox.TabIndex = 13;
-            this.monthComboBox.Text = "Mes";
             // 
             // mailTextBox
             // 
@@ -388,6 +354,14 @@
             this.cerrarSesionLinkLabel.Text = "cerrar sesión";
             this.cerrarSesionLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cerrarSesionLinkLabel_LinkClicked);
             // 
+            // fnDateTimePicker
+            // 
+            this.fnDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.fnDateTimePicker.Location = new System.Drawing.Point(135, 218);
+            this.fnDateTimePicker.Name = "fnDateTimePicker";
+            this.fnDateTimePicker.Size = new System.Drawing.Size(190, 20);
+            this.fnDateTimePicker.TabIndex = 81;
+            // 
             // ABMChoferForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -419,9 +393,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox yearComboBox;
-        private System.Windows.Forms.ComboBox dayComboBox;
-        private System.Windows.Forms.ComboBox monthComboBox;
         private System.Windows.Forms.TextBox mailTextBox;
         private System.Windows.Forms.TextBox telefonoTextBox;
         private System.Windows.Forms.TextBox direccionTextBox;
@@ -442,5 +413,6 @@
         private System.Windows.Forms.Button buscarButton;
         private System.Windows.Forms.ErrorProvider errorProvider;
         private System.Windows.Forms.LinkLabel cerrarSesionLinkLabel;
+        private System.Windows.Forms.DateTimePicker fnDateTimePicker;
     }
 }

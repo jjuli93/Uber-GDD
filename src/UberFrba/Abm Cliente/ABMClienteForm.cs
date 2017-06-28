@@ -24,9 +24,8 @@ namespace UberFrba.Abm_Cliente
             InitializeComponent();
             this.CenterToScreen();
             objController = ObjetosFormCTRL.Instance;
-            objController.setCBFechaNac(dayComboBox, monthComboBox, yearComboBox);
             campos_obligatorios = new List<Control>() 
-            { nombreTextBox, apellidoTextBox, dniTextBox, telTextBox, dirTextBox, cpTextBox, dayComboBox, monthComboBox, yearComboBox };
+            { nombreTextBox, apellidoTextBox, dniTextBox, telTextBox, dirTextBox, cpTextBox, fnDateTimePicker };
             formAnterior = _parent;
 
             this.FormClosing += ABMClienteForm_FormClosing;
@@ -48,12 +47,7 @@ namespace UberFrba.Abm_Cliente
             }
             else
             {
-                Cliente cliente_nuevo = new Cliente(0);
-                DateTime fechaNac = new DateTime((int)dayComboBox.SelectedItem, (int)monthComboBox.SelectedItem, (int)yearComboBox.SelectedItem);
-                cliente_nuevo.set_datos_principales(nombreTextBox.Text, apellidoTextBox.Text, Convert.ToUInt32(dniTextBox.Text), fechaNac);
-                cliente_nuevo.set_datos_secundarios(mailTextBox.Text, Convert.ToUInt32(telTextBox.Text), dirTextBox.Text);
-
-                if (ClienteDAO.Instance.crear_cliente(cliente_nuevo))
+                if (ClienteDAO.Instance.crear_cliente(get_nuevo_cliente()))
                 {
                     MessageBox.Show("Cliente creado.", "Alta cliente", MessageBoxButtons.OK);
                     limpiar_form();
@@ -103,6 +97,32 @@ namespace UberFrba.Abm_Cliente
         private void cerrarSesionLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             objController.cerrar_sesion();
+        }
+
+        private Cliente get_nuevo_cliente()
+        {
+            UInt32 dni = 11111111;
+            UInt32 telefono = 1000001;
+
+            if (!UInt32.TryParse(dniTextBox.Text, out dni))
+            {
+                errorProvider1.SetError(dniTextBox, "Formato incorrecto, debe ser solo números.");
+                return null;
+            }
+
+
+            if (!UInt32.TryParse(telTextBox.Text, out telefono))
+            {
+                errorProvider1.SetError(telTextBox, "Formato incorrecto, debe ser solo números.");
+                return null;
+            }
+
+            var nuevo = new Cliente(0);
+
+            nuevo.set_datos_principales(nombreTextBox.Text, apellidoTextBox.Text, dni, fnDateTimePicker.Value);
+            nuevo.set_datos_secundarios(mailTextBox.Text, telefono, dirTextBox.Text);
+
+            return nuevo;
         }
         
     }

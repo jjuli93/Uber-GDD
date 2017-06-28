@@ -25,9 +25,8 @@ namespace UberFrba.Abm_Chofer
             this.CenterToScreen();
             formAnterior = _formMenu;
             objController = ObjetosFormCTRL.Instance;
-            objController.setCBFechaNac(dayComboBox, monthComboBox, yearComboBox);
 
-            campos_obligatorios = new List<Control>() { nombreTextBox, apeliidoTextBox, dniTextBox, direccionTextBox, mailTextBox, telefonoTextBox, dayComboBox, monthComboBox, yearComboBox };
+            campos_obligatorios = new List<Control>() { nombreTextBox, apeliidoTextBox, dniTextBox, direccionTextBox, mailTextBox, telefonoTextBox, fnDateTimePicker };
 
             this.FormClosing += ABMChoferForm_FormClosing;
         }
@@ -111,10 +110,6 @@ namespace UberFrba.Abm_Chofer
         {            
             UInt32 dni = 11111111;
             UInt32 telefono = 1000001;
-            int year = Convert.ToInt32(yearComboBox.SelectedItem.ToString());
-            int month = Convert.ToInt32(monthComboBox.SelectedItem.ToString());
-            int day = Convert.ToInt32(dayComboBox.SelectedItem.ToString());
-            DateTime fecha = new DateTime(year, month, day);
 
             if (!UInt32.TryParse(dniTextBox.Text, out dni))
             {
@@ -131,7 +126,7 @@ namespace UberFrba.Abm_Chofer
 
             var nuevo = new Chofer(0);
 
-            nuevo.set_datos_principales(nombreTextBox.Text, apeliidoTextBox.Text, dni, fecha);
+            nuevo.set_datos_principales(nombreTextBox.Text, apeliidoTextBox.Text, dni, fnDateTimePicker.Value);
             nuevo.set_datos_secundarios(mailTextBox.Text, telefono, direccionTextBox.Text);
 
             return nuevo;

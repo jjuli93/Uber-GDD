@@ -45,11 +45,8 @@ namespace UberFrba.Abm_Chofer
             direccionTextBox.Text = chofer.direccion;
             telefonoTextBox.Text = chofer.telefono.ToString();
             mailTextBox.Text = chofer.mail;
-
-            objController.cargar_valor_comboBox(this.dayComboBox, chofer.fecha_nacimiento.Day.ToString());
-            objController.cargar_valor_comboBox(this.monthComboBox, chofer.fecha_nacimiento.Month.ToString());
-            objController.cargar_valor_comboBox(this.yearComboBox, chofer.fecha_nacimiento.Year.ToString());
-
+            fnDateTimePicker.Value = chofer.fecha_nacimiento;
+            
             habilitarCheckBox.Checked = chofer.habilitado;
         }
 
@@ -61,7 +58,7 @@ namespace UberFrba.Abm_Chofer
 
         private void guardarButton_Click(object sender, EventArgs e)
         {
-            var campos = new List<Control>() { nombreTextBox, apeliidoTextBox, dniTextBox, telefonoTextBox, direccionTextBox, dayComboBox, monthComboBox, yearComboBox };
+            var campos = new List<Control>() { nombreTextBox, apeliidoTextBox, dniTextBox, telefonoTextBox, direccionTextBox, fnDateTimePicker };
 
             if (objController.cumpleCamposObligatorios(campos, errorProvider))
             {

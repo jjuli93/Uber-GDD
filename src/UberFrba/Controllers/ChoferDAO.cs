@@ -69,6 +69,19 @@ namespace UberFrba.Controllers
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
+                    //create procedure [DDG].sp_update_chofer (@nombre varchar(250), @apellido varchar(250), 
+                    //@fechanac date, @dni numeric(10,0), @direccion varchar(250), @telefono numeric(18,0), 
+                    //@email varchar(250), @habilitado numeric(1,0), @idChofer numeric(10,0))
+
+                    cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = chofer.nombre;
+                    cmd.Parameters.Add("@apellido", SqlDbType.VarChar).Value = chofer.apellido;
+                    cmd.Parameters.Add("@fechanac", SqlDbType.Date).Value = chofer.fecha_nacimiento;
+                    cmd.Parameters.Add("@dni", SqlDbType.Decimal).Value = chofer.dni;
+                    cmd.Parameters.Add("@direccion", SqlDbType.VarChar).Value = chofer.direccion;
+                    cmd.Parameters.Add("@telefono", SqlDbType.Decimal).Value = chofer.telefono;
+                    cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = chofer.mail;
+                    cmd.Parameters.AddWithValue("@habilitado", chofer.habilitado);
+                    cmd.Parameters.AddWithValue("@idChofer", chofer.id);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
@@ -111,9 +124,16 @@ namespace UberFrba.Controllers
 
         public Chofer obtener_cliente_from_row(System.Windows.Forms.DataGridViewRow row)
         {
-            Chofer chofer = new Chofer((int)row.Cells[0].Value);
+            Chofer chofer = new Chofer((int)row.Cells["chofer_id"].Value);
 
-            //fill up da shit
+            chofer.nombre = (string)row.Cells["chofer_nombre"].Value;
+            chofer.apellido = (string)row.Cells["chofer_apellido"].Value;
+            chofer.fecha_nacimiento = Convert.ToDateTime(row.Cells["chofer_fecha_nacimiento"].Value);
+            chofer.dni = Convert.ToUInt32(row.Cells["chofer_dni"].Value);
+            chofer.direccion = (string)row.Cells["chofer_direccion"].Value;
+            chofer.telefono = Convert.ToUInt32(row.Cells["chofer_telefono"].Value);
+            chofer.mail = (string)row.Cells["chofer_email"].Value;
+            chofer.habilitado = Convert.ToBoolean(row.Cells["chofer_habilitado"].Value);
 
             return chofer;
         }

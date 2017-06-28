@@ -31,9 +31,6 @@
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.habilitarCheckBox = new System.Windows.Forms.CheckBox();
-            this.yearComboBox = new System.Windows.Forms.ComboBox();
-            this.monthComboBox = new System.Windows.Forms.ComboBox();
-            this.dayComboBox = new System.Windows.Forms.ComboBox();
             this.cpTextBox = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -52,16 +49,15 @@
             this.cancelarButton = new System.Windows.Forms.Button();
             this.guardarButton = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.fnDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.fnDateTimePicker);
             this.groupBox1.Controls.Add(this.habilitarCheckBox);
-            this.groupBox1.Controls.Add(this.yearComboBox);
-            this.groupBox1.Controls.Add(this.monthComboBox);
-            this.groupBox1.Controls.Add(this.dayComboBox);
             this.groupBox1.Controls.Add(this.cpTextBox);
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.label6);
@@ -93,33 +89,6 @@
             this.habilitarCheckBox.TabIndex = 48;
             this.habilitarCheckBox.Text = "Habilitar";
             this.habilitarCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // yearComboBox
-            // 
-            this.yearComboBox.FormattingEnabled = true;
-            this.yearComboBox.Location = new System.Drawing.Point(269, 289);
-            this.yearComboBox.Name = "yearComboBox";
-            this.yearComboBox.Size = new System.Drawing.Size(71, 21);
-            this.yearComboBox.TabIndex = 47;
-            this.yearComboBox.Text = "Año";
-            // 
-            // monthComboBox
-            // 
-            this.monthComboBox.FormattingEnabled = true;
-            this.monthComboBox.Location = new System.Drawing.Point(207, 289);
-            this.monthComboBox.Name = "monthComboBox";
-            this.monthComboBox.Size = new System.Drawing.Size(48, 21);
-            this.monthComboBox.TabIndex = 46;
-            this.monthComboBox.Text = "Mes";
-            // 
-            // dayComboBox
-            // 
-            this.dayComboBox.FormattingEnabled = true;
-            this.dayComboBox.Location = new System.Drawing.Point(145, 289);
-            this.dayComboBox.Name = "dayComboBox";
-            this.dayComboBox.Size = new System.Drawing.Size(48, 21);
-            this.dayComboBox.TabIndex = 45;
-            this.dayComboBox.Text = "Día";
             // 
             // cpTextBox
             // 
@@ -266,6 +235,14 @@
             // 
             this.errorProvider.ContainerControl = this;
             // 
+            // fnDateTimePicker
+            // 
+            this.fnDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.fnDateTimePicker.Location = new System.Drawing.Point(145, 288);
+            this.fnDateTimePicker.Name = "fnDateTimePicker";
+            this.fnDateTimePicker.Size = new System.Drawing.Size(195, 20);
+            this.fnDateTimePicker.TabIndex = 49;
+            // 
             // ModificarClienteForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -302,12 +279,10 @@
         private System.Windows.Forms.TextBox nombreTextBox;
         private System.Windows.Forms.TextBox dniTextBox;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox yearComboBox;
-        private System.Windows.Forms.ComboBox monthComboBox;
-        private System.Windows.Forms.ComboBox dayComboBox;
         private System.Windows.Forms.Button cancelarButton;
         private System.Windows.Forms.Button guardarButton;
         private System.Windows.Forms.CheckBox habilitarCheckBox;
         private System.Windows.Forms.ErrorProvider errorProvider;
+        private System.Windows.Forms.DateTimePicker fnDateTimePicker;
     }
 }

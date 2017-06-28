@@ -28,6 +28,9 @@ namespace UberFrba.Controllers
 
         public bool crear_cliente(Cliente cliente)
         {
+            if (cliente == null)
+                return false;
+
             bool result = true;
 
             try
@@ -61,28 +64,38 @@ namespace UberFrba.Controllers
 
         public bool modificar_cliente(Cliente cliente)
         {
+            if (cliente == null)
+                return false;
+
             bool result = true;
 
-            //try
-            //{
-            //    using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
-            //    using (SqlCommand cmd = new SqlCommand("DDG.sp_update_cliente", conn))
-            //    {
-            //        cmd.CommandType = CommandType.StoredProcedure;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_update_cliente", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-            //        cmd.Parameters.AddWithValue("@idcliente", cliente.id);
-                    
-            //        //definir bien como va a hacer para modificar
+                    cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = cliente.nombre;
+                    cmd.Parameters.Add("@apellido", SqlDbType.VarChar).Value = cliente.apellido;
+                    cmd.Parameters.Add("@fechaNacimiento", SqlDbType.Date).Value = cliente.fecha_nacimiento;
+                    //cmd.Parameters.Add("@dni", SqlDbType.Decimal).Value = cliente.dni;
+                    cmd.Parameters.Add("@direccion", SqlDbType.VarChar).Value = cliente.direccion;
+                    cmd.Parameters.Add("@codPostal", SqlDbType.Decimal).Value = cliente.codigoPostal;
+                    cmd.Parameters.Add("@telefono", SqlDbType.Decimal).Value = cliente.telefono;
+                    cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = cliente.mail;
+                    cmd.Parameters.AddWithValue("@habilitado", cliente.habilitado);
+                    cmd.Parameters.AddWithValue("@idcliente", cliente.id);
 
-            //        conn.Open();
-            //        cmd.ExecuteNonQuery();
-            //    }
-            //}
-            //catch (SqlException)
-            //{
-            //    result = false;
-            //    //throw;
-            //}
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException)
+            {
+                result = false;
+                //throw;
+            }
 
             return result;
         }
@@ -117,12 +130,20 @@ namespace UberFrba.Controllers
         {
             Cliente cliente = new Cliente((int)row.Cells[0].Value);
 
-            //fill up da shit
+            cliente.nombre = (string)row.Cells["cliente_nombre"].Value;
+            cliente.apellido = (string)row.Cells["cliente_apellido"].Value;
+            cliente.fecha_nacimiento = Convert.ToDateTime(row.Cells["cliente_fecha_nacimiento"].Value);
+            cliente.dni = Convert.ToUInt32(row.Cells["cliente_dni"].Value);
+            cliente.direccion = (string)row.Cells["cliente_direccion"].Value;
+            cliente.codigoPostal = (int)row.Cells["cliente_codigo_postal"].Value;
+            cliente.telefono = Convert.ToUInt32(row.Cells["cliente_telefono"].Value);
+            cliente.mail = (string)row.Cells["cliente_email"].Value;
+            cliente.habilitado = Convert.ToBoolean(row.Cells["cliente_habilitado"].Value);
 
             return cliente;
         }
 
-        public DataTable get_clientes()
+        public DataTable get_clientes(string nombre, string apellido, string dni)
         {
             DataTable clientes = null;
 
@@ -132,6 +153,16 @@ namespace UberFrba.Controllers
                 using (SqlCommand cmd = new SqlCommand("DDG.sp_get_clientes", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = nombre;
+                    cmd.Parameters.Add("@apellido", SqlDbType.VarChar).Value = apellido;
+
+                    UInt32 dni_num = 0;
+
+                    if (UInt32.TryParse(dni, out dni_num))
+                        cmd.Parameters.AddWithValue("@dni", dni_num);
+                    else
+                        cmd.Parameters.AddWithValue("@dni", null);
 
                     conn.Open();
                     SqlDataReader lector = cmd.ExecuteReader();
@@ -151,57 +182,76 @@ namespace UberFrba.Controllers
             return clientes;
         }
 
-        public DataTable get_clientes_with_parameters(string nombre, string apellido, double dni)
+        /*
+           * Creo que lo mejor es hacer lo siguiente:
+           * 
+           * 1) llamar esta funcion, que realice la facturacion (sp_alta_factura) 
+           *      y que devuelva el id de factura
+           *      
+           * 2) luego llamar otra funcion (ej: obtenerImporte(id_factura)) 
+           *      -> (sp_calcular_importe @id_factura) -> devuelve el importe
+           *      
+           * 3) finalmente llamar obtenerViajes donde tambien le paso el id_factura
+           *      -> (sp_get_viajes_facturados @id_factura)
+           */
+
+        public int realizarFacturacion(int id_cliente, DateTime hora_inicio, DateTime hora_fin)
         {
-            DataTable clientes = new DataTable();
-
-            using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
-            using (SqlCommand cmd = new SqlCommand("DDG.sp_get_clientes", conn))
-            {
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                conn.Open();
-                SqlDataReader lector = cmd.ExecuteReader();
-
-                clientes.Load(lector);
-
-                lector.Close();
-            }
-
-            return clientes;
-        }
-
-        public int realizarFacturacion(int id_cliente)
-        {
-            int importe = 0;
-
-            /*
-             * Creo que lo mejor es hacer lo siguiente:
-             * 
-             * 1) llamar esta funcion, que realice la facturacion (sp_alta_factura) 
-             *      y que devuelva el id de factura
-             *      
-             * 2) luego llamar otra funcion (ej: obtenerImporte(id_factura)) 
-             *      -> (sp_calcular_importe @id_factura) -> devuelve el importe
-             *      
-             * 3) finalmente llamar obtenerViajes donde tambien le paso el id_factura
-             *      -> (sp_get_viajes_facturados @id_factura)
-             */
+            int id_factura = 0;
 
             try
             {
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_alta_factura", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id_cliente", id_cliente);
+                    SqlParameter returnParameter = cmd.Parameters.Add("@id_factura", SqlDbType.Int);
+                    returnParameter.Direction = ParameterDirection.Output;
 
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    id_factura = (int)cmd.Parameters["@id_factura"].Value;
+                }
             }
             catch (SqlException)
             {
-                importe = -1;
+                id_factura = -1;
+                //throw;
+            }
+
+            return id_factura;
+        }
+
+        public int obtener_importe(int id_factura)
+        {
+            int importe = 0;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_get_importe", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id_factura", id_factura);
+                    SqlParameter returnParameter = cmd.Parameters.Add("@importe", SqlDbType.Int);
+                    returnParameter.Direction = ParameterDirection.Output;
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    importe = (int)cmd.Parameters["@importe"].Value;
+                }
+            }
+            catch (SqlException)
+            {
+                return -1;
                 //throw;
             }
 
             return importe;
         }
 
-        public DataTable obtenerViajes(int id_cliente)
+        public DataTable obtenerViajes(int id_factura)
         {
             DataTable viajes = new DataTable();
 

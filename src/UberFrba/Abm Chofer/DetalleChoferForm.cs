@@ -45,12 +45,7 @@ namespace UberFrba.Abm_Chofer
             direccionTextBox.Text = chofer.direccion;
             telefonoTextBox.Text = chofer.telefono.ToString();
             mailTextBox.Text = chofer.mail;
-
-            var objCTRL = ObjetosFormCTRL.Instance;
-
-            objCTRL.cargar_valor_comboBox(dayComboBox, chofer.fecha_nacimiento.Day.ToString());
-            objCTRL.cargar_valor_comboBox(monthComboBox, chofer.fecha_nacimiento.Month.ToString());
-            objCTRL.cargar_valor_comboBox(yearComboBox, chofer.fecha_nacimiento.Year.ToString());
+            fnTextBox.Text = chofer.fecha_nacimiento.ToShortDateString();
 
             habilitadoCheckBox.Checked = chofer.habilitado;
         }

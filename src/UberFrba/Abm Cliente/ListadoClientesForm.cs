@@ -92,11 +92,16 @@ namespace UberFrba.Abm_Cliente
                 if (ClienteDAO.Instance.eliminar_cliente(id_cliente))
                 {
                     MessageBox.Show("Cliente eliminado", "Eliminar Cliente", MessageBoxButtons.OK);
+                    clientesDataGridView.Rows[index_cliente_selecccionado].Cells["cliente_habilitado"].Value = 0;
                 }
                 else
                 {
                     MessageBox.Show("No se ha podido eliminar el cliente", "Error en Eliminar Cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }    
+                }
+
+                index_cliente_selecccionado = -1;
+                objController.habilitarContenidoPanel(clienteSeleccionadoPanel, false);
+                clientesDataGridView.ClearSelection();
             }            
         }
         // <------ end abm cliente
@@ -148,6 +153,20 @@ namespace UberFrba.Abm_Cliente
             if (index_cliente_selecccionado == -1)
                 return null;
 
+            var nulo = false;
+
+            foreach (DataGridViewCell item in clientesDataGridView.Rows[index_cliente_selecccionado].Cells)
+            {
+                if (item.Value == null)
+                {
+                    nulo = true;
+                    break;
+                }
+            }
+
+            if (nulo)
+                return null;
+
             return ClienteDAO.Instance.obtener_cliente_from_row(clientesDataGridView.Rows[index_cliente_selecccionado]);
         }
 
@@ -161,10 +180,49 @@ namespace UberFrba.Abm_Cliente
 
         private void buscarButton_Click(object sender, EventArgs e)
         {
-            //ver el tema de buscar clientes
-            //siempre verificar que la DataTable devuelta por 
-            //el controller sea distinto de null para llenarla
-            //en el datagridview
+            string nombre_filtro = null;
+            string apellido_filtro = null;
+            string dni_filtro = null;
+
+            if (!string.IsNullOrEmpty(nameFilterTB.Text))
+                nombre_filtro = nameFilterTB.Text;
+
+            if (!string.IsNullOrEmpty(lnameFilterTB.Text))
+                apellido_filtro = lnameFilterTB.Text;
+
+            if (!string.IsNullOrEmpty(dniFilterTB.Text))
+                dni_filtro = dniFilterTB.Text;
+
+            DataTable resultados = ClienteDAO.Instance.get_clientes(nombre_filtro, apellido_filtro, dni_filtro);
+
+            if (resultados == null)
+            {
+                MessageBox.Show("Ha ocurrido un error en el buscador", "Error Buscar Clientes", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (resultados.Rows.Count == 0)
+            {
+                MessageBox.Show("No se han encontrado clientes con los filtro aplicados", "Buscar Clientes", MessageBoxButtons.OK);
+                return;
+            }
+
+            clientesDataGridView.DataSource = resultados;
+        }
+
+        private void cleanParamsButton_Click(object sender, EventArgs e)
+        {
+            nameFilterTB.Text = "";
+            lnameFilterTB.Text = "";
+            dniFilterTB.Text = "";
+        }
+
+        private void cleanTableButton_Click(object sender, EventArgs e)
+        {
+            clientesDataGridView.ClearSelection();
+            clientesDataGridView.Rows.Clear();
+            index_cliente_selecccionado = -1;
+            clientesDataGridView.DataSource = null;
         }
         
     }
