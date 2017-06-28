@@ -108,13 +108,19 @@ namespace UberFrba.Controllers
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
+                    cmd.Parameters.AddWithValue("@horaInicio", nuevo.hora_inicio.ToLongTimeString());
+                    cmd.Parameters.AddWithValue("@horaFin", nuevo.hora_fin.ToLongTimeString());
+                    cmd.Parameters.Add("@descripcion", SqlDbType.VarChar).Value = nuevo.descripcion;
+                    cmd.Parameters.AddWithValue("@valorKM", nuevo.valor_km);
+                    cmd.Parameters.AddWithValue("@precioBase", nuevo.precio_base);
                     
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
+                MessageBox.Show(e.Message, "Error en Alta de Turno");
                 result = false;
                 //throw;
             }
@@ -133,6 +139,13 @@ namespace UberFrba.Controllers
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
+                    cmd.Parameters.AddWithValue("@idTurno", modificado.id);
+                    cmd.Parameters.AddWithValue("@horaInicio", modificado.hora_inicio.ToLongTimeString());
+                    cmd.Parameters.AddWithValue("@horaFin", modificado.hora_fin.ToLongTimeString());
+                    cmd.Parameters.Add("@descripcion", SqlDbType.VarChar).Value = modificado.descripcion;
+                    cmd.Parameters.AddWithValue("@valorKM", modificado.valor_km);
+                    cmd.Parameters.AddWithValue("@precioBase", modificado.precio_base);
+                    cmd.Parameters.AddWithValue("@habilitado", modificado.habilitado);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
@@ -194,8 +207,8 @@ namespace UberFrba.Controllers
 
             turno = new Turno(Convert.ToInt32(row.Cells["turno_habilitado"].Value));
             turno.descripcion = row.Cells["turno_descripcion"].Value.ToString();
-            turno.hora_inicio = row.Cells["turno_hora_inicio"].Value.ToString();
-            turno.hora_fin = row.Cells["turno_hora_fin"].Value.ToString();
+            turno.hora_inicio = Convert.ToDateTime(row.Cells["turno_hora_inicio"].Value);
+            turno.hora_fin = Convert.ToDateTime(row.Cells["turno_hora_fin"].Value);
             turno.valor_km = Convert.ToDouble(row.Cells["turno_valor_km"].Value.ToString());
             turno.precio_base = Convert.ToDouble(row.Cells["turno_precio_base"].Value.ToString());
 

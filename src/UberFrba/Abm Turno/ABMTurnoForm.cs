@@ -81,8 +81,8 @@ namespace UberFrba.Abm_Turno
             Turno nuevo = null;
 
             nuevo.descripcion = descripcionTextBox.Text;
-            nuevo.hora_inicio = beginDateTimePicker.Value.ToString();
-            nuevo.hora_fin = beginDateTimePicker.Value.ToString();
+            nuevo.hora_inicio = beginDateTimePicker.Value;
+            nuevo.hora_fin = beginDateTimePicker.Value;
             nuevo.valor_km = Convert.ToDouble(precioNumericUpDown.Value);
             nuevo.precio_base = Convert.ToDouble(kmNumericUpDown.Value);
 

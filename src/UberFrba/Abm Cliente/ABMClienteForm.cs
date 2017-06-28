@@ -50,8 +50,8 @@ namespace UberFrba.Abm_Cliente
             {
                 Cliente cliente_nuevo = new Cliente(0);
                 DateTime fechaNac = new DateTime((int)dayComboBox.SelectedItem, (int)monthComboBox.SelectedItem, (int)yearComboBox.SelectedItem);
-                cliente_nuevo.set_datos_principales(nombreTextBox.Text, apellidoTextBox.Text, Convert.ToDouble(dniTextBox.Text), fechaNac);
-                cliente_nuevo.set_datos_secundarios(mailTextBox.Text, Convert.ToDouble(telTextBox.Text), dirTextBox.Text);
+                cliente_nuevo.set_datos_principales(nombreTextBox.Text, apellidoTextBox.Text, Convert.ToUInt32(dniTextBox.Text), fechaNac);
+                cliente_nuevo.set_datos_secundarios(mailTextBox.Text, Convert.ToUInt32(telTextBox.Text), dirTextBox.Text);
 
                 if (ClienteDAO.Instance.crear_cliente(cliente_nuevo))
                 {

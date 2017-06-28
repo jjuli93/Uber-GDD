@@ -34,7 +34,7 @@
             this.userTextBox = new System.Windows.Forms.TextBox();
             this.passTextBox = new System.Windows.Forms.TextBox();
             this.IngresarButton = new System.Windows.Forms.Button();
-            this.CancelButton = new System.Windows.Forms.Button();
+            this.cancelarButton = new System.Windows.Forms.Button();
             this.groupBoxLoginDatos = new System.Windows.Forms.GroupBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
@@ -88,14 +88,14 @@
             // 
             // CancelButton
             // 
-            this.CancelButton.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.CancelButton.Location = new System.Drawing.Point(159, 246);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 5;
-            this.CancelButton.Text = "Cancelar";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            this.cancelarButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.cancelarButton.Location = new System.Drawing.Point(159, 246);
+            this.cancelarButton.Name = "CancelButton";
+            this.cancelarButton.Size = new System.Drawing.Size(75, 23);
+            this.cancelarButton.TabIndex = 5;
+            this.cancelarButton.Text = "Cancelar";
+            this.cancelarButton.UseVisualStyleBackColor = true;
+            this.cancelarButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // groupBoxLoginDatos
             // 
@@ -129,7 +129,7 @@
             this.Controls.Add(this.userTextBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.CancelButton);
+            this.Controls.Add(this.cancelarButton);
             this.Controls.Add(this.IngresarButton);
             this.Controls.Add(this.groupBoxLoginDatos);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -151,7 +151,7 @@
         private System.Windows.Forms.TextBox userTextBox;
         private System.Windows.Forms.TextBox passTextBox;
         private System.Windows.Forms.Button IngresarButton;
-        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button cancelarButton;
         private System.Windows.Forms.GroupBox groupBoxLoginDatos;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ErrorProvider errorProvider;

@@ -115,19 +115,20 @@ namespace UberFrba.Controllers
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.AddWithValue("@idchofer", nuevo.chofer_id);
-                    cmd.Parameters.AddWithValue("@idmarca", nuevo.idmarca); //falta
                     cmd.Parameters.AddWithValue("@idmodelo", nuevo.idmodelo);
                     cmd.Parameters.Add("@patente", SqlDbType.VarChar).Value = nuevo.patente;
-                    cmd.Parameters.AddWithValue("@idturno", nuevo.idturno); //falta
                     cmd.Parameters.Add("@licencia", SqlDbType.VarChar).Value = nuevo.licencia.ToString();
                     cmd.Parameters.Add("@rodado", SqlDbType.VarChar).Value = nuevo.rodado;
+                    //cmd.Parameters.AddWithValue("@idmarca", nuevo.idmarca);
+                    cmd.Parameters.AddWithValue("@idturno", nuevo.idturno);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
+                MessageBox.Show(e.Message, "Error en alta automovil");
                 result = false;
                 //throw;
             }
@@ -148,13 +149,13 @@ namespace UberFrba.Controllers
 
                     cmd.Parameters.AddWithValue("@id", modificado.id);
                     cmd.Parameters.AddWithValue("@idchofer", modificado.chofer_id);
-                    cmd.Parameters.AddWithValue("@idmarca", modificado.idmarca);
                     cmd.Parameters.AddWithValue("@idmodelo", modificado.idmodelo);
                     cmd.Parameters.Add("@patente", SqlDbType.VarChar).Value = modificado.patente;
-                    cmd.Parameters.AddWithValue("@idturno", modificado.idturno);
                     cmd.Parameters.Add("@licencia", SqlDbType.VarChar).Value = modificado.licencia.ToString();
                     cmd.Parameters.Add("@rodado", SqlDbType.VarChar).Value = modificado.rodado;
                     cmd.Parameters.AddWithValue("@habilitado", Convert.ToInt32(modificado.habilitado));
+                    cmd.Parameters.AddWithValue("@idturno", modificado.idturno);
+                    //cmd.Parameters.AddWithValue("@idmarca", modificado.idmarca);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
@@ -188,8 +189,7 @@ namespace UberFrba.Controllers
             }
             catch (SqlException)
             {
-
-                throw;
+                //throw;
             }
 
             return result;
@@ -214,6 +214,7 @@ namespace UberFrba.Controllers
             auto.licencia = Convert.ToInt32(row.Cells[4].Value);
             auto.rodado = row.Cells[5].Value.ToString();
             auto.habilitado = Convert.ToBoolean(row.Cells[6].Value);
+            
 
             return auto;
         }
