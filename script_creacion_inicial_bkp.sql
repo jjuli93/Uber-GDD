@@ -117,7 +117,6 @@ GO
 create table [DDG].Autos (
 auto_id numeric(10) primary key identity,
 auto_chofer numeric(10) not null references [DDG].Choferes,
-auto_marca numeric(10) not null references [DDG].Marcas
 auto_modelo numeric(10) not null references [DDG].Modelos,
 auto_patente varchar(10)  not null unique,
 auto_licencia varchar(26) not null,
