@@ -92,8 +92,8 @@ GO
 
 create table [DDG].Turnos (
 turno_id numeric(10) primary key identity,
-turno_hora_inicio time(7) not null,
-turno_hora_fin time(7) not null,
+turno_hora_inicio time(0) not null,
+turno_hora_fin time(0) not null,
 turno_descripcion varchar(255),
 turno_valor_km decimal(5,2) not null,
 turno_precio_base decimal(5,2) not null,
@@ -121,8 +121,14 @@ auto_modelo numeric(10) not null references [DDG].Modelos,
 auto_patente varchar(10)  not null unique,
 auto_licencia varchar(26) not null,
 auto_rodado varchar(10) not null,
-auto_turno numeric(10) not null references [DDG].Turnos,
 auto_habilitado bit not null default 1
+)
+GO
+
+create table [DDG].AutosXTurnos (
+autoXTurno_id numeric(10) primary key identity,
+autoXTurno_auto numeric(10) not null references [DDG].Autos,
+autoXTurno_turno numeric(10) not null references [DDG].Turnos
 )
 GO
 
@@ -249,9 +255,9 @@ and r.rol_nombre = ('Chofer')
 
 					/*Turnos*/
 insert into DDG.Turnos(turno_descripcion, turno_hora_fin, turno_hora_inicio, turno_precio_base, turno_valor_km)
-select distinct Turno_Descripcion, Turno_Hora_Fin, Turno_Hora_Inicio, Turno_Precio_Base, Turno_Valor_Kilometro
+select distinct Turno_Descripcion, dateadd(HOUR,Turno_Hora_Fin,cast('00:00:00' as time(0))), dateadd(HOUR,Turno_Hora_Inicio,cast('00:00:00' as time(0))), Turno_Precio_Base, Turno_Valor_Kilometro
 from gd_esquema.Maestra
-order by Turno_Hora_Inicio
+order by dateadd(HOUR,Turno_Hora_Inicio,cast('00:00:00' as time(0)))
 
 /*Sobreescribo descripcion turno mañana porque está mal escrita*/
 update DDG.Turnos
@@ -268,7 +274,7 @@ select distinct c.chofer_id, m.Rendicion_Fecha, sum(m.Rendicion_Importe), m.Rend
 from gd_esquema.Maestra m, DDG.Choferes c, DDG.Turnos t
 where m.Rendicion_Fecha is not null
 and m.Chofer_Dni = c.chofer_dni
-and m.Turno_Hora_Inicio = t.turno_hora_inicio
+and dateadd(HOUR,m.Turno_Hora_Inicio,cast('00:00:00' as time(0))) = t.turno_hora_inicio
 group by Rendicion_Nro, c.chofer_id, t.turno_id, m.Rendicion_Fecha
 order by Rendicion_Nro
 
@@ -290,13 +296,19 @@ from gd_esquema.Maestra m, [DDG].Marcas ma
 where m.Auto_Marca = ma.marca_descripcion
 
 					/*Autos*/
-insert into DDG.Autos (auto_licencia, auto_modelo, auto_patente, auto_rodado, auto_chofer, auto_turno)
-select distinct m.Auto_Licencia, mo.modelo_id, m.Auto_Patente, m.Auto_Rodado, c.chofer_id, ABS(Checksum(NewID()) % 3) + 1		/*Les inserto un turno random ya que todos se utilizaron en todos los turnos*/
+insert into DDG.Autos (auto_licencia, auto_modelo, auto_patente, auto_rodado, auto_chofer)
+select distinct m.Auto_Licencia, mo.modelo_id, m.Auto_Patente, m.Auto_Rodado, c.chofer_id
 from gd_esquema.Maestra m, DDG.Choferes c, [DDG].Modelos mo
 where m.Auto_Patente is not null
 and m.Chofer_Dni = c.chofer_dni
 and m.Auto_Modelo = mo.modelo_descripcion
-group by m.Auto_Licencia, mo.modelo_id, m.Auto_Patente, m.Auto_Rodado, c.chofer_id
+
+					/*AutosXTurnos*/
+insert into DDG.AutosXTurnos (autoXTurno_auto, autoXTurno_turno)
+select distinct  a.auto_id, t.turno_id
+from gd_esquema.Maestra m, DDG.Autos a, ddg.Turnos t
+where m.Auto_Patente = a.auto_patente
+and dateadd(HOUR,m.Turno_Hora_Inicio,cast('00:00:00' as time(0))) = t.turno_hora_inicio
 
 
 					/*Facturas*/
@@ -323,7 +335,7 @@ and m.Auto_Patente = a.auto_patente
 and m.Chofer_Dni = ch.chofer_dni
 and m.Cliente_Dni = cl.cliente_dni
 and m.Rendicion_Nro = r.rendicion_numero
-and m.Turno_Hora_Inicio = t.turno_hora_inicio
+and dateadd(HOUR,m.Turno_Hora_Inicio,cast('00:00:00' as time(0))) = t.turno_hora_inicio
 and m.Chofer_Dni = m2.Chofer_Dni
 and m.Cliente_Dni = m2.Cliente_Dni
 and m.Viaje_Fecha = m2.Viaje_Fecha
@@ -787,7 +799,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='choferYaAsignado' AND type in
 DROP FUNCTION [ddg].choferYaAsignado
 GO
 
-create function [DDG].choferYaAsignado(@idchofer numeric(10,0), @idTurno numeric(10,0), @idAuto numeric(10,0))
+create function [DDG].choferYaAsignado(@idchofer numeric(10,0))
 returns int
 begin
 declare @retorno bit
@@ -795,9 +807,7 @@ declare @retorno bit
 if	((select count(*)
 	from DDG.Autos
 	where auto_chofer = @idchofer
-	and @idAuto is null or (@idAuto != auto_id)
-	and auto_habilitado = 1
-	and auto_turno = @idTurno) > 0)
+	and auto_habilitado = 1) > 0)
 
 	set @retorno = 1
 
@@ -879,7 +889,29 @@ return @retorno
 end
 GO
 
+--=============================================================================================================
+--TIPO		: Funcion
+--NOMBRE	: turno_horario_valido
+--OBJETIVO  : determinar si el rango horario de un turno es valido                                   
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='turno_horario_valido' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
+DROP FUNCTION [ddg].turno_horario_valido
+GO
 
+create function [DDG].turno_horario_valido(@horaInicio time(0), @horaFin time(0))
+returns bit
+begin
+declare @retorno bit
+
+	if	(@horaFin > @horaInicio) 
+		set @retorno = 1
+	else 
+		set @retorno = 0
+
+return @retorno
+
+end
+GO
 
 /* Alta Usuario */
 
@@ -1011,17 +1043,17 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_automovil' AND type='
 	DROP PROCEDURE [DDG].sp_alta_automovil
 GO
 
-create procedure [DDG].sp_alta_automovil (@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10), @idTurno numeric(10,0))
+create procedure [DDG].sp_alta_automovil (@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10))
 as
 begin
 
-if (ddg.choferYaAsignado (@idchofer, @idTurno, null)=1)
+if (ddg.choferYaAsignado (@idchofer)=1)
 	
-	THROW 51000, 'El chofer ya tiene un auto asignado en el turno seleccionado', 1;														
+	THROW 51000, 'El chofer ya tiene un auto asignado.', 1;														
 
 else
-	insert into DDG.Autos(auto_chofer,auto_modelo,auto_patente,auto_licencia,auto_rodado, auto_turno)
-	values(@idchofer, @idmodelo, @patente, @licencia, @rodado,  @idTurno)
+	insert into DDG.Autos(auto_chofer,auto_modelo,auto_patente,auto_licencia,auto_rodado)
+	values(@idchofer, @idmodelo, @patente, @licencia, @rodado)
 
 end
 GO
@@ -1038,12 +1070,12 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_automovil' AND type
 	DROP PROCEDURE [DDG].sp_update_automovil
 GO
 
-create procedure [DDG].sp_update_automovil (@id numeric(10,0),@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10),@habilitado numeric(1,0), @idTurno numeric(10,0)) as
+create procedure [DDG].sp_update_automovil (@id numeric(10,0),@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10),@habilitado numeric(1,0)) as
 begin
 	
-if (ddg.choferYaAsignado (@idchofer,  @idTurno, @id)=1)
+if (ddg.choferYaAsignado (@idchofer)=1)
 	
-	THROW 51000, 'El chofer ya tiene un auto asignado en el turno seleccionado.', 1;												
+	THROW 51000, 'El chofer ya tiene un auto asignado.', 1;												
 
 else
 
@@ -1053,8 +1085,7 @@ else
 		auto_patente = @patente,
 		auto_licencia = @licencia,
 		auto_rodado = @rodado,
-		auto_habilitado = @habilitado,
-		auto_turno = @idTurno
+		auto_habilitado = @habilitado
 	where	auto_id = @id;
 end
 GO
@@ -1168,7 +1199,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_viaje' AND type='p')
 	DROP PROCEDURE [DDG].sp_alta_viaje
 GO
 
-create procedure [ddg].sp_alta_viaje (@idChofer numeric(10,0), @idAuto numeric(10,0), @idTurno numeric(10,0), @idCliente numeric(10,0), @cantKM numeric(5,0), @horaIn time(7) , @horaFin time(7)) as
+create procedure [ddg].sp_alta_viaje (@idChofer numeric(10,0), @idAuto numeric(10,0), @idTurno numeric(10,0), @idCliente numeric(10,0), @cantKM numeric(5,0), @horaIn time , @horaFin time) as
 begin
 	insert into ddg.viajes(viaje_chofer, viaje_auto, viaje_turno, viaje_cliente, viaje_cantidad_km, viaje_hora_inicio, viaje_hora_fin) 
 	values (@idChofer, @idAuto, @idTurno, @idCliente, @cantKM, @horaIn , @horaFin)
@@ -1278,7 +1309,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_turno' AND type='p')
 	DROP PROCEDURE [DDG].sp_alta_turno
 GO
 
-create procedure [ddg].sp_alta_turno (@horaInicio time(7), @horaFin time(7), @descripcion varchar(250), @valorKM numeric(10,2), @precioBase numeric(10,2)) as
+create procedure [ddg].sp_alta_turno (@horaInicio time(0), @horaFin time(0), @descripcion varchar(250), @valorKM numeric(10,2), @precioBase numeric(10,2)) as
 begin
 	
 	if(ddg.turno_horario_valido(@horaInicio, @horaFin) = 0) THROW 53000, 'Horario invalido', 1;
@@ -1299,7 +1330,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_turno' AND type='p'
 	DROP PROCEDURE [DDG].sp_update_turno
 GO
 
-create procedure [ddg].sp_update_turno (@idTurno, @horaInicio time(7), @horaFin time(7), @descripcion varchar(250), @valorKM numeric(10,2), @precioBase numeric(10,2)) as
+create procedure [ddg].sp_update_turno (@idTurno numeric(10), @horaInicio time(0), @horaFin time(0), @descripcion varchar(250), @valorKM numeric(10,2), @precioBase numeric(10,2)) as
 begin
 	
 	if(ddg.turno_horario_valido(@horaInicio, @horaFin) = 0) THROW 53000, 'Horario invalido', 1;
@@ -1732,8 +1763,8 @@ end
 go
 
 --=============================================================================================================
---TIPO		: Stored procedure
---NOMBRE	: sp_get_automovilDetalles																										                       
+--TIPO		: Stored procedure	
+--NOMBRE	: sp_get_automovilDetalles								//--TODO faltan los turnos																			                       
 --=============================================================================================================
 IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_automovilDetalles' AND type='p')
 	DROP PROCEDURE [DDG].sp_get_automovilDetalles
@@ -1742,43 +1773,16 @@ GO
 create procedure [ddg].sp_get_automovilDetalles(@idAuto numeric(10,0)) as
 begin
 
-select ma.marca_descripcion, mo.modelo_descripcion, a.auto_patente, c.chofer_nombre, c.chofer_apellido, t.turno_descripcion, a.auto_licencia, a.auto_rodado, a.auto_habilitado
-from ddg.Autos a, ddg.Marcas ma, ddg.Modelos mo, ddg.Choferes c, ddg.Turnos t
+select ma.marca_descripcion, mo.modelo_descripcion, a.auto_patente, c.chofer_nombre, c.chofer_apellido, a.auto_licencia, a.auto_rodado, a.auto_habilitado
+from ddg.Autos a, ddg.Marcas ma, ddg.Modelos mo, ddg.Choferes c
 where a.auto_chofer = c.chofer_id
 and a.auto_modelo = mo.modelo_id
 and mo.modelo_marca = marca_id
-and a.auto_turno = t.turno_id
 
 end
 GO
 
 
-
-
-
---=============================================================================================================
---TIPO		: Funcion
---NOMBRE	: turno_horario_valido
---OBJETIVO  : determinar si el rango horario de un turno es valido                                   
---=============================================================================================================
-IF EXISTS (SELECT name FROM sysobjects WHERE name='turno_horario_valido' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
-DROP FUNCTION [ddg].turno_horario_valido
-GO
-
-create function [DDG].turno_horario_valido(@horaInicio time(7), @horaFin time(7))
-returns bit
-begin
-declare @retorno bit
-
-	if	(@horaFin > @horaInicio) 
-		set @retorno = 1
-	else 
-		set @retorno = 0
-
-return @retorno
-
-end
-GO
 
 
 
@@ -1791,7 +1795,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='validar_datos_turno' AND type
 DROP PROCEDURE [ddg].validar_datos_turno
 GO
 
-create procedure [ddg].validar_datos_turno(@horaInicio time(7), @horaFin time(7), @descripcion varchar(250)) as
+create procedure [ddg].validar_datos_turno(@horaInicio time(0), @horaFin time(0), @descripcion varchar(250)) as
 
 begin
 
