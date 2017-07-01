@@ -1279,7 +1279,7 @@ returns bit
 begin
 declare @retorno bit
 
-	if	((select count (*) from ddg.turnos where turno_hora_inicio <= @hora and turno_hora_fin >= @hora) > 0) 
+	if	((select count (*) from ddg.turnos where turno_habilitado = 1 and turno_hora_inicio <= @hora and turno_hora_fin >= @hora) > 0) 
 		set @retorno = 1
 	else 
 		set @retorno = 0
@@ -1307,13 +1307,13 @@ create procedure [ddg].sp_validar_datos_turno(@horaInicio time(0), @horaFin time
 begin
 
 
-	if	(@horaFin > @horaInicio) THROW 53000, 'Horario invalido', 1;
+	if	(@horaInicio >= @horaFin) THROW 53000, 'Horario invalido', 1;
 
-	if 	((select count (*) from ddg.turnos where turno_descripcion = @descripcion) > 0) THROW 5400, 'Ya existe un turno con esta descripcion', 1;
+	if 	((select count (*) from ddg.turnos where turno_habilitado = 1 and turno_descripcion = @descripcion) > 0) THROW 54000, 'Ya existe un turno con esta descripcion', 1;
 
 
 
-	if	((ddg.horario_superpuesto (@horaInicio) = 1) or (ddg.horario_superpuesto (@horaInicio) = 1)) THROW 5500, 'El turno se superpone con otro ya habilitado', 1;
+	if	((ddg.horario_superpuesto (@horaInicio) = 1) or (ddg.horario_superpuesto (@horaFin) = 1)) THROW 55000, 'El turno se superpone con otro ya habilitado', 1;
 
 end
 GO
