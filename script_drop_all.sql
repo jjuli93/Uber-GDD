@@ -77,6 +77,7 @@ DROP FUNCTION [ddg].existeClienteConMismoTelefono
 DROP FUNCTION [ddg].ExisteRendicion
 DROP FUNCTION [ddg].ExisteFacturacion
 DROP FUNCTION [ddg].turno_horario_valido
+DROP FUNCTION [ddg].horario_superpuesto
 
 
 -- Eliminacion de tablas
