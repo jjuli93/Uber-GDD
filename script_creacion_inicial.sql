@@ -3,9 +3,6 @@ go
 
 													/* Creacion de tablas*/
 
-
-
-
 create schema [DDG] authorization [gd]
 go
 
@@ -477,7 +474,7 @@ end
 	/*ABM ROL*/
 
 
-create type funcionalidadesList as table (funcionalidadID int);
+create type listaIDs as table (id int);
 
 --=============================================================================================================
 --TIPO		: Stored procedure
@@ -488,7 +485,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_rol' AND type='p')
 	DROP PROCEDURE [DDG].sp_alta_rol
 GO
 
-create procedure [DDG].sp_alta_rol (@nombre varchar(255), @habilitado  bit, @listaFuncionalidades funcionalidadesList readonly)
+create procedure [DDG].sp_alta_rol (@nombre varchar(255), @habilitado  bit, @listaFuncionalidades listaIDs readonly)
 as
 begin
 
@@ -496,7 +493,7 @@ insert into DDG.Roles (rol_nombre, rol_habilitado)
 values(@nombre, @habilitado)
 
 insert into ddg.RolesXFuncionalidades (rolXFuncionalidad_rol, rolXFuncionalidad_funcionalidad)
-select  rol_ID, funcionalidadID
+select  rol_ID, id
 from @listaFuncionalidades, ddg.Roles
 where @nombre = rol_nombre
 
@@ -533,7 +530,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_rol' AND type='p')
 	DROP PROCEDURE [DDG].sp_update_rol
 GO											
 
-create procedure [DDG].sp_update_rol (@id numeric(10,0), @nombre varchar(255), @habilitado bit, @listaFuncionalidades funcionalidadesList readonly)	
+create procedure [DDG].sp_update_rol (@id numeric(10,0), @nombre varchar(255), @habilitado bit, @listaFuncionalidades listaIDs readonly)	
 as
 begin
 
@@ -545,7 +542,7 @@ delete from ddg.RolesXFuncionalidades
 where rolXFuncionalidad_rol = @id
 
 insert into ddg.RolesXFuncionalidades (rolXFuncionalidad_rol, rolXFuncionalidad_funcionalidad)
-select  @id, funcionalidadID
+select  @id, id
 from @listaFuncionalidades
 
 
@@ -1043,7 +1040,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_automovil' AND type='
 	DROP PROCEDURE [DDG].sp_alta_automovil
 GO
 
-create procedure [DDG].sp_alta_automovil (@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10))
+create procedure [DDG].sp_alta_automovil (@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10), @listaTurnos listaIDs readonly)
 as
 begin
 
@@ -1054,6 +1051,13 @@ if (ddg.choferYaAsignado (@idchofer)=1)
 else
 	insert into DDG.Autos(auto_chofer,auto_modelo,auto_patente,auto_licencia,auto_rodado)
 	values(@idchofer, @idmodelo, @patente, @licencia, @rodado)
+
+	declare @idAuto int
+	set @idAuto = scope_identity()
+
+	insert into DDG.AutosXTurnos(autoXTurno_auto, autoXTurno_turno)
+	select @idAuto, id
+	from @listaTurnos
 
 end
 GO
@@ -1070,7 +1074,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_automovil' AND type
 	DROP PROCEDURE [DDG].sp_update_automovil
 GO
 
-create procedure [DDG].sp_update_automovil (@id numeric(10,0),@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10),@habilitado numeric(1,0)) as
+create procedure [DDG].sp_update_automovil (@id numeric(10,0),@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10),@habilitado numeric(1,0), @listaTurnos listaIDs readonly ) as
 begin
 	
 if (ddg.choferYaAsignado (@idchofer)=1)
@@ -1087,6 +1091,15 @@ else
 		auto_rodado = @rodado,
 		auto_habilitado = @habilitado
 	where	auto_id = @id;
+
+
+delete from ddg.AutosXTurnos
+where autoXTurno_auto = @id
+
+insert into ddg.AutosXTurnos(autoXTurno_auto, autoXTurno_turno)
+select  @id, id
+from @listaTurnos
+
 end
 GO
 
@@ -1225,7 +1238,7 @@ GO
 
 
 --=============================================================================================================
---TIPO		: Stored procedure				(TODO podria devolver el id para que sea mas facil buscar los viajes despues)
+--TIPO		: Stored procedure
 --NOMBRE	: sp_alta_rendicion																												
 --OBJETIVO  : pagar a un chofer los viajes de un dia particular (dar de alta una rendicion de un dia y actualizar los viajes con esa rendicion)                            
 --=============================================================================================================
@@ -1236,6 +1249,7 @@ GO
 create procedure [ddg].sp_alta_rendicion (@idChofer numeric(10,0), @fecha date, @idTurno numeric(10,0),  @retorno int output) as
 begin
 declare @idRendicion int
+declare @idRendicionDetalle int
 
 	if(ddg.ExisteRendicion(@idChofer, @idTurno, @fecha) = 1) THROW 51000, 'Ya se realizó la rendicion solicitada', 1;	
 
@@ -1251,8 +1265,10 @@ declare @idRendicion int
 	insert into DDG.RendicionesDetalle (rendicionDetalle_rendicion)
 	values (@idRendicion)
 
+	set @idRendicionDetalle = scope_identity()
+
 	update DDG.Viajes
-	set viaje_rendicion = @idRendicion
+	set viaje_rendicion = @idRendicionDetalle
 	where viaje_chofer = @idChofer and viaje_fecha_viaje = @fecha and viaje_turno = @idTurno
 
 	set @retorno = @idRendicion
@@ -1261,7 +1277,7 @@ end
 GO
 
 --=============================================================================================================
---TIPO		: Stored procedure						(TODO podria devolver el id para que sea mas facil buscar los viajes despues)
+--TIPO		: Stored procedure
 --NOMBRE	: sp_alta_factura																												
 --OBJETIVO  : facturar desde una fecha a otra (dar de alta la factura y actualizar los viajes)                            
 --=============================================================================================================
@@ -1272,6 +1288,7 @@ GO
 create procedure [DDG].sp_alta_factura (@idCliente numeric(10,0), @fechaDesde date, @fechaHasta date, @retorno int output) as
 begin
 declare @idfactura int
+declare @idDetalleFactura int
 
 	if(ddg.ExisteFacturacion(@idCliente, @fechaDesde, @fechaHasta) = 1) THROW 51000, 'Ya se realizó la facturación solicitada', 1;
 	
@@ -1286,8 +1303,10 @@ declare @idfactura int
 	insert into DDG.FacturasDetalle(facturaDetalle_factura)
 	values (@idfactura)
 
+	set @idDetalleFactura = scope_identity()
+
 	update DDG.Viajes
-	set viaje_factura = @idfactura
+	set viaje_factura = @idDetalleFactura
 	where viaje_cliente = @idCliente and viaje_fecha_viaje between @fechaDesde and @fechaHasta
 
 	set @retorno = @idfactura
