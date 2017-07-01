@@ -1279,7 +1279,7 @@ returns bit
 begin
 declare @retorno bit
 
-	if	((select count (*) from ddg.turnos where turno_hora_inicio < @hora and turno_hora_fin > @hora) > 0) 
+	if	((select count (*) from ddg.turnos where turno_hora_inicio <= @hora and turno_hora_fin >= @hora) > 0) 
 		set @retorno = 1
 	else 
 		set @retorno = 0
