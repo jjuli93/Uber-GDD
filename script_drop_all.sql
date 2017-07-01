@@ -60,7 +60,7 @@ DROP PROCEDURE [DDG].sp_get_automovilDetalles
 DROP PROCEDURE [DDG].sp_alta_turno
 DROP PROCEDURE [DDG].sp_update_turno
 DROP PROCEDURE [DDG].sp_baja_turno
-DROP PROCEDURE [DDG].validar_datos_turno
+DROP PROCEDURE [DDG].sp_validar_datos_turno
 
 
 
@@ -76,7 +76,6 @@ DROP FUNCTION [ddg].calcularimporteViaje
 DROP FUNCTION [ddg].existeClienteConMismoTelefono
 DROP FUNCTION [ddg].ExisteRendicion
 DROP FUNCTION [ddg].ExisteFacturacion
-DROP FUNCTION [ddg].turno_horario_valido
 DROP FUNCTION [ddg].horario_superpuesto
 
 

@@ -1263,6 +1263,65 @@ end
 GO
 
 
+
+
+--=============================================================================================================
+--TIPO		: Funcion
+--NOMBRE	: horario_superpuesto
+--OBJETIVO  : determinar si el horario de inicio o de fin de un turno cae dentro de otro ya habilitado                                   
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='horario_superpuesto' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
+DROP FUNCTION [ddg].horario_superpuesto
+GO
+
+create function [DDG].horario_superpuesto(@hora time(0))
+returns bit
+begin
+declare @retorno bit
+
+	if	((select count (*) from ddg.turnos where turno_hora_inicio < @hora and turno_hora_fin > @hora) > 0) 
+		set @retorno = 1
+	else 
+		set @retorno = 0
+
+return @retorno
+
+end
+GO
+
+
+
+
+
+--=============================================================================================================
+--TIPO		: Stored Procedure
+--NOMBRE	: sp_validar_datos_turno
+--OBJETIVO  : determinar si los datos de un turno son validos                                   
+--=============================================================================================================
+IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_validar_datos_turno' AND type = 'p')
+DROP PROCEDURE [ddg].sp_validar_datos_turno
+GO
+
+create procedure [ddg].sp_validar_datos_turno(@horaInicio time(0), @horaFin time(0), @descripcion varchar(250)) as
+
+begin
+
+
+	if	(@horaFin > @horaInicio) THROW 53000, 'Horario invalido', 1;
+
+	if 	((select count (*) from ddg.turnos where turno_descripcion = @descripcion) > 0) THROW 5400, 'Ya existe un turno con esta descripcion', 1;
+
+
+
+	if	((ddg.horario_superpuesto (@horaInicio) = 1) or (ddg.horario_superpuesto (@horaInicio) = 1)) THROW 5500, 'El turno se superpone con otro ya habilitado', 1;
+
+end
+GO
+
+
+
+
+
 /* ABM de turno */
 
 --=============================================================================================================
@@ -1275,10 +1334,10 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_turno' AND type='p')
 	DROP PROCEDURE [DDG].sp_alta_turno
 GO
 
-create procedure [ddg].sp_alta_turno (@horaInicio time(7), @horaFin time(7), @descripcion varchar(250), @valorKM numeric(10,2), @precioBase numeric(10,2)) as
+create procedure [ddg].sp_alta_turno (@horaInicio time(0), @horaFin time(0), @descripcion varchar(250), @valorKM numeric(10,2), @precioBase numeric(10,2)) as
 begin
 	
-	if(ddg.turno_horario_valido(@horaInicio, @horaFin) = 0) THROW 53000, 'Horario invalido', 1;
+	exec ddg.sp_validar_datos_turno @horaInicio, @horaFin, @descripcion
 
 	insert into ddg.turnos(turno_hora_inicio, turno_hora_fin, turno_descripcion, turno_valor_km, turno_precio_base) 
 	values (@horaInicio, @horaFin, @descripcion, @valorKM, @precioBase)
@@ -1296,17 +1355,18 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_turno' AND type='p'
 	DROP PROCEDURE [DDG].sp_update_turno
 GO
 
-create procedure [ddg].sp_update_turno (@idTurno numeric(10), @horaInicio time(7), @horaFin time(7), @descripcion varchar(250), @valorKM numeric(10,2), @precioBase numeric(10,2)) as
+create procedure [ddg].sp_update_turno (@idTurno numeric(10), @horaInicio time(7), @horaFin time(7), @descripcion varchar(250), @valorKM numeric(10,2), @precioBase numeric(10,2), @habilitado bit) as
 begin
 	
-	if(ddg.turno_horario_valido(@horaInicio, @horaFin) = 0) THROW 53000, 'Horario invalido', 1;
+	exec ddg.sp_validar_datos_turno @horaInicio, @horaFin, @descripcion
 
 	update 	ddg.turnos
 	set 	turno_hora_inicio = @horaInicio,
 		turno_hora_fin = @horaFin,
 		turno_descripcion = @descripcion,
 		turno_valor_km = @valorKM,
-		turno_precio_base = @precioBase
+		turno_precio_base = @precioBase,
+		turno_habilitado = @habilitado
 	where 	turno_id = @idTurno;
 end
 GO
@@ -1749,84 +1809,3 @@ and a.auto_turno = t.turno_id
 end
 GO
 
-
-
-
-
---=============================================================================================================
---TIPO		: Funcion
---NOMBRE	: turno_horario_valido
---OBJETIVO  : determinar si el rango horario de un turno es valido                                   
---=============================================================================================================
-IF EXISTS (SELECT name FROM sysobjects WHERE name='turno_horario_valido' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
-DROP FUNCTION [ddg].turno_horario_valido
-GO
-
-create function [DDG].turno_horario_valido(@horaInicio time(0), @horaFin time(0))
-returns bit
-begin
-declare @retorno bit
-
-	if	(@horaFin > @horaInicio) 
-		set @retorno = 1
-	else 
-		set @retorno = 0
-
-return @retorno
-
-end
-GO
-
-
-
---=============================================================================================================
---TIPO		: Stored Procedure
---NOMBRE	: validar_datos_turno
---OBJETIVO  : determinar si los datos de un turno son validos                                   
---=============================================================================================================
-IF EXISTS (SELECT name FROM sysobjects WHERE name='validar_datos_turno' AND type = 'p')
-DROP PROCEDURE [ddg].validar_datos_turno
-GO
-
-create procedure [ddg].validar_datos_turno(@horaInicio time(0), @horaFin time(0), @descripcion varchar(250)) as
-
-begin
-
-
-	if	(@horaFin > @horaInicio) THROW 53000, 'Horario invalido', 1;
-
-	if 	((select count (*) from ddg.turnos where turno_descripcion = @descripcion) > 0) THROW 5400, 'Ya existe un turno con esta descripcion', 1;
-
-
-
-	if	((ddg.horario_superpuesto (@horaInicio) = 1) or (ddg.horario_superpuesto (@horaInicio) = 1)) THROW 5500, 'El turno se superpone con otro ya habilitado', 1;
-
-end
-GO
-
-
-
-
---=============================================================================================================
---TIPO		: Funcion
---NOMBRE	: horario_superpuesto
---OBJETIVO  : determinar si el horario de inicio o de fin de un turno cae dentro de otro ya habilitado                                   
---=============================================================================================================
-IF EXISTS (SELECT name FROM sysobjects WHERE name='horario_superpuesto' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
-DROP FUNCTION [ddg].horario_superpuesto
-GO
-
-create function [DDG].horario_superpuesto(@hora time(0))
-returns bit
-begin
-declare @retorno bit
-
-	if	((select count (*) from ddg.turnos where turno_hora_inicio < @hora and turno_hora_fin > @hora) > 0) 
-		set @retorno = 1
-	else 
-		set @retorno = 0
-
-return @retorno
-
-end
-GO
