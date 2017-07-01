@@ -44,7 +44,7 @@ DROP PROCEDURE [DDG].sp_get_modelos
 DROP PROCEDURE [DDG].sp_get_turnos_habilitados
 DROP PROCEDURE [DDG].sp_get_turnos_automovil
 DROP PROCEDURE [DDG].sp_get_automoviles_chofer
-DROP PROCEDURE [DDG].sp_get_automovilesHabilitados_chofer
+DROP PROCEDURE [DDG].sp_get_automovilHabilitado_chofer
 DROP PROCEDURE [DDG].sp_get_importe_factura
 DROP PROCEDURE [DDG].sp_get_viajes_rendicion
 DROP PROCEDURE [DDG].sp_get_viajes_factura
