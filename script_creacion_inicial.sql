@@ -1799,7 +1799,7 @@ GO
 create procedure [ddg].sp_get_automovilDetalles(@idAuto numeric(10,0)) as
 begin
 
-select ma.marca_descripcion, mo.modelo_descripcion, a.auto_patente, c.chofer_nombre, c.chofer_apellido, a.auto_licencia, a.auto_rodado, a.auto_habilitado
+select ma.marca_descripcion, mo.modelo_descripcion, a.auto_patente, c.chofer_nombre, c.chofer_apellido, a.auto_licencia, a.auto_rodado, a.auto_habilitado, mo.modelo_id, ma.marca_id
 from ddg.Autos a, ddg.Marcas ma, ddg.Modelos mo, ddg.Choferes c
 where a.auto_chofer = c.chofer_id
 and a.auto_modelo = mo.modelo_id
