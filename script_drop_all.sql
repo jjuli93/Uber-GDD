@@ -100,6 +100,10 @@ drop table [DDG].RolesXFuncionalidades
 drop table [DDG].Roles
 drop table [DDG].Funcionalidades
 
+
+--tipos
+drop type listaIDs
+
 -- Eliminacion del schema
 
 drop schema DDG
