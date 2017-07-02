@@ -490,6 +490,8 @@ create procedure [DDG].sp_alta_rol (@nombre varchar(255), @habilitado  bit, @lis
 as
 begin
 
+begin tran
+
 insert into DDG.Roles (rol_nombre, rol_habilitado)
 values(@nombre, @habilitado)
 
@@ -498,6 +500,7 @@ select  rol_ID, id
 from @listaFuncionalidades, ddg.Roles
 where @nombre = rol_nombre
 
+commit
 end
 GO
 
@@ -535,6 +538,8 @@ create procedure [DDG].sp_update_rol (@id numeric(10,0), @nombre varchar(255), @
 as
 begin
 
+begin tran
+
 update DDG.Roles
 set rol_nombre = @nombre, rol_habilitado = @habilitado
 where rol_ID = @id
@@ -546,7 +551,7 @@ insert into ddg.RolesXFuncionalidades (rolXFuncionalidad_rol, rolXFuncionalidad_
 select  @id, id
 from @listaFuncionalidades
 
-
+commit
 
 end
 GO												
@@ -926,6 +931,8 @@ create procedure [DDG].sp_alta_usuario (@username varchar(255), @contrasenia var
 as
 begin
 
+begin tran
+
 insert into DDG.Usuarios (usuario_username, usuario_password)
 values(@username, HASHBYTES('SHA2_256',cast(@contrasenia as varchar(16))))
 
@@ -933,6 +940,8 @@ insert into ddg.UsuariosXRoles (usuarioXRol_usuario, usuarioXRol_rol)
 select usuario_ID, @idRol
 from ddg.Usuarios
 where usuario_username = @username
+
+commit
 
 end
 GO
@@ -956,6 +965,8 @@ create procedure [DDG].sp_alta_cliente (@nombre varchar(250), @apellido varchar(
 as
 begin
 
+begin tran
+
 	declare @noPuedoCrearUsuario int
 	set @noPuedoCrearUsuario = ddg.existeClienteConMismoTelefono(null,@telefono)
 	if(@noPuedoCrearUsuario = 1) THROW 51000, 'Ya existe un cliente con el numero de telefono ingresado.', 1;	
@@ -969,6 +980,8 @@ begin
 
 	insert into DDG.Clientes(cliente_usuario,cliente_nombre,cliente_apellido,cliente_fecha_nacimiento,cliente_dni,cliente_direccion,cliente_codigo_postal,cliente_telefono,cliente_email)
 	values((select usuario_id from ddg.usuarios where usuario_username=@dni), @nombre, @apellido, @fechanac, @dni, @direccion, @codpost, @telefono, @email)
+
+commit
 
 end
 GO
@@ -988,6 +1001,8 @@ GO
 create procedure [DDG].sp_update_cliente (@nombre varchar(250),  @apellido varchar(250), @fechaNacimiento date, @direccion varchar(250), @codPostal numeric, @telefono numeric(18,0),  @email varchar(250), @habilitado numeric(1,0), @idcliente numeric(10,0)) as
 begin
 
+begin tran
+
 declare @noPuedoCrearUsuario int
 	set @noPuedoCrearUsuario = ddg.existeClienteConMismoTelefono(@idcliente,@telefono)
 	if(@noPuedoCrearUsuario = 1) THROW 51000, 'Ya existe un cliente con el numero de telefono ingresado.', 1;	
@@ -1002,6 +1017,8 @@ cliente_telefono = @telefono,
 cliente_email = @email,
 cliente_habilitado = @habilitado
 where cliente_id = @idcliente
+
+commit
 
 end
 GO
@@ -1045,6 +1062,8 @@ create procedure [DDG].sp_alta_automovil (@idchofer numeric(10,0),@idmodelo nume
 as
 begin
 
+begin tran
+
 if (ddg.choferYaAsignado (@idchofer)=1)
 	
 	THROW 51000, 'El chofer ya tiene un auto asignado.', 1;														
@@ -1059,6 +1078,8 @@ else
 	insert into DDG.AutosXTurnos(autoXTurno_auto, autoXTurno_turno)
 	select @idAuto, id
 	from @listaTurnos
+
+commit
 
 end
 GO
@@ -1077,7 +1098,9 @@ GO
 
 create procedure [DDG].sp_update_automovil (@id numeric(10,0),@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10),@habilitado numeric(1,0), @listaTurnos listaIDs readonly ) as
 begin
-	
+
+begin tran
+
 if (ddg.choferYaAsignado (@idchofer)=1)
 	
 	THROW 51000, 'El chofer ya tiene un auto asignado.', 1;												
@@ -1100,6 +1123,8 @@ where autoXTurno_auto = @id
 insert into ddg.AutosXTurnos(autoXTurno_auto, autoXTurno_turno)
 select  @id, id
 from @listaTurnos
+
+commit
 
 end
 GO
@@ -1143,6 +1168,9 @@ GO
 create procedure [DDG].sp_alta_chofer (@nombre varchar(250), @apellido varchar(250), @fechanac date, @dni numeric(10,0), @direccion varchar(250), @telefono numeric(18,0), @email varchar(250))
 as
 begin
+
+begin tran
+
 	declare @usuario varchar(255)
 	declare @contraseña varchar(255)
 	set @usuario =   convert(varchar(255), @dni)
@@ -1152,6 +1180,8 @@ begin
 
 	insert into DDG.Choferes(chofer_usuario ,chofer_nombre ,chofer_apellido, chofer_fecha_nacimiento ,chofer_dni, chofer_direccion,chofer_telefono ,chofer_email)
 	values((select usuario_id from ddg.usuarios where usuario_username=@dni), @nombre, @apellido, @fechanac, @dni, @direccion, @telefono, @email)
+
+commit
 
 end
 GO
@@ -1254,6 +1284,9 @@ GO
 
 create procedure [ddg].sp_alta_rendicion (@idChofer numeric(10,0), @fecha date, @idTurno numeric(10,0),  @retorno int output) as
 begin
+
+begin tran
+
 declare @idRendicion int
 declare @idRendicionDetalle int
 
@@ -1279,6 +1312,9 @@ declare @idRendicionDetalle int
 
 	set @retorno = @idRendicion
 	return @retorno
+
+commit
+
 end
 GO
 
@@ -1293,6 +1329,9 @@ GO
 
 create procedure [DDG].sp_alta_factura (@idCliente numeric(10,0), @fechaDesde date, @fechaHasta date, @retorno int output) as
 begin
+
+begin tran
+
 declare @idfactura int
 declare @idDetalleFactura int
 
@@ -1317,6 +1356,8 @@ declare @idDetalleFactura int
 
 	set @retorno = @idfactura
 	return @retorno
+
+commit
 
 end
 GO
