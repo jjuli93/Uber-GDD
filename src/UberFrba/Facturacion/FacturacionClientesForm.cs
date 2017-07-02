@@ -60,7 +60,7 @@ namespace UberFrba.Facturacion
         {
             if (cumple_campos())
             {
-                var importe = clienteDAO.realizarFacturacion(id_cliente);
+                var importe = clienteDAO.realizarFacturacion(id_cliente, beginDateTimePicker.Value, endDateTimePicker.Value);
 
                 if (importe == -1)
                 {
