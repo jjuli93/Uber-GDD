@@ -113,6 +113,5 @@ namespace UberFrba.Abm_Turno
             objController.habilitarContenidoPanel(turnoSeleccionadoPanel, false);
         }
 
-
     }
 }

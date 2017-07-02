@@ -119,11 +119,26 @@ namespace UberFrba.Controllers
                     cmd.Parameters.Add("@patente", SqlDbType.VarChar).Value = nuevo.patente;
                     cmd.Parameters.Add("@licencia", SqlDbType.VarChar).Value = nuevo.licencia.ToString();
                     cmd.Parameters.Add("@rodado", SqlDbType.VarChar).Value = nuevo.rodado;
-                    //cmd.Parameters.AddWithValue("@idmarca", nuevo.idmarca);
-                    //cmd.Parameters.AddWithValue("@idturno", nuevo.idturno);
+
+                    var table = new DataTable();
+
+                    table.Columns.Add("id", typeof(int));
+
+                    foreach (var item in nuevo.turnos)
+                    {
+                        table.Rows.Add(item.id);
+                    }
+
+                    var plist = new SqlParameter("@listaTurnos", SqlDbType.Structured);
+                    plist.TypeName = "listaIDs";
+                    plist.Value = table;
+
+                    cmd.Parameters.Add(plist);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
+
+                    table.Dispose();
                 }
             }
             catch (SqlException e)
@@ -154,11 +169,26 @@ namespace UberFrba.Controllers
                     cmd.Parameters.Add("@licencia", SqlDbType.VarChar).Value = modificado.licencia.ToString();
                     cmd.Parameters.Add("@rodado", SqlDbType.VarChar).Value = modificado.rodado;
                     cmd.Parameters.AddWithValue("@habilitado", Convert.ToInt32(modificado.habilitado));
-                    //cmd.Parameters.AddWithValue("@idturno", modificado.idturno);
-                    //cmd.Parameters.AddWithValue("@idmarca", modificado.idmarca);
+
+                    var table = new DataTable();
+
+                    table.Columns.Add("id", typeof(int));
+
+                    foreach (var item in modificado.turnos)
+                    {
+                        table.Rows.Add(item.id);
+                    }
+
+                    var plist = new SqlParameter("@listaTurnos", SqlDbType.Structured);
+                    plist.TypeName = "listaIDs";
+                    plist.Value = table;
+
+                    cmd.Parameters.Add(plist);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
+
+                    table.Dispose();
                 }
             }
             catch (SqlException)
@@ -195,26 +225,51 @@ namespace UberFrba.Controllers
             return result;
         }
 
-        public Automovil obtener_auto_from_row(System.Windows.Forms.DataGridViewRow row)
+        public Automovil obtener_auto_from_row(int id)
         {
             Automovil auto = null;
-            bool hay_nulo = false;
 
-            foreach (var item in row.Cells)
+            try
             {
-                if (item == null)
-                    hay_nulo = true;
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_get_automovilDetalles", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@idAuto", id);
+
+                    conn.Open();
+                    SqlDataReader lector = cmd.ExecuteReader();
+
+                    if (lector.HasRows)
+                    {
+                        auto = new Automovil(id, "");
+
+                        if (lector.Read())
+                        {
+                            auto.marca = lector["marca_descripcion"].ToString();
+                            auto.modelo = lector["modelo_descripcion"].ToString();
+                            auto.patente = lector["auto_patente"].ToString();
+                            auto.nombre_chofer = lector["chofer_nombre"].ToString();
+                            auto.apellido_chofer = lector["chofer_apellido"].ToString();
+                            auto.licencia = Convert.ToInt32(lector["auto_licencia"]);
+                            auto.rodado = lector["auto_rodado"].ToString();
+                            auto.habilitado = Convert.ToBoolean(lector["auto_habilitado"]);
+                            auto.chofer_id = Convert.ToInt32(lector["chofer_id"]);
+                            auto.idmarca = Convert.ToInt32(lector["marca_id"]);
+                            auto.idmodelo = Convert.ToInt32(lector["modelo_id"]);
+                        }
+                    }
+
+                    lector.Close();
+                }
+            }
+            catch (SqlException)
+            {
+                //throw;
             }
 
-            if (hay_nulo)
-                return auto;
-
-            auto = new Automovil(Convert.ToInt32(row.Cells[0].Value), row.Cells[3].Value.ToString());
-            auto.idmodelo = Convert.ToInt32(row.Cells[2].Value);
-            auto.licencia = Convert.ToInt32(row.Cells[4].Value);
-            auto.rodado = row.Cells[5].Value.ToString();
-            auto.habilitado = Convert.ToBoolean(row.Cells[6].Value);
-            
+            auto.turnos = TurnoDAO.Instance.get_turnos_automovil(auto.id);
 
             return auto;
         }

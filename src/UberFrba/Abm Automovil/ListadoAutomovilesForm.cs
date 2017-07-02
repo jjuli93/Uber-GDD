@@ -42,9 +42,10 @@ namespace UberFrba.Abm_Automovil
 
         private void autosDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            objController.habilitarContenidoPanel(autoSelectedPanelBtns, true);
+            AutomovilSeleccionado = Convert.ToInt32(autosDataGridView.Rows[e.RowIndex].Cells["auto_id"].Value);
 
-            AutomovilSeleccionado = Convert.ToInt32(autosDataGridView.Rows[e.RowIndex].Cells[0].Value);
+            if (AutomovilSeleccionado > 0)
+                objController.habilitarContenidoPanel(autoSelectedPanelBtns, true);
         }
 
         private void verButton_Click(object sender, EventArgs e)
@@ -59,7 +60,9 @@ namespace UberFrba.Abm_Automovil
                 return;
             }
 
-            var auto = autoDAO.obtener_auto_from_row(row);
+            int id = Convert.ToInt32(row.Cells["auto_id"].Value);
+
+            var auto = autoDAO.obtener_auto_from_row(id);
 
             var detalle_form = new DetalleAutomovilForm(auto, this);
 
@@ -79,7 +82,9 @@ namespace UberFrba.Abm_Automovil
                 return;
             }
 
-            var auto = autoDAO.obtener_auto_from_row(row);
+            int id = Convert.ToInt32(row.Cells["auto_id"].Value);
+
+            var auto = autoDAO.obtener_auto_from_row(id);
 
             var modificar_form = new ModificarAutomovilForm(auto, this);
 

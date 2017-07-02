@@ -25,6 +25,8 @@ namespace UberFrba.Modelo
         public int idmarca { get; set; }
         public int licencia { get; set; }
         public string rodado { get; set; }
+        public string nombre_chofer { get; set; }
+        public string apellido_chofer { get; set; }
 
     }
 }

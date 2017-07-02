@@ -249,5 +249,45 @@ namespace UberFrba.Controllers
             return turno;
         }
 
+        public List<Turno> get_turnos_automovil(int id_auto)
+        {
+            var turnos = new List<Turno>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_get_turnos_automovil", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@idAuto", id_auto);
+
+                    conn.Open();
+                    SqlDataReader lector = cmd.ExecuteReader();
+
+                    if (lector.HasRows)
+                    {
+                        while (lector.HasRows)
+                        {
+                            Turno nuevo = new Turno(Convert.ToInt32(lector["turno_id"]));
+
+                            nuevo.descripcion = lector["turno_descripcion"].ToString();
+
+                            turnos.Add(nuevo);
+                        }
+                    }
+
+                    lector.Close();
+                }
+            }
+            catch (SqlException)
+            {
+
+                //throw;
+            }
+
+            return turnos;
+        }
+
     }
 }
