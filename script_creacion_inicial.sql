@@ -1769,16 +1769,17 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_automoviles' AND type=
 	DROP PROCEDURE [DDG].sp_get_automoviles
 GO
 
-create procedure [ddg].sp_get_automoviles(@idMarca numeric(10,0), @modelo varchar(250), @patente varchar(10), @idChofer numeric(10,0)) as
+create procedure [ddg].sp_get_automoviles(@idMarca numeric(10,0), @idmodelo varchar(250), @patente varchar(10), @dniChofer numeric(10,0)) as
 begin
 
 select a.auto_id,a.auto_chofer,a.auto_licencia,a.auto_patente,a.auto_rodado,m.modelo_descripcion, ma.marca_descripcion, a.auto_habilitado
-from DDG.Autos a, ddg.Modelos m, ddg.Marcas ma
+from DDG.Autos a, ddg.Modelos m, ddg.Marcas ma, Choferes c
 where a.auto_modelo = m.modelo_id
+and a.auto_chofer = c.chofer_id
 and (@idMarca is null or (@idMarca = m.modelo_marca))
-and (@modelo is null or (@modelo = m.modelo_descripcion))
+and (@idmodelo is null or (@idmodelo = a.auto_modelo))
 and (@patente is null or (@patente = auto_patente))
-and (@idChofer is null or (@idChofer = auto_chofer))
+and (@dniChofer is null or (@dniChofer = c.chofer_dni))
 and m.modelo_marca = ma.marca_id
 
 OPTION (RECOMPILE)
