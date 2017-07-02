@@ -28,8 +28,6 @@ namespace UberFrba.Abm_Automovil
             automovilSeleccionado = _auto;
             objController = ObjetosFormCTRL.Instance;
             autoDAO = AutomovilDAO.Instance;
-            objController.inicializar_Marcas(this.marcaComboBox);
-            objController.setCBTurno(this.turnoComboBox);
             cargar_datos_form(_auto);
             formAnterior = _formAnterior;
             this.FormClosing += ModificarAutomovilForm_FormClosing;
@@ -42,14 +40,49 @@ namespace UberFrba.Abm_Automovil
 
         private void cargar_datos_form(Automovil auto)
         {
-            objController.cargar_valor_comboBox(marcaComboBox, auto.marca);
-            modeloTextBox.Text = auto.modelo;
+            objController.inicializar_Marcas(this.marcaComboBox);
+            objController.cargar_objeto_comboBox(marcaComboBox, auto.idmarca);
+
+            autoDAO.setModelos(modeloComboBox, auto.idmarca);
+            objController.cargar_objeto_comboBox(modeloComboBox, auto.idmodelo);
+
             patenteTextBox.Text = auto.patente;
             nombreChoferTB.Text = auto.chofer_id.ToString();
-            objController.cargar_valor_comboBox(turnoComboBox, auto.turno); //VER ESTO QUE ESTA MAL
+            cargar_turnos(auto);
             licenciaTextBox.Text = auto.licencia.ToString();
             rodadoTextBox.Text = auto.rodado;
             habilitarCheckBox.Checked = auto.habilitado;
+        }
+
+        private void cargar_turnos(Automovil auto)
+        {
+            List<ObjetosFormCTRL.itemListBox> turnos = TurnoDAO.Instance.get_turnos_asList();
+
+            foreach (var item in turnos)
+            {
+                turnosCheckedListBox.Items.Add(item);
+            }
+
+            checkear_items(auto.turnos);
+        }
+
+        private void checkear_items(List<Turno> turnos)
+        {
+            ObjetosFormCTRL.itemListBox item = null;
+
+            foreach (var turno in turnos)
+            {
+                for (int i = 0; i <= (turnosCheckedListBox.Items.Count - 1); i++)
+                {
+                    item = (ObjetosFormCTRL.itemListBox) turnosCheckedListBox.Items[i];
+
+                    if ((item.id_item == turno.id) && (item.nombre_item == turno.descripcion))
+                    {
+                        turnosCheckedListBox.SetItemCheckState(i, CheckState.Checked);
+                        break;
+                    }
+                }     
+            }
         }
 
         private void cancelarButton_Click(object sender, EventArgs e)
@@ -65,5 +98,87 @@ namespace UberFrba.Abm_Automovil
             this.Hide();
         }
 
+        private void guardarButton_Click(object sender, EventArgs e)
+        {
+            List<Control> obligatorios = new List<Control>() { marcaComboBox, modeloComboBox, nombreChoferTB, patenteTextBox, turnosCheckedListBox };
+
+            if (objController.cumpleCamposObligatorios(obligatorios, errorProvider))
+            {
+                if (MessageBox.Show("¿Está seguro de querer guardar los cambios realizados?", "Modificación Automóvil", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                {
+                    actualizar_turnos_checkeados();
+                    if (!autoDAO.modificacion_automovil(automovilSeleccionado))
+                    {
+                        MessageBox.Show("[Error] No se han podido guardar los cambios realizados", "Error en Modificación Automovil", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void actualizar_turnos_checkeados()
+        {
+            ObjetosFormCTRL.itemListBox item = null;
+            int pos = -1;
+
+            for (int i = 0; i < (turnosCheckedListBox.Items.Count - 1); i++)
+            {
+                item = (ObjetosFormCTRL.itemListBox)turnosCheckedListBox.Items[i];
+                pos = esta_en_lista(item);
+
+                if (turnosCheckedListBox.GetItemChecked(i)) //checked
+                {
+                    if (pos == -1) //ITS CHECKED BUT NOT IN THE LIST THEN ITS A NEW ONE
+                    {
+                        Turno nuevo = new Turno(item.id_item);
+                        nuevo.descripcion = item.nombre_item;
+
+                        automovilSeleccionado.turnos.Add(nuevo);
+                    }
+                }
+                else //not checked
+                {
+                    if (pos >= 0) //ITS NOT CHECKED BUT ITS IN THE LIST THEN I MUST REMOVE IT
+                    {
+                        automovilSeleccionado.turnos.RemoveAt(pos);
+                    }
+                }
+            }
+        }
+
+        private int esta_en_lista(ObjetosFormCTRL.itemListBox item) 
+        {
+            int pos = -1;
+
+            for (int i = 0; i < (automovilSeleccionado.turnos.Count - 1); i++)
+            {
+                Turno turno = automovilSeleccionado.turnos[i];
+
+                if (turno.id == item.id_item)
+                {
+                    pos = i;
+                    break;
+                }
+            }
+
+            return pos;
+        }
+
+        private void marcaComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var marca = (ObjetosFormCTRL.itemComboBox)marcaComboBox.SelectedItem;
+
+            autoDAO.setModelos(modeloComboBox, marca.id_item);
+
+            automovilSeleccionado.marca = marca.nombre_item;
+            automovilSeleccionado.idmarca = marca.id_item;
+        }
+
+        private void modeloComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var modelo = (ObjetosFormCTRL.itemComboBox)modeloComboBox.SelectedItem;
+
+            automovilSeleccionado.idmodelo = modelo.id_item;
+            automovilSeleccionado.modelo = modelo.nombre_item;
+        }
     }
 }

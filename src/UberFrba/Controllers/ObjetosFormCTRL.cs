@@ -51,36 +51,7 @@ namespace UberFrba.Controllers
         /*
          * Llena el contenido de los comboBox para la fecha de nacimiento
          */
-        public void setCBFechaNac(ComboBox _dayCB, ComboBox _monthCB, ComboBox _yearCB)
-        {
-            int[] days = Enumerable.Range(1, 31).ToArray();
-            int[] months = Enumerable.Range(1, 12).ToArray();
-            int[] years = Enumerable.Range(1930, 2050).ToArray();
-
-            _dayCB.DropDownStyle = ComboBoxStyle.DropDownList;
-            _monthCB.DropDownStyle = ComboBoxStyle.DropDownList;
-            _yearCB.DropDownStyle = ComboBoxStyle.DropDownList;
-
-            llenarComboBox(days, _dayCB);
-            llenarComboBox(months, _monthCB);
-            llenarComboBox(years, _yearCB);
-        }
-
-        public void setCBTurno(ComboBox combo)
-        {
-            combo.Items.Add("Mañana");
-            combo.Items.Add("Tarde");
-            combo.Items.Add("Noche");
-        }
-
-        private void llenarComboBox(int[] _array, ComboBox _cb)
-        {
-            foreach (int num in _array)
-            {
-                _cb.Items.Add(num.ToString());
-            }
-        }
-
+     
         public void cargar_valor_comboBox(ComboBox combo, string valor)
         {
             bool pudo_setear = false;
@@ -91,6 +62,28 @@ namespace UberFrba.Controllers
                 {
                     combo.SelectedIndex = combo.Items.IndexOf(item);
                     pudo_setear = true;
+                }
+            }
+
+            if (!pudo_setear)
+            {
+                combo.SelectedIndex = -1;
+                combo.Text = "Not found";
+                combo.BackColor = Color.Red;
+            }
+        }
+
+        public void cargar_objeto_comboBox(ComboBox combo, int id_item)
+        {
+            bool pudo_setear = false;
+
+            foreach (itemComboBox item in combo.Items)
+            {
+                if (item.id_item == id_item)
+                {
+                    combo.SelectedIndex = combo.Items.IndexOf(item);
+                    pudo_setear = true;
+                    break;
                 }
             }
 

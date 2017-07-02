@@ -34,7 +34,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.habilitadoCheckBox = new System.Windows.Forms.CheckBox();
-            this.turnoTextBox = new System.Windows.Forms.TextBox();
             this.choferTextBox = new System.Windows.Forms.TextBox();
             this.marcaTextBox = new System.Windows.Forms.TextBox();
             this.patenteTextBox = new System.Windows.Forms.TextBox();
@@ -45,17 +44,18 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.volverButton = new System.Windows.Forms.Button();
+            this.turnosListBox = new System.Windows.Forms.ListBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.turnosListBox);
             this.groupBox1.Controls.Add(this.rodadoTextBox);
             this.groupBox1.Controls.Add(this.licenciaTextBox);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.habilitadoCheckBox);
-            this.groupBox1.Controls.Add(this.turnoTextBox);
             this.groupBox1.Controls.Add(this.choferTextBox);
             this.groupBox1.Controls.Add(this.marcaTextBox);
             this.groupBox1.Controls.Add(this.patenteTextBox);
@@ -67,14 +67,14 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(352, 301);
+            this.groupBox1.Size = new System.Drawing.Size(352, 367);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Datos de un automovil";
             // 
             // rodadoTextBox
             // 
-            this.rodadoTextBox.Location = new System.Drawing.Point(101, 231);
+            this.rodadoTextBox.Location = new System.Drawing.Point(98, 296);
             this.rodadoTextBox.Name = "rodadoTextBox";
             this.rodadoTextBox.ReadOnly = true;
             this.rodadoTextBox.Size = new System.Drawing.Size(223, 20);
@@ -82,7 +82,7 @@
             // 
             // licenciaTextBox
             // 
-            this.licenciaTextBox.Location = new System.Drawing.Point(101, 195);
+            this.licenciaTextBox.Location = new System.Drawing.Point(98, 260);
             this.licenciaTextBox.Name = "licenciaTextBox";
             this.licenciaTextBox.ReadOnly = true;
             this.licenciaTextBox.Size = new System.Drawing.Size(223, 20);
@@ -91,7 +91,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(29, 234);
+            this.label7.Location = new System.Drawing.Point(26, 299);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(48, 13);
             this.label7.TabIndex = 31;
@@ -100,7 +100,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(29, 198);
+            this.label6.Location = new System.Drawing.Point(26, 263);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(50, 13);
             this.label6.TabIndex = 30;
@@ -110,20 +110,12 @@
             // 
             this.habilitadoCheckBox.AutoSize = true;
             this.habilitadoCheckBox.Enabled = false;
-            this.habilitadoCheckBox.Location = new System.Drawing.Point(29, 268);
+            this.habilitadoCheckBox.Location = new System.Drawing.Point(26, 333);
             this.habilitadoCheckBox.Name = "habilitadoCheckBox";
             this.habilitadoCheckBox.Size = new System.Drawing.Size(71, 17);
             this.habilitadoCheckBox.TabIndex = 29;
             this.habilitadoCheckBox.Text = "Hablitado";
             this.habilitadoCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // turnoTextBox
-            // 
-            this.turnoTextBox.Location = new System.Drawing.Point(101, 158);
-            this.turnoTextBox.Name = "turnoTextBox";
-            this.turnoTextBox.ReadOnly = true;
-            this.turnoTextBox.Size = new System.Drawing.Size(223, 20);
-            this.turnoTextBox.TabIndex = 28;
             // 
             // choferTextBox
             // 
@@ -162,9 +154,9 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(26, 161);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(41, 13);
+            this.label5.Size = new System.Drawing.Size(46, 13);
             this.label5.TabIndex = 23;
-            this.label5.Text = "Turno: ";
+            this.label5.Text = "Turnos: ";
             // 
             // label4
             // 
@@ -204,7 +196,7 @@
             // 
             // volverButton
             // 
-            this.volverButton.Location = new System.Drawing.Point(42, 330);
+            this.volverButton.Location = new System.Drawing.Point(42, 391);
             this.volverButton.Name = "volverButton";
             this.volverButton.Size = new System.Drawing.Size(75, 23);
             this.volverButton.TabIndex = 1;
@@ -212,11 +204,20 @@
             this.volverButton.UseVisualStyleBackColor = true;
             this.volverButton.Click += new System.EventHandler(this.volverButton_Click);
             // 
+            // turnosListBox
+            // 
+            this.turnosListBox.Enabled = false;
+            this.turnosListBox.FormattingEnabled = true;
+            this.turnosListBox.Location = new System.Drawing.Point(101, 161);
+            this.turnosListBox.Name = "turnosListBox";
+            this.turnosListBox.Size = new System.Drawing.Size(220, 82);
+            this.turnosListBox.TabIndex = 34;
+            // 
             // DetalleAutomovilForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(377, 365);
+            this.ClientSize = new System.Drawing.Size(377, 426);
             this.Controls.Add(this.volverButton);
             this.Controls.Add(this.groupBox1);
             this.Name = "DetalleAutomovilForm";
@@ -232,7 +233,6 @@
 
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox habilitadoCheckBox;
-        private System.Windows.Forms.TextBox turnoTextBox;
         private System.Windows.Forms.TextBox choferTextBox;
         private System.Windows.Forms.TextBox marcaTextBox;
         private System.Windows.Forms.TextBox patenteTextBox;
@@ -247,5 +247,6 @@
         private System.Windows.Forms.TextBox licenciaTextBox;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ListBox turnosListBox;
     }
 }

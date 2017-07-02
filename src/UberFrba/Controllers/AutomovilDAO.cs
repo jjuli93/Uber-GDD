@@ -120,7 +120,7 @@ namespace UberFrba.Controllers
                     cmd.Parameters.Add("@licencia", SqlDbType.VarChar).Value = nuevo.licencia.ToString();
                     cmd.Parameters.Add("@rodado", SqlDbType.VarChar).Value = nuevo.rodado;
                     //cmd.Parameters.AddWithValue("@idmarca", nuevo.idmarca);
-                    cmd.Parameters.AddWithValue("@idturno", nuevo.idturno);
+                    //cmd.Parameters.AddWithValue("@idturno", nuevo.idturno);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
@@ -154,7 +154,7 @@ namespace UberFrba.Controllers
                     cmd.Parameters.Add("@licencia", SqlDbType.VarChar).Value = modificado.licencia.ToString();
                     cmd.Parameters.Add("@rodado", SqlDbType.VarChar).Value = modificado.rodado;
                     cmd.Parameters.AddWithValue("@habilitado", Convert.ToInt32(modificado.habilitado));
-                    cmd.Parameters.AddWithValue("@idturno", modificado.idturno);
+                    //cmd.Parameters.AddWithValue("@idturno", modificado.idturno);
                     //cmd.Parameters.AddWithValue("@idmarca", modificado.idmarca);
 
                     conn.Open();

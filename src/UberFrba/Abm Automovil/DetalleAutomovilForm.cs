@@ -41,7 +41,7 @@ namespace UberFrba.Abm_Automovil
             modeloTextBox.Text = auto.modelo;
             patenteTextBox.Text = auto.patente;
             choferTextBox.Text = auto.chofer_id.ToString();
-            turnoTextBox.Text = auto.turno;
+            cargar_turnos(auto);
             licenciaTextBox.Text = auto.licencia.ToString();
             rodadoTextBox.Text = auto.rodado;
             habilitadoCheckBox.Checked = auto.habilitado;
@@ -51,6 +51,14 @@ namespace UberFrba.Abm_Automovil
         {
             this.Owner.Show();
             this.Dispose();
+        }
+
+        private void cargar_turnos(Automovil auto)
+        {
+            foreach (var item in auto.turnos)
+            {
+                turnosListBox.Items.Add(item.descripcion);
+            }
         }
 
     }

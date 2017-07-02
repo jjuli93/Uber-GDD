@@ -58,6 +58,40 @@ namespace UberFrba.Controllers
             return turnos;
         }
 
+        public List<ObjetosFormCTRL.itemListBox> get_turnos_asList()
+        {
+            List<ObjetosFormCTRL.itemListBox> turnos = new List<ObjetosFormCTRL.itemListBox>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_get_turnos_habilitados", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    conn.Open();
+                    SqlDataReader lector = cmd.ExecuteReader();
+
+                    if (lector.HasRows)
+                    {
+                        while (lector.HasRows)
+                        {
+                            turnos.Add(new ObjetosFormCTRL.itemListBox(lector["turno_descripcion"].ToString(), Convert.ToInt32(lector["turno_id"])));
+                        }
+                    }
+
+                    lector.Close();
+                }
+            }
+            catch (SqlException)
+            {
+
+                //throw;
+            }
+
+            return turnos;
+        }
+
         public bool set_turnos_CB(ComboBox combo)
         {
             bool result = true;
