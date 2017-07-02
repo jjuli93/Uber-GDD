@@ -37,7 +37,10 @@ namespace UberFrba.Controllers
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.Add("@descripcion", SqlDbType.VarChar).Value = descripcion;
+                    if (descripcion != null)
+                        cmd.Parameters.Add("@descripcion", SqlDbType.VarChar).Value = descripcion;
+                    else
+                        cmd.Parameters.AddWithValue("@descripcion", DBNull.Value);
 
                     conn.Open();
                     SqlDataReader lector = cmd.ExecuteReader();
@@ -74,9 +77,9 @@ namespace UberFrba.Controllers
 
                     if (lector.HasRows)
                     {
-                        while (lector.HasRows)
+                        while (lector.Read())
                         {
-                            turnos.Add(new ObjetosFormCTRL.itemListBox(lector["turno_descripcion"].ToString(), Convert.ToInt32(lector["turno_id"])));
+                            turnos.Add(new ObjetosFormCTRL.itemListBox(lector[3].ToString(), Convert.ToInt32(lector[0])));
                         }
                     }
 
@@ -110,7 +113,7 @@ namespace UberFrba.Controllers
 
                     if (lector.HasRows)
                     {
-                        while (lector.HasRows)
+                        while (lector.Read())
                         {
                             combo.Items.Add(new ObjetosFormCTRL.itemComboBox(lector["turno_descripcion"].ToString(), Convert.ToInt32(lector["turno_id"])));
                         }
@@ -267,7 +270,7 @@ namespace UberFrba.Controllers
 
                     if (lector.HasRows)
                     {
-                        while (lector.HasRows)
+                        while (lector.Read())
                         {
                             Turno nuevo = new Turno(Convert.ToInt32(lector["turno_id"]));
 

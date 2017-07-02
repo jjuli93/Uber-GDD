@@ -154,15 +154,27 @@ namespace UberFrba.Controllers
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = nombre;
-                    cmd.Parameters.Add("@apellido", SqlDbType.VarChar).Value = apellido;
-
-                    UInt32 dni_num = 0;
-
-                    if (UInt32.TryParse(dni, out dni_num))
-                        cmd.Parameters.AddWithValue("@dni", dni_num);
+                    if (nombre != null)
+                        cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = nombre;
                     else
-                        cmd.Parameters.AddWithValue("@dni", null);
+                        cmd.Parameters.AddWithValue("@nombre", DBNull.Value);
+
+                    if (apellido != null)
+                        cmd.Parameters.Add("@apellido", SqlDbType.VarChar).Value = apellido;
+                    else
+                        cmd.Parameters.AddWithValue("@apellido", DBNull.Value);
+
+                    if (dni != null)
+                    {
+                        UInt32 dni_num = 0;
+
+                        if (UInt32.TryParse(dni, out dni_num))
+                            cmd.Parameters.AddWithValue("@dni", dni_num);
+                        else
+                            cmd.Parameters.AddWithValue("@dni", DBNull.Value);
+                    }
+                    else
+                        cmd.Parameters.AddWithValue("@dni", DBNull.Value);
 
                     conn.Open();
                     SqlDataReader lector = cmd.ExecuteReader();

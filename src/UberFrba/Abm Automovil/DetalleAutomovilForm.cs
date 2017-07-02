@@ -40,7 +40,7 @@ namespace UberFrba.Abm_Automovil
             marcaTextBox.Text = auto.marca;
             modeloTextBox.Text = auto.modelo;
             patenteTextBox.Text = auto.patente;
-            choferTextBox.Text = auto.chofer_id.ToString();
+            choferTextBox.Text = auto.nombre_chofer + " " + auto.apellido_chofer;
             cargar_turnos(auto);
             licenciaTextBox.Text = auto.licencia.ToString();
             rodadoTextBox.Text = auto.rodado;

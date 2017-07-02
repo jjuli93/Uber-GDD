@@ -69,10 +69,6 @@ namespace UberFrba.Controllers
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    //create procedure [DDG].sp_update_chofer (@nombre varchar(250), @apellido varchar(250), 
-                    //@fechanac date, @dni numeric(10,0), @direccion varchar(250), @telefono numeric(18,0), 
-                    //@email varchar(250), @habilitado numeric(1,0), @idChofer numeric(10,0))
-
                     cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = chofer.nombre;
                     cmd.Parameters.Add("@apellido", SqlDbType.VarChar).Value = chofer.apellido;
                     cmd.Parameters.Add("@fechanac", SqlDbType.Date).Value = chofer.fecha_nacimiento;
@@ -149,15 +145,27 @@ namespace UberFrba.Controllers
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = nombre;
-                    cmd.Parameters.Add("@apellido", SqlDbType.VarChar).Value = apellido;
-
-                    UInt32 dni_num = 0;
-
-                    if (UInt32.TryParse(dni, out dni_num))
-                        cmd.Parameters.AddWithValue("@dni", dni_num);
+                    if (nombre != null)
+                        cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = nombre;
                     else
-                        cmd.Parameters.AddWithValue("@dni", null);
+                        cmd.Parameters.AddWithValue("@nombre", DBNull.Value);
+                    
+                    if (apellido != null)
+                        cmd.Parameters.Add("@apellido", SqlDbType.VarChar).Value = apellido;
+                    else
+                        cmd.Parameters.AddWithValue("@apellido", DBNull.Value);
+
+                    if (dni != null)
+                    {
+                        UInt32 dni_num = 0;
+
+                        if (UInt32.TryParse(dni, out dni_num))
+                            cmd.Parameters.AddWithValue("@dni", dni_num);
+                        else
+                            cmd.Parameters.AddWithValue("@dni", DBNull.Value);
+                    }
+                    else
+                        cmd.Parameters.AddWithValue("@dni", DBNull.Value);
 
                     conn.Open();
                     SqlDataReader lector = cmd.ExecuteReader();

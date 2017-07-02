@@ -47,7 +47,7 @@ namespace UberFrba.Abm_Automovil
             objController.cargar_objeto_comboBox(modeloComboBox, auto.idmodelo);
 
             patenteTextBox.Text = auto.patente;
-            nombreChoferTB.Text = auto.chofer_id.ToString();
+            nombreChoferTB.Text = auto.nombre_chofer + " " + auto.apellido_chofer;
             cargar_turnos(auto);
             licenciaTextBox.Text = auto.licencia.ToString();
             rodadoTextBox.Text = auto.rodado;

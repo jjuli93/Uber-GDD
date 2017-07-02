@@ -26,9 +26,9 @@ namespace UberFrba.Controllers
             }
         }
 
-        public DataTable obtenerAutomoviles(int marca, int modelo, string patente, string chofer)
+        public DataTable obtenerAutomoviles(ObjetosFormCTRL.itemComboBox marca, ObjetosFormCTRL.itemComboBox modelo, string patente, string chofer)
         {
-            DataTable resultados = null;
+            DataTable resultados = new DataTable();
 
             try
             {
@@ -36,10 +36,27 @@ namespace UberFrba.Controllers
                 using (SqlCommand cmd = new SqlCommand("DDG.sp_get_automoviles", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@idMarca", marca);
-                    cmd.Parameters.AddWithValue("@idModelo", modelo);
-                    cmd.Parameters.Add("@patente", SqlDbType.VarChar).Value = patente;
-                    cmd.Parameters.AddWithValue("@dniChofer", Convert.ToDouble(chofer));
+
+                    if (marca != null)
+                        cmd.Parameters.AddWithValue("@idMarca", marca.id_item);
+                    else
+                        cmd.Parameters.AddWithValue("@idMarca", DBNull.Value);
+
+                    if (modelo != null)
+                        cmd.Parameters.AddWithValue("@idmodelo", modelo.id_item);
+                    else
+                        cmd.Parameters.AddWithValue("@idmodelo", DBNull.Value);
+
+                    if (patente != null)
+                        cmd.Parameters.Add("@patente", SqlDbType.VarChar).Value = patente;
+                    else
+                        cmd.Parameters.AddWithValue("@patente", DBNull.Value);
+
+                    if (chofer != null)
+                        cmd.Parameters.AddWithValue("@dniChofer", Convert.ToUInt32(chofer));
+                    else
+                        cmd.Parameters.AddWithValue("@dniChofer", DBNull.Value);
+
 
                     conn.Open();
                     SqlDataReader lector = cmd.ExecuteReader();
@@ -49,8 +66,9 @@ namespace UberFrba.Controllers
                     lector.Close();
                 }
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
+                System.Console.Out.Write(e.Message);
                 //throw;
             }
 

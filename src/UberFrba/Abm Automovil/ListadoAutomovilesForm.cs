@@ -31,8 +31,7 @@ namespace UberFrba.Abm_Automovil
 
             marcaComboBox.SelectedIndex = -1;
             modeloComboBox.SelectedIndex = -1;
-            marcaComboBox.Items.Add(new ObjetosFormCTRL.itemComboBox("", -1));
-            modeloComboBox.Items.Add(new ObjetosFormCTRL.itemComboBox("", -1));
+            objController.inicializar_Marcas(marcaComboBox);
         }
 
         private void ListadoAutomovilesForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -99,10 +98,10 @@ namespace UberFrba.Abm_Automovil
             string patente = null;
             string chofer = null;
 
-            if (marcaComboBox.SelectedIndex != -1 || ((marcaComboBox.SelectedItem as ObjetosFormCTRL.itemComboBox).id_item != -1))
+            if (marcaComboBox.SelectedIndex != -1)
                 marca = (ObjetosFormCTRL.itemComboBox)marcaComboBox.SelectedItem;
 
-            if (modeloComboBox.SelectedIndex != -1 || ((modeloComboBox.SelectedItem as ObjetosFormCTRL.itemComboBox).id_item != -1))
+            if (modeloComboBox.SelectedIndex != -1)
                 modelo = (ObjetosFormCTRL.itemComboBox)modeloComboBox.SelectedItem;
 
             if (!string.IsNullOrEmpty(patenteTextBox.Text))
@@ -111,7 +110,12 @@ namespace UberFrba.Abm_Automovil
             if (!string.IsNullOrEmpty(choferTextBox.Text))
                 chofer = choferTextBox.Text;
 
-            this.autosDataGridView.DataSource = autoDAO.obtenerAutomoviles(marca.id_item, modelo.id_item, patente, chofer);
+            var autos = autoDAO.obtenerAutomoviles(marca, modelo, patente, chofer);
+
+            if (autos.Rows.Count == 0)
+                MessageBox.Show("No se han encontrado automóviles", "Buscador Automóviles");
+
+            this.autosDataGridView.DataSource = autos;
         }
 
         private void limpiarButton_Click(object sender, EventArgs e)
