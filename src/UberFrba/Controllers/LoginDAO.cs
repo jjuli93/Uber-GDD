@@ -13,7 +13,6 @@ namespace UberFrba.Controllers
     class LoginDAO
     {
         private static readonly LoginDAO _instance = new LoginDAO();
-        private int intentosLogin = 3;
         private Usuario usuario_logueado = null;
 
         static LoginDAO() { }
@@ -90,20 +89,6 @@ namespace UberFrba.Controllers
             conn.Dispose();
 
             return user;
-        }
-
-        public void obtner_funcionalidades(Rol _rol)
-        {
-            /*
-             * llamo a "sp_get_funcionalidades_rol(_rol.id)" 
-             * para obtener las funcionalidades
-             * y las seteo en _rol.funcionalidades
-             */
-        }
-
-        public int get_intentos()
-        {
-            return this.intentosLogin;
         }
 
         public Usuario get_usuario_logueado()

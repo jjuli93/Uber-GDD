@@ -24,7 +24,6 @@ namespace UberFrba.Abm_Rol
             this.CenterToScreen();
             objController = ObjetosFormCTRL.Instance;
             formAnterior = _formAnterior;
-            rolesDataGridView.Rows.Clear();
             rolesDataGridView.DataSource = RolDAO.Instance.get_roles();
 
             this.FormClosing += ListadoRolesForm_FormClosing;
@@ -66,7 +65,7 @@ namespace UberFrba.Abm_Rol
             {
                 if (RolDAO.Instance.eliminar_rol(id_rol))
                 {
-                    MessageBox.Show(string.Format("Se ha eliminado el rol {0}?", nombre_rol), "Rol eliminado", MessageBoxButtons.OK);
+                    MessageBox.Show(string.Format("Se ha eliminado el rol {0}", nombre_rol), "Rol eliminado", MessageBoxButtons.OK);
                     this.reloadTable();
                 }
                 else
@@ -74,13 +73,6 @@ namespace UberFrba.Abm_Rol
                     MessageBox.Show(string.Format("No se ha podido eliminar el rol {0}", nombre_rol), "Error en Eliminar Rol", MessageBoxButtons.OK);
                 }
             }
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            objController.habilitarContenidoPanel(this.rolSeleccionadoPanel, true);
-            
-            index_rol_seleccionado = e.RowIndex;
         }
 
         private void ListadoRolesForm_Click(object sender, EventArgs e)
@@ -94,6 +86,16 @@ namespace UberFrba.Abm_Rol
         {
             this.rolesDataGridView.Refresh();
             this.rolesDataGridView.DataSource = RolDAO.Instance.get_roles();
+        }
+
+        private void rolesDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (rolesDataGridView.Rows[e.RowIndex].Cells[0] != null && e.RowIndex > 0)
+            {
+                objController.habilitarContenidoPanel(this.rolSeleccionadoPanel, true);
+
+                index_rol_seleccionado = e.RowIndex;
+            }
         }
     }
 }

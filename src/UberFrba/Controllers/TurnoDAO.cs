@@ -99,8 +99,6 @@ namespace UberFrba.Controllers
         {
             bool result = true;
 
-            combo.Items.Add(new ObjetosFormCTRL.itemComboBox("", -1));
-
             try
             {
                 using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))

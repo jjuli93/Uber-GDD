@@ -292,5 +292,45 @@ namespace UberFrba.Controllers
             return auto;
         }
 
+        public Automovil get_automovil_chofer(int id_chofer)
+        {
+            Automovil auto = null;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_get_automovilHabilitado_chofer", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@idChofer", id_chofer);
+
+                    conn.Open();
+                    SqlDataReader lector = cmd.ExecuteReader();
+
+                    if (lector.HasRows)
+                    {
+                        if (lector.Read())
+                        {
+                            auto = new Automovil(Convert.ToInt32(lector["auto_id"]), lector["auto_patente"].ToString());
+                            auto.chofer_id = Convert.ToInt32(lector["auto_chofer"]);
+                            auto.idmodelo = Convert.ToInt32(lector["auto_modelo"]);
+                            auto.licencia = Convert.ToInt32(lector["auto_licencia"]);
+                            auto.rodado = lector["auto_rodado"].ToString();
+                            auto.habilitado = Convert.ToBoolean(lector["auto_habilitado"]);
+                        }
+                    }
+
+                    lector.Close();
+                }
+            }
+            catch (SqlException)
+            {
+                //throw;
+            }
+
+            return auto;
+        }
+
     }
 }

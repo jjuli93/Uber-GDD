@@ -31,7 +31,6 @@ namespace UberFrba.Registro_Viajes
             this.formAnterior = _parent;
 
             objController = ObjetosFormCTRL.Instance;
-            TurnoDAO.Instance.set_turnos_CB(turnoComboBox);
             camposObligatorios = new List<Control>() { datosChoferTB, autoTextBox, turnoComboBox, kmNumericUpDown, beginDateTimePicker, endDateTimePicker, datosClienteTB };
 
             this.FormClosing += RegistroViajeForm_FormClosing;
@@ -62,11 +61,19 @@ namespace UberFrba.Registro_Viajes
         {
             if (cumple_campos())
             {
-                //magia.....
-                if (MessageBox.Show("Registro exitoso.", "Registro de viaje", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+                Viaje nuevo = get_new_viaje();
+
+                if (ViajeDAO.Instance.alta_viaje(nuevo))
                 {
-                    objController.limpiarControles(this);
-                    return;
+                    if (MessageBox.Show("Registro exitoso.", "Registro de viaje", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+                    {
+                        objController.limpiarControles(this);
+                        return;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("No se pudo registrar el viaje", "Error en Registro de Viaje", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -77,6 +84,28 @@ namespace UberFrba.Registro_Viajes
                     return;
                 }
             }
+        }
+
+        private Viaje get_new_viaje()
+        {
+            Viaje nuevo = new Viaje(0);
+
+            nuevo.automovil = auto_seleccionado.id;
+            nuevo.chofer = chofer_seleccionado.id;
+            nuevo.cliente = cliente_seleccionado.id;
+
+            if (turnoComboBox.SelectedIndex == -1)
+            {
+                nuevo.turno = (turnoComboBox.SelectedItem as ObjetosFormCTRL.itemComboBox).id_item;
+            }
+            else
+                return null;
+
+            nuevo.km_viaje = (int)kmNumericUpDown.Value;
+            nuevo.inicio_date = beginDateTimePicker.Value;
+            nuevo.fin_date = endDateTimePicker.Value;
+
+            return nuevo;
         }
 
         private void cancelarButton_Click(object sender, EventArgs e)
@@ -90,24 +119,34 @@ namespace UberFrba.Registro_Viajes
             objController.cerrar_sesion();
         }
 
-        public void seleccionarChofer(Chofer _chofer_seleccionado)
+        public void setChoferSeleccionado(Chofer _chofer_seleccionado)
         {
+            if (_chofer_seleccionado == null)
+                return;
+            
             this.chofer_seleccionado = _chofer_seleccionado;
+            datosChoferTB.Text = string.Format("{0} {1}", _chofer_seleccionado.nombre, _chofer_seleccionado.apellido);
 
-            if (_chofer_seleccionado != null)
-            {
-                datosChoferTB.Text = string.Format("{0} {1}", _chofer_seleccionado.nombre, _chofer_seleccionado.apellido);
-            }
+            seleccionarAutomovil(chofer_seleccionado.id);
         }
 
-        public void seleccionarAutomovil(Automovil _auto_seleccionado)
+        public void seleccionarAutomovil(int id_chofer)
         {
-            this.auto_seleccionado = _auto_seleccionado;
+            this.auto_seleccionado = AutomovilDAO.Instance.get_automovil_chofer(id_chofer);
 
-            if (_auto_seleccionado != null)
+            if (auto_seleccionado != null)
             {
-                autoTextBox.Text = string.Format("{0} {1}  -  Patente nro: [{2}]",_auto_seleccionado.marca, _auto_seleccionado.modelo, _auto_seleccionado.patente.ToString());
+                List<Turno> turnos = TurnoDAO.Instance.get_turnos_automovil(auto_seleccionado.id);
+
+                foreach (var item in turnos)
+                {
+                    turnoComboBox.Items.Add(new ObjetosFormCTRL.itemComboBox(item.descripcion, item.id));
+                }
+
+                autoTextBox.Text = string.Format("Patente: [{0}]  |  Licencia nro: [{1}]", auto_seleccionado.patente, auto_seleccionado.licencia.ToString());
             }
+            else
+                MessageBox.Show("No se pudo encontrar el automovil asignado del chofer", "Registro Viaje", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public void seleccionarCliente(Cliente _cliente_seleccionado)

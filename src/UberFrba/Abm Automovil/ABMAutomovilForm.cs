@@ -58,7 +58,6 @@ namespace UberFrba.Abm_Automovil
 
         private void buscarChoferButton_Click(object sender, EventArgs e)
         {
-            this.limpiar_form();
             var buscadorChofer = new ListadoChoferesForm(this, false);
             this.Hide();
             buscadorChofer.ShowDialog(this);
@@ -108,10 +107,13 @@ namespace UberFrba.Abm_Automovil
 
         private void marcaComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            modeloComboBox.Items.Clear();
-            marca_seleccionada = (ObjetosFormCTRL.itemComboBox) marcaComboBox.SelectedItem;
+            if (marcaComboBox.SelectedIndex > 0)
+            {
+                modeloComboBox.Items.Clear();
+                marca_seleccionada = (ObjetosFormCTRL.itemComboBox)marcaComboBox.SelectedItem;
 
-            AutomovilDAO.Instance.setModelos(modeloComboBox, marca_seleccionada.id_item);
+                AutomovilDAO.Instance.setModelos(modeloComboBox, marca_seleccionada.id_item);
+            }
         }
     }
 }

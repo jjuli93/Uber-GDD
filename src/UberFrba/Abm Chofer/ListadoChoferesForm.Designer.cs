@@ -133,7 +133,7 @@
             this.choferesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.choferesDataGridView.Size = new System.Drawing.Size(362, 172);
             this.choferesDataGridView.TabIndex = 8;
-            this.choferesDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.choferesDataGridView_CellContentClick);
+            this.choferesDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.choferesDataGridView_CellClick);
             // 
             // limpiarButton
             // 

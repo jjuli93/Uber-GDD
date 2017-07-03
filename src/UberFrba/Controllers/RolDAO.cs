@@ -70,7 +70,20 @@ namespace UberFrba.Controllers
                     cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = rol_modificado.nombre;
                     cmd.Parameters.Add("@habilitado", SqlDbType.Bit).Value = Convert.ToInt32(rol_modificado.habilitado);
 
-                    //Faltan las funcionalidades
+                    var table = new DataTable();
+
+                    table.Columns.Add("id", typeof(int));
+
+                    foreach (var item in rol_modificado.funcionalidades)
+                    {
+                        table.Rows.Add(item.id);
+                    }
+
+                    var plist = new SqlParameter("@listaFuncionalidades", SqlDbType.Structured);
+                    plist.TypeName = "listaIDs";
+                    plist.Value = table;
+
+                    cmd.Parameters.Add(plist);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
@@ -124,6 +137,21 @@ namespace UberFrba.Controllers
 
                     cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = nombre_rol;
                     cmd.Parameters.Add("@habilitado", SqlDbType.Bit).Value = 1;
+
+                    var table = new DataTable();
+
+                    table.Columns.Add("id", typeof(int));
+
+                    foreach (ObjetosFormCTRL.itemListBox item in funcionalidades)
+                    {
+                        table.Rows.Add(item.id_item);
+                    }
+
+                    var plist = new SqlParameter("@listaFuncionalidades", SqlDbType.Structured);
+                    plist.TypeName = "listaIDs";
+                    plist.Value = table;
+
+                    cmd.Parameters.Add(plist);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();

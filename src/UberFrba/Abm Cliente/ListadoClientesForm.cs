@@ -56,24 +56,6 @@ namespace UberFrba.Abm_Cliente
             objController.cerrar_app_Event(sender, e);
         }
 
-        private void clientesDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            index_cliente_selecccionado = e.RowIndex;
-
-            verButton.Enabled = true;
-
-            if (fromABM)
-            {
-                modificarButton.Enabled = true;
-                eliminarButton.Enabled = true;
-            }
-            else
-            {
-                seleccionarButton.Enabled = true;
-                cancelarButton.Enabled = true;
-            }
-        }
-
         // ------> Botones desde ABM Cliente
         private void modificarButton_Click(object sender, EventArgs e)
         {
@@ -117,22 +99,30 @@ namespace UberFrba.Abm_Cliente
         // ------> Botones desde form exterior
         private void seleccionarButton_Click(object sender, EventArgs e)
         {
-            /*
-             *  # Registro de Viaje
-             *  # Facturacion Clientes
-             */
-            /*
-            var reg = this.Owner as UberFrba.Registro_Viajes.RegistroViajeForm;
-            var fact = this.Owner as UberFrba.Facturacion.FacturacionClientesForm;
-
-            if (reg != null)
-                reg.seleccionarCliente(get_selected_client());
-
-            if (fact != null)
-                fact.seleccionarCliente(get_selected_client());
-             * */
             dynamic form = this.Owner;
-            form.seleccionarCliente(get_selected_client());
+
+            if (MessageBox.Show("¿Está seguro de seleccionar al cliente seleccionado?", "Seleccionar Cliente", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                var client = get_selected_client();
+
+                if (client != null)
+                { 
+                    form.seleccionarCliente(client);
+                    this.Owner.Show();
+                    this.Dispose();
+                }
+                else
+                {
+                    MessageBox.Show("Ha ocurrido un error en la selección de un cliente.", "Error en cliente seleccionado", MessageBoxButtons.OK);
+                }
+            }
+            else
+            {
+                index_cliente_selecccionado = -1;
+                clientesDataGridView.ClearSelection();
+                objController.habilitarContenidoPanel(clienteSeleccionadoPanel, false);
+            }
+
         }
 
         private void cancelarButton_Click(object sender, EventArgs e)
@@ -220,9 +210,27 @@ namespace UberFrba.Abm_Cliente
         private void cleanTableButton_Click(object sender, EventArgs e)
         {
             clientesDataGridView.ClearSelection();
-            clientesDataGridView.Rows.Clear();
+            (clientesDataGridView.DataSource as DataTable).Clear(); ;
             index_cliente_selecccionado = -1;
             clientesDataGridView.DataSource = null;
+        }
+
+        private void clientesDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            index_cliente_selecccionado = e.RowIndex;
+
+            verButton.Enabled = true;
+
+            if (fromABM)
+            {
+                modificarButton.Enabled = true;
+                eliminarButton.Enabled = true;
+            }
+            else
+            {
+                seleccionarButton.Enabled = true;
+                cancelarButton.Enabled = true;
+            }
         }
         
     }

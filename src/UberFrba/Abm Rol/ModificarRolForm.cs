@@ -20,9 +20,6 @@ namespace UberFrba.Abm_Rol
         public ModificarRolForm(Rol _rol)
         {
             InitializeComponent();
-            //SACAAAAAAR
-            this.asdasczxcf(_rol);
-            //--------
             rolSeleccionado = _rol;
             objController = ObjetosFormCTRL.Instance;
             
@@ -119,26 +116,6 @@ namespace UberFrba.Abm_Rol
                     rolSeleccionado.funcionalidades.Remove(fun);
                 }
             }
-        }
-
-        public void asdasczxcf(Rol rol)
-        {
-            Funcionalidad f1 = new Funcionalidad(1);
-            f1.habilitada = true;
-            f1.descripcion = "ABM de Rol";
-
-            Funcionalidad f2 = new Funcionalidad(2);
-            f2.habilitada = true;
-            f2.descripcion = "ABM de Clientes";
-
-            Funcionalidad f3 = new Funcionalidad(3);
-            f3.habilitada = true;
-            f3.descripcion = "ABM de Automoviles";
-
-
-            rol.funcionalidades.Add(f1);
-            rol.funcionalidades.Add(f2);
-            rol.funcionalidades.Add(f3);
         }
 
     }

@@ -45,16 +45,16 @@ namespace UberFrba.Abm_Chofer
         //Metodos de los botones de aparecen cuando se busca un chofer desde una abm exterior
         private void seleccionarButton_Click(object sender, EventArgs e)
         {
-            ABMAutomovilForm abmAuto = this.Owner as ABMAutomovilForm;
+            dynamic abm = this.Owner;
 
-            if (MessageBox.Show("Está seguro de seleccionar al chofer seleccionado", "Seleccionar Chofer", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("¿Está seguro de seleccionar al chofer seleccionado?", "Seleccionar Chofer", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 var driver = ChoferDAO.Instance.obtener_cliente_from_row(choferesDataGridView.Rows[chofer_index]);
 
                 if (driver != null)
                 {
-                    abmAuto.setChoferSeleccionado(driver);
-                    abmAuto.Show();
+                    abm.setChoferSeleccionado(driver);
+                    this.Owner.Show();
                     this.Dispose();
                 }
                 else
@@ -164,13 +164,15 @@ namespace UberFrba.Abm_Chofer
                 MessageBox.Show("Ha ocurrido un error en la busqueda de choferes", "Buscador de choferes", MessageBoxButtons.OK, MessageBoxIcon.Error); 
         }
 
-        private void choferesDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {            
+        private void choferesDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
             if (choferesDataGridView.SelectedRows[0].Cells[0].Value != null)
             {
                 habilitar_botones(true);
                 chofer_index = e.RowIndex;
             }
         }
+
+        
     }
 }

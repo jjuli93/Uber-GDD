@@ -145,7 +145,7 @@
             this.clientesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.clientesDataGridView.Size = new System.Drawing.Size(507, 150);
             this.clientesDataGridView.TabIndex = 2;
-            this.clientesDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientesDataGridView_CellContentClick);
+            this.clientesDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientesDataGridView_CellClick);
             // 
             // volverButton
             // 

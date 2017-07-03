@@ -120,15 +120,15 @@ namespace UberFrba.Controllers
 
         public Chofer obtener_cliente_from_row(System.Windows.Forms.DataGridViewRow row)
         {
-            Chofer chofer = new Chofer((int)row.Cells["chofer_id"].Value);
+            Chofer chofer = new Chofer(Convert.ToInt32(row.Cells["chofer_id"].Value));
 
-            chofer.nombre = (string)row.Cells["chofer_nombre"].Value;
-            chofer.apellido = (string)row.Cells["chofer_apellido"].Value;
+            chofer.nombre = row.Cells["chofer_nombre"].Value.ToString();
+            chofer.apellido = row.Cells["chofer_apellido"].Value.ToString();
             chofer.fecha_nacimiento = Convert.ToDateTime(row.Cells["chofer_fecha_nacimiento"].Value);
             chofer.dni = Convert.ToUInt32(row.Cells["chofer_dni"].Value);
-            chofer.direccion = (string)row.Cells["chofer_direccion"].Value;
+            chofer.direccion = row.Cells["chofer_direccion"].Value.ToString();
             chofer.telefono = Convert.ToUInt32(row.Cells["chofer_telefono"].Value);
-            chofer.mail = (string)row.Cells["chofer_email"].Value;
+            chofer.mail = row.Cells["chofer_email"].Value.ToString();
             chofer.habilitado = Convert.ToBoolean(row.Cells["chofer_habilitado"].Value);
 
             return chofer;

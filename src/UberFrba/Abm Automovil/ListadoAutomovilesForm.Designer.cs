@@ -145,7 +145,7 @@
             this.autosDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.autosDataGridView.Size = new System.Drawing.Size(441, 167);
             this.autosDataGridView.TabIndex = 1;
-            this.autosDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.autosDataGridView_CellContentClick);
+            this.autosDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.autosDataGridView_CellClick);
             // 
             // buscarButton
             // 

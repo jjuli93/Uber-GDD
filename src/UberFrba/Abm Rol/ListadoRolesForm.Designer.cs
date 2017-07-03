@@ -115,7 +115,7 @@
             this.rolesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.rolesDataGridView.Size = new System.Drawing.Size(351, 150);
             this.rolesDataGridView.TabIndex = 0;
-            this.rolesDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.rolesDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.rolesDataGridView_CellClick);
             // 
             // ListadoRolesForm
             // 

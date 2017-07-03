@@ -19,6 +19,7 @@ namespace UberFrba.Rendicion_Viajes
         private menuFuncsRolUserForm formAnterior;
         private ObjetosFormCTRL objController;
         private List<Control> camposObligatorios;
+        private Chofer chofer_seleccionado;
 
         public RendicionViajesForm(menuFuncsRolUserForm _parent)
         {
@@ -75,6 +76,32 @@ namespace UberFrba.Rendicion_Viajes
         private void cerrarSesionLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             objController.cerrar_sesion();
+        }
+
+        public void setChoferSeleccionado(Chofer _chofer_seleccionado)
+        {
+            if (_chofer_seleccionado == null)
+                return;
+
+            this.chofer_seleccionado = _chofer_seleccionado;
+            datosChoferTB.Text = string.Format("{0} {1}", _chofer_seleccionado.nombre, _chofer_seleccionado.apellido);
+
+            set_turnos_chofer();
+        }
+
+        private void set_turnos_chofer()
+        {
+            Automovil auto_chofer = AutomovilDAO.Instance.get_automovil_chofer(chofer_seleccionado.id);
+
+            if (auto_chofer == null)
+                return;
+
+            List<Turno> turnos = TurnoDAO.Instance.get_turnos_automovil(auto_chofer.id);
+
+            foreach (var item in turnos)
+            {
+                turnoComboBox.Items.Add(new ObjetosFormCTRL.itemComboBox(item.descripcion, item.id));
+            }
         }
     }
 }

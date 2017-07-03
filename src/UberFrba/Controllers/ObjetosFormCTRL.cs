@@ -8,6 +8,7 @@ using System.Drawing;
 using UberFrba.Modelo;
 using System.ComponentModel;
 using UberFrba.Login;
+using System.Data;
 
 namespace UberFrba.Controllers
 {
@@ -193,8 +194,8 @@ namespace UberFrba.Controllers
 
                 if (table != null)
                 {
-                    table.Rows.Clear();
-                    table.Refresh();
+                    (table.DataSource as DataTable).Clear();
+                    table.DataSource = null;
                 }
 
                 if (calen != null)

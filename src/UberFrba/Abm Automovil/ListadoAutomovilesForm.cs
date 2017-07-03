@@ -39,14 +39,6 @@ namespace UberFrba.Abm_Automovil
             this.objController.cerrar_app_Event(sender, e);
         }
 
-        private void autosDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            AutomovilSeleccionado = Convert.ToInt32(autosDataGridView.Rows[e.RowIndex].Cells["auto_id"].Value);
-
-            if (AutomovilSeleccionado > 0)
-                objController.habilitarContenidoPanel(autoSelectedPanelBtns, true);
-        }
-
         private void verButton_Click(object sender, EventArgs e)
         {
             var row = autosDataGridView.Rows[AutomovilSeleccionado];
@@ -65,6 +57,8 @@ namespace UberFrba.Abm_Automovil
 
             var detalle_form = new DetalleAutomovilForm(auto, this);
 
+            objController.habilitarContenidoPanel(autoSelectedPanelBtns, false);
+            AutomovilSeleccionado = -1;
             this.Hide();
             detalle_form.Show(this);
         }
@@ -87,6 +81,8 @@ namespace UberFrba.Abm_Automovil
 
             var modificar_form = new ModificarAutomovilForm(auto, this);
 
+            objController.habilitarContenidoPanel(autoSelectedPanelBtns, false);
+            AutomovilSeleccionado = -1;
             this.Hide();
             modificar_form.Show(this);
         }
@@ -121,6 +117,8 @@ namespace UberFrba.Abm_Automovil
         private void limpiarButton_Click(object sender, EventArgs e)
         {
             objController.limpiarControles(this);
+            objController.habilitarContenidoPanel(autoSelectedPanelBtns, false);
+            AutomovilSeleccionado = -1;
         }
 
         private void volverButton_Click(object sender, EventArgs e)
@@ -155,13 +153,26 @@ namespace UberFrba.Abm_Automovil
                 if (autoDAO.baja_automovil(Convert.ToInt32(row.Cells[0].Value)))
                 {
                     MessageBox.Show("Se ha eliminado el automovil selccionado?", "Automovil eliminado", MessageBoxButtons.OK);
-                    row.Cells[6].Value = "0";
+                    row.Cells["auto_habilitado"].Value = "0";
+
+                    objController.habilitarContenidoPanel(autoSelectedPanelBtns, false);
+                    AutomovilSeleccionado = -1;
                 }
                 else
                 {
                     MessageBox.Show("No se ha podido eliminar el automovil selccionado", "Error en Eliminar Automovil", MessageBoxButtons.OK);
                 }
             }
+        }
+
+        private void autosDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            AutomovilSeleccionado = e.RowIndex;
+
+            int id_auto = Convert.ToInt32(autosDataGridView.Rows[e.RowIndex].Cells["auto_id"].Value);
+
+            if (id_auto > 0)
+                objController.habilitarContenidoPanel(autoSelectedPanelBtns, true);
         }
 
     }
