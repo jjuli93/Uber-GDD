@@ -21,6 +21,8 @@ namespace UberFrba.Abm_Automovil
         private List<Control> camposObligatorios;
         public Chofer choferSeleccionado;
         ObjetosFormCTRL.itemComboBox marca_seleccionada = null;
+        ObjetosFormCTRL.itemComboBox modelo_seleccionado = null;
+        List<Turno> turnos_seleccionados = null;
 
         public ABMAutomovilForm(menuFuncsRolUserForm _menu)
         {
@@ -30,7 +32,11 @@ namespace UberFrba.Abm_Automovil
             objController = ObjetosFormCTRL.Instance;
             objController.inicializar_Marcas(this.marcaComboBox);
             camposObligatorios = new List<Control>() { marcaComboBox, modeloComboBox, patenteTextBox, nombreChoferTB, turnosCheckedListBox, licenciaTextBox, rodadoTextBox };
+            turnos_seleccionados = new List<Turno>();
             this.setTurnos();
+
+            patenteTextBox.MaxLength = 6;
+            licenciaTextBox.MaxLength = 20;
 
             this.FormClosing += ABMAutomovilForm_FormClosing;
         }
@@ -81,10 +87,36 @@ namespace UberFrba.Abm_Automovil
         {
             if (objController.cumpleCamposObligatorios(camposObligatorios, errorProvider))
             {
-                objController.borrarMensajeDeError(camposObligatorios, errorProvider);
-                this.limpiar_form();
-                MessageBox.Show("Automovil creado");
+                if (AutomovilDAO.Instance.alta_automovil(get_nuevo_automovil()))
+                {
+                    objController.borrarMensajeDeError(camposObligatorios, errorProvider);
+                    this.limpiar_form();
+                    MessageBox.Show("Automovil creado");
+                }
             }
+        }
+
+        private Automovil get_nuevo_automovil()
+        {
+            Automovil auto = new Automovil(0, patenteTextBox.Text);
+
+            auto.chofer_id = choferSeleccionado.id;
+            auto.idmarca = marca_seleccionada.id_item;
+            auto.idmodelo = modelo_seleccionado.id_item;
+            auto.licencia = Convert.ToInt32(licenciaTextBox.Text);
+            auto.rodado = rodadoTextBox.Text;
+
+            set_turnos_nuevo(auto);
+
+            return auto;
+        }
+
+        private void set_turnos_nuevo(Automovil auto)
+        {
+            auto.turnos = new List<Turno>();
+
+            //auto.turnos.AddRange(turnos_seleccionados);
+            auto.turnos.Add(new Turno(2));
         }
 
         private void cancelarButton_Click(object sender, EventArgs e)
@@ -107,13 +139,31 @@ namespace UberFrba.Abm_Automovil
 
         private void marcaComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (marcaComboBox.SelectedIndex > 0)
+            if (marcaComboBox.SelectedIndex >= 0)
             {
                 modeloComboBox.Items.Clear();
                 marca_seleccionada = (ObjetosFormCTRL.itemComboBox)marcaComboBox.SelectedItem;
 
                 AutomovilDAO.Instance.setModelos(modeloComboBox, marca_seleccionada.id_item);
             }
+        }
+
+        private void licenciaTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            objController.only_numbers(e);
+        }
+
+        private void modeloComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (modeloComboBox.SelectedIndex >= 0)
+            {
+                modelo_seleccionado = (ObjetosFormCTRL.itemComboBox)modeloComboBox.SelectedItem;
+            }
+        }
+
+        private void turnosCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            //TODO crear y agregar turnos seleccionados
         }
     }
 }

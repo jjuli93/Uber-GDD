@@ -69,7 +69,7 @@ namespace UberFrba.Abm_Cliente
         {            
             if (MessageBox.Show("¿Está seguro de querer eliminar el cliente seleccionado?", "Eliminar Cliente", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                int id_cliente = (int)clientesDataGridView.Rows[index_cliente_selecccionado].Cells[0].Value;
+                int id_cliente = Convert.ToInt32(clientesDataGridView.Rows[index_cliente_selecccionado].Cells["cliente_id"].Value);
                 
                 if (ClienteDAO.Instance.eliminar_cliente(id_cliente))
                 {

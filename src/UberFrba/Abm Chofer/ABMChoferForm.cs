@@ -26,6 +26,9 @@ namespace UberFrba.Abm_Chofer
             formAnterior = _formMenu;
             objController = ObjetosFormCTRL.Instance;
 
+            dniTextBox.MaxLength = 8;
+            telefonoTextBox.MaxLength = 12;
+
             campos_obligatorios = new List<Control>() { nombreTextBox, apeliidoTextBox, dniTextBox, direccionTextBox, mailTextBox, telefonoTextBox, fnDateTimePicker };
 
             this.FormClosing += ABMChoferForm_FormClosing;
@@ -130,6 +133,16 @@ namespace UberFrba.Abm_Chofer
             nuevo.set_datos_secundarios(mailTextBox.Text, telefono, direccionTextBox.Text);
 
             return nuevo;
+        }
+
+        private void dniTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            objController.only_numbers(e);
+        }
+
+        private void telefonoTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            objController.only_numbers(e);
         }
     }
 }

@@ -192,7 +192,7 @@ namespace UberFrba.Controllers
                     combo.SelectedIndex = -1;
                 }
 
-                if (table != null)
+                if ((table != null)&&(table.DataSource != null))
                 {
                     (table.DataSource as DataTable).Clear();
                     table.DataSource = null;
@@ -329,6 +329,14 @@ namespace UberFrba.Controllers
 
                 if (item.id_item == id)
                     list.SetItemCheckState(i, state);
+            }
+        }
+
+        public void only_numbers(KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
+            {
+                e.Handled = true;
             }
         }
     }

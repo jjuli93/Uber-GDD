@@ -124,7 +124,7 @@ namespace UberFrba.Controllers
             return result;
         }
 
-        internal bool crear_rol(string nombre_rol, System.Windows.Forms.ListBox.SelectedObjectCollection funcionalidades)
+        internal bool crear_rol(string nombre_rol, List<ObjetosFormCTRL.itemListBox> funcionalidades)
         {
             bool result = true;
 

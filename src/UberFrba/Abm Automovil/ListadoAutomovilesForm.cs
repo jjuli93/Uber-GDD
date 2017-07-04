@@ -152,8 +152,8 @@ namespace UberFrba.Abm_Automovil
             {
                 if (autoDAO.baja_automovil(Convert.ToInt32(row.Cells[0].Value)))
                 {
-                    MessageBox.Show("Se ha eliminado el automovil selccionado?", "Automovil eliminado", MessageBoxButtons.OK);
-                    row.Cells["auto_habilitado"].Value = "0";
+                    MessageBox.Show("Se ha eliminado el automovil selccionado", "Automovil eliminado", MessageBoxButtons.OK);
+                    row.Cells["auto_habilitado"].Value = 0;
 
                     objController.habilitarContenidoPanel(autoSelectedPanelBtns, false);
                     AutomovilSeleccionado = -1;

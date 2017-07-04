@@ -28,6 +28,9 @@ namespace UberFrba.Abm_Cliente
             { nombreTextBox, apellidoTextBox, dniTextBox, telTextBox, dirTextBox, cpTextBox, fnDateTimePicker };
             formAnterior = _parent;
 
+            dniTextBox.MaxLength = 8;
+            telTextBox.MaxLength = 12;
+
             this.FormClosing += ABMClienteForm_FormClosing;
         }
 
@@ -121,8 +124,24 @@ namespace UberFrba.Abm_Cliente
 
             nuevo.set_datos_principales(nombreTextBox.Text, apellidoTextBox.Text, dni, fnDateTimePicker.Value);
             nuevo.set_datos_secundarios(mailTextBox.Text, telefono, dirTextBox.Text);
+            nuevo.codigoPostal = Convert.ToInt32(cpTextBox.Text);
 
             return nuevo;
+        }
+
+        private void dniTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            objController.only_numbers(e);
+        }
+
+        private void telTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            objController.only_numbers(e);
+        }
+
+        private void cpTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            objController.only_numbers(e);
         }
         
     }

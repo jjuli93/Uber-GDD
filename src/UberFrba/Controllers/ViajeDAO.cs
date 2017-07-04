@@ -54,7 +54,7 @@ namespace UberFrba.Controllers
             }
             catch (SqlException e)
             {
-                MessageBox.Show(e.Message, "Error en Alta de Turno");
+                //MessageBox.Show(e.Message, "Error en Alta de Turno");
                 result = false;
                 //throw;
             }

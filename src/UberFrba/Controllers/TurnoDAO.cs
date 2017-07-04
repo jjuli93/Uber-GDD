@@ -242,8 +242,8 @@ namespace UberFrba.Controllers
 
             turno = new Turno(Convert.ToInt32(row.Cells["turno_habilitado"].Value));
             turno.descripcion = row.Cells["turno_descripcion"].Value.ToString();
-            turno.hora_inicio = Convert.ToDateTime(row.Cells["turno_hora_inicio"].Value);
-            turno.hora_fin = Convert.ToDateTime(row.Cells["turno_hora_fin"].Value);
+            turno.hora_inicio = Convert.ToDateTime(row.Cells["turno_hora_inicio"].Value.ToString());
+            turno.hora_fin = Convert.ToDateTime(row.Cells["turno_hora_fin"].Value.ToString());
             turno.valor_km = Convert.ToDouble(row.Cells["turno_valor_km"].Value.ToString());
             turno.precio_base = Convert.ToDouble(row.Cells["turno_precio_base"].Value.ToString());
 

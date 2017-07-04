@@ -35,6 +35,9 @@ namespace UberFrba.Abm_Chofer
                     this.Owner.Show();
                     this.Dispose();
             }
+
+            dniTextBox.MaxLength = 8;
+            telefonoTextBox.MaxLength = 12;
         }
 
         private void cargar_datos_form(Chofer chofer)
@@ -74,6 +77,16 @@ namespace UberFrba.Abm_Chofer
                     }
                 }
             }
+        }
+
+        private void dniTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            objController.only_numbers(e);
+        }
+
+        private void telefonoTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            objController.only_numbers(e);
         }
     }
 }

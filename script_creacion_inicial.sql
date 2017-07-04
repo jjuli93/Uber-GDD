@@ -979,7 +979,7 @@ begin tran
 	exec [DDG].sp_alta_usuario @usuario, @contraseña, 3
 
 	insert into DDG.Clientes(cliente_usuario,cliente_nombre,cliente_apellido,cliente_fecha_nacimiento,cliente_dni,cliente_direccion,cliente_codigo_postal,cliente_telefono,cliente_email)
-	values((select usuario_id from ddg.usuarios where usuario_username=@dni), @nombre, @apellido, @fechanac, @dni, @direccion, @codpost, @telefono, @email)
+	values((select usuario_id from ddg.usuarios where usuario_username=convert(varchar(255), @dni)), @nombre, @apellido, @fechanac, @dni, @direccion, @codpost, @telefono, @email)
 
 commit
 
@@ -1179,7 +1179,7 @@ begin tran
 	exec [DDG].sp_alta_usuario @usuario, @contraseña, 2
 
 	insert into DDG.Choferes(chofer_usuario ,chofer_nombre ,chofer_apellido, chofer_fecha_nacimiento ,chofer_dni, chofer_direccion,chofer_telefono ,chofer_email)
-	values((select usuario_id from ddg.usuarios where usuario_username=@dni), @nombre, @apellido, @fechanac, @dni, @direccion, @telefono, @email)
+	values((select usuario_id from ddg.usuarios where usuario_username=convert(varchar(255), @dni)), @nombre, @apellido, @fechanac, @dni, @direccion, @telefono, @email)
 
 commit
 

@@ -25,7 +25,6 @@ namespace UberFrba.Controllers
 
         private void fill_consultas()
         {
-            consultas.Add(new ObjetosFormCTRL.itemComboBox("", -1));
             consultas.Add(new ObjetosFormCTRL.itemComboBox("Choferes con mayor recuadación", 1));
             consultas.Add(new ObjetosFormCTRL.itemComboBox("Choferes con el viaje más largo realizado", 2));
             consultas.Add(new ObjetosFormCTRL.itemComboBox("Clientes con mayor consumo", 3));

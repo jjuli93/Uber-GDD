@@ -43,10 +43,13 @@ namespace UberFrba.Controllers
                     cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = cliente.nombre;
                     cmd.Parameters.Add("@apellido", SqlDbType.VarChar).Value = cliente.apellido;
                     cmd.Parameters.Add("@fechanac", SqlDbType.Date).Value = cliente.fecha_nacimiento;
-                    cmd.Parameters.Add("@dni", SqlDbType.Decimal).Value = cliente.dni;
+                    //cmd.Parameters.Add("@dni", SqlDbType.Decimal).Value = cliente.dni;
+                    cmd.Parameters.AddWithValue("@dni", Convert.ToInt32(cliente.dni));
                     cmd.Parameters.Add("@direccion", SqlDbType.VarChar).Value = cliente.direccion;
-                    cmd.Parameters.Add("@codpost", SqlDbType.Decimal).Value = cliente.codigoPostal;
-                    cmd.Parameters.Add("@telefono", SqlDbType.Decimal).Value = cliente.telefono;
+                    //cmd.Parameters.Add("@codpost", SqlDbType.Decimal).Value = cliente.codigoPostal;
+                    cmd.Parameters.AddWithValue("@codpost", Convert.ToInt32(cliente.codigoPostal));
+                    //cmd.Parameters.Add("@telefono", SqlDbType.Decimal).Value = cliente.telefono;
+                    cmd.Parameters.AddWithValue("@telefono", Convert.ToInt32(cliente.telefono));
                     cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = cliente.mail;
 
                     conn.Open();

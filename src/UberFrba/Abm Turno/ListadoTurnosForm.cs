@@ -34,13 +34,18 @@ namespace UberFrba.Abm_Turno
 
         private void turnosDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            objController.habilitarContenidoPanel(turnoSeleccionadoPanel, true);
-            turno_index = e.RowIndex;
+            if (e.RowIndex >= 0)
+            {
+                objController.habilitarContenidoPanel(turnoSeleccionadoPanel, true);
+                turno_index = e.RowIndex;
+            }
         }
 
         private void limpiarButton_Click(object sender, EventArgs e)
         {
             limpiar_form();
+            objController.habilitarContenidoPanel(turnoSeleccionadoPanel, false);
+            turnosDataGridView.ClearSelection();
         }
 
         private void limpiar_form()

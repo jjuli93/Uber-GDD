@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.fnDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.crearButton = new System.Windows.Forms.Button();
             this.limpiarButton = new System.Windows.Forms.Button();
             this.label16 = new System.Windows.Forms.Label();
@@ -57,7 +58,6 @@
             this.buscarButton = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.cerrarSesionLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.fnDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
@@ -94,6 +94,14 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Nuevo Chofer";
+            // 
+            // fnDateTimePicker
+            // 
+            this.fnDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.fnDateTimePicker.Location = new System.Drawing.Point(135, 218);
+            this.fnDateTimePicker.Name = "fnDateTimePicker";
+            this.fnDateTimePicker.Size = new System.Drawing.Size(190, 20);
+            this.fnDateTimePicker.TabIndex = 81;
             // 
             // crearButton
             // 
@@ -224,6 +232,7 @@
             this.telefonoTextBox.Name = "telefonoTextBox";
             this.telefonoTextBox.Size = new System.Drawing.Size(145, 20);
             this.telefonoTextBox.TabIndex = 11;
+            this.telefonoTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.telefonoTextBox_KeyPress);
             // 
             // direccionTextBox
             // 
@@ -240,6 +249,7 @@
             this.dniTextBox.Name = "dniTextBox";
             this.dniTextBox.Size = new System.Drawing.Size(145, 20);
             this.dniTextBox.TabIndex = 9;
+            this.dniTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dniTextBox_KeyPress);
             // 
             // apeliidoTextBox
             // 
@@ -353,14 +363,6 @@
             this.cerrarSesionLinkLabel.TabStop = true;
             this.cerrarSesionLinkLabel.Text = "cerrar sesión";
             this.cerrarSesionLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cerrarSesionLinkLabel_LinkClicked);
-            // 
-            // fnDateTimePicker
-            // 
-            this.fnDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.fnDateTimePicker.Location = new System.Drawing.Point(135, 218);
-            this.fnDateTimePicker.Name = "fnDateTimePicker";
-            this.fnDateTimePicker.Size = new System.Drawing.Size(190, 20);
-            this.fnDateTimePicker.TabIndex = 81;
             // 
             // ABMChoferForm
             // 

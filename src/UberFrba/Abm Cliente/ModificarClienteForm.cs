@@ -38,6 +38,9 @@ namespace UberFrba.Abm_Cliente
                 }
             }
 
+            dniTextBox.MaxLength = 8;
+            telTextBox.MaxLength = 12;
+
             this.FormClosing += ModificarClienteForm_FormClosing;
         }
 
@@ -84,6 +87,16 @@ namespace UberFrba.Abm_Cliente
                     }
                 }
             }
+        }
+
+        private void telTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            objController.only_numbers(e);
+        }
+
+        private void dniTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            objController.only_numbers(e);
         }
     }
 }

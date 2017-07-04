@@ -74,7 +74,6 @@
             // 
             // funcionalidadesLB
             // 
-            this.funcionalidadesLB.Enabled = false;
             this.funcionalidadesLB.FormattingEnabled = true;
             this.funcionalidadesLB.Location = new System.Drawing.Point(28, 79);
             this.funcionalidadesLB.Name = "funcionalidadesLB";

@@ -30,6 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.turnosCheckedListBox = new System.Windows.Forms.CheckedListBox();
+            this.limpiarButton = new System.Windows.Forms.Button();
+            this.buscarAutoButton = new System.Windows.Forms.Button();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.rodadoTextBox = new System.Windows.Forms.TextBox();
@@ -54,11 +57,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.limpiarButton = new System.Windows.Forms.Button();
-            this.buscarAutoButton = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.cerrarSesionLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.turnosCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
@@ -99,6 +99,35 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Nuevo automovil";
             // 
+            // turnosCheckedListBox
+            // 
+            this.turnosCheckedListBox.FormattingEnabled = true;
+            this.turnosCheckedListBox.Location = new System.Drawing.Point(409, 30);
+            this.turnosCheckedListBox.Name = "turnosCheckedListBox";
+            this.turnosCheckedListBox.Size = new System.Drawing.Size(206, 94);
+            this.turnosCheckedListBox.TabIndex = 29;
+            this.turnosCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.turnosCheckedListBox_ItemCheck);
+            // 
+            // limpiarButton
+            // 
+            this.limpiarButton.Location = new System.Drawing.Point(116, 238);
+            this.limpiarButton.Name = "limpiarButton";
+            this.limpiarButton.Size = new System.Drawing.Size(75, 23);
+            this.limpiarButton.TabIndex = 20;
+            this.limpiarButton.Text = "Limpiar";
+            this.limpiarButton.UseVisualStyleBackColor = true;
+            this.limpiarButton.Click += new System.EventHandler(this.limpiarButton_Click);
+            // 
+            // buscarAutoButton
+            // 
+            this.buscarAutoButton.Location = new System.Drawing.Point(32, 238);
+            this.buscarAutoButton.Name = "buscarAutoButton";
+            this.buscarAutoButton.Size = new System.Drawing.Size(75, 23);
+            this.buscarAutoButton.TabIndex = 1;
+            this.buscarAutoButton.Text = "Buscador";
+            this.buscarAutoButton.UseVisualStyleBackColor = true;
+            this.buscarAutoButton.Click += new System.EventHandler(this.buscarAutoButton_Click);
+            // 
             // label15
             // 
             this.label15.AutoSize = true;
@@ -136,6 +165,7 @@
             this.licenciaTextBox.Name = "licenciaTextBox";
             this.licenciaTextBox.Size = new System.Drawing.Size(182, 20);
             this.licenciaTextBox.TabIndex = 25;
+            this.licenciaTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.licenciaTextBox_KeyPress);
             // 
             // label13
             // 
@@ -162,6 +192,7 @@
             this.modeloComboBox.Name = "modeloComboBox";
             this.modeloComboBox.Size = new System.Drawing.Size(190, 21);
             this.modeloComboBox.TabIndex = 22;
+            this.modeloComboBox.SelectedIndexChanged += new System.EventHandler(this.modeloComboBox_SelectedIndexChanged);
             // 
             // crearButton
             // 
@@ -334,26 +365,6 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Marca: ";
             // 
-            // limpiarButton
-            // 
-            this.limpiarButton.Location = new System.Drawing.Point(116, 238);
-            this.limpiarButton.Name = "limpiarButton";
-            this.limpiarButton.Size = new System.Drawing.Size(75, 23);
-            this.limpiarButton.TabIndex = 20;
-            this.limpiarButton.Text = "Limpiar";
-            this.limpiarButton.UseVisualStyleBackColor = true;
-            this.limpiarButton.Click += new System.EventHandler(this.limpiarButton_Click);
-            // 
-            // buscarAutoButton
-            // 
-            this.buscarAutoButton.Location = new System.Drawing.Point(32, 238);
-            this.buscarAutoButton.Name = "buscarAutoButton";
-            this.buscarAutoButton.Size = new System.Drawing.Size(75, 23);
-            this.buscarAutoButton.TabIndex = 1;
-            this.buscarAutoButton.Text = "Buscador";
-            this.buscarAutoButton.UseVisualStyleBackColor = true;
-            this.buscarAutoButton.Click += new System.EventHandler(this.buscarAutoButton_Click);
-            // 
             // errorProvider
             // 
             this.errorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
@@ -369,14 +380,6 @@
             this.cerrarSesionLinkLabel.TabStop = true;
             this.cerrarSesionLinkLabel.Text = "cerrar sesión";
             this.cerrarSesionLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cerrarSesionLinkLabel_LinkClicked);
-            // 
-            // turnosCheckedListBox
-            // 
-            this.turnosCheckedListBox.FormattingEnabled = true;
-            this.turnosCheckedListBox.Location = new System.Drawing.Point(409, 30);
-            this.turnosCheckedListBox.Name = "turnosCheckedListBox";
-            this.turnosCheckedListBox.Size = new System.Drawing.Size(206, 94);
-            this.turnosCheckedListBox.TabIndex = 29;
             // 
             // ABMAutomovilForm
             // 

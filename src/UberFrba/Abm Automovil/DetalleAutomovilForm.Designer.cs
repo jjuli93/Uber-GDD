@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.turnosListBox = new System.Windows.Forms.ListBox();
             this.rodadoTextBox = new System.Windows.Forms.TextBox();
             this.licenciaTextBox = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -44,7 +45,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.volverButton = new System.Windows.Forms.Button();
-            this.turnosListBox = new System.Windows.Forms.ListBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -71,6 +71,14 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Datos de un automovil";
+            // 
+            // turnosListBox
+            // 
+            this.turnosListBox.FormattingEnabled = true;
+            this.turnosListBox.Location = new System.Drawing.Point(101, 161);
+            this.turnosListBox.Name = "turnosListBox";
+            this.turnosListBox.Size = new System.Drawing.Size(220, 82);
+            this.turnosListBox.TabIndex = 34;
             // 
             // rodadoTextBox
             // 
@@ -203,15 +211,6 @@
             this.volverButton.Text = "<< Volver";
             this.volverButton.UseVisualStyleBackColor = true;
             this.volverButton.Click += new System.EventHandler(this.volverButton_Click);
-            // 
-            // turnosListBox
-            // 
-            this.turnosListBox.Enabled = false;
-            this.turnosListBox.FormattingEnabled = true;
-            this.turnosListBox.Location = new System.Drawing.Point(101, 161);
-            this.turnosListBox.Name = "turnosListBox";
-            this.turnosListBox.Size = new System.Drawing.Size(220, 82);
-            this.turnosListBox.TabIndex = 34;
             // 
             // DetalleAutomovilForm
             // 

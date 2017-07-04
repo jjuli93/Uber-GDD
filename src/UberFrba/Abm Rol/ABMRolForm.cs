@@ -18,6 +18,7 @@ namespace UberFrba.Abm_Rol
         private menuFuncsRolUserForm formAnterior;
         private ObjetosFormCTRL objController;
         private List<Control> camposObligatorios;
+        private List<ObjetosFormCTRL.itemListBox> funcionalidades_seleccionadas;
 
         public ABMRolForm(menuFuncsRolUserForm _menu)
         {
@@ -26,6 +27,7 @@ namespace UberFrba.Abm_Rol
             formAnterior = _menu;
             objController = ObjetosFormCTRL.Instance;
             camposObligatorios = new List<Control>() { nombreTextBox, chkListBoxFuncs };
+            funcionalidades_seleccionadas = new List<ObjetosFormCTRL.itemListBox>();
             chkListBoxFuncs.Items.Clear();
             this.inicializarFuncionalidades();
 
@@ -71,7 +73,7 @@ namespace UberFrba.Abm_Rol
 
             if (objController.cumpleCamposObligatorios(camposObligatorios, errorProvider))
             {
-                if (RolDAO.Instance.crear_rol(nombreTextBox.Text, chkListBoxFuncs.SelectedItems))
+                if (RolDAO.Instance.crear_rol(nombreTextBox.Text, funcionalidades_seleccionadas))
                 {
                     MessageBox.Show("Rol creado", "Nuevo Rol");
                     this.limpiar_form();
@@ -92,6 +94,20 @@ namespace UberFrba.Abm_Rol
             this.limpiar_form();
             this.Owner.Show();
             this.Dispose();
+        }
+
+        private void chkListBoxFuncs_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            var item = (ObjetosFormCTRL.itemListBox)chkListBoxFuncs.Items[e.Index];
+
+            if (e.CurrentValue != CheckState.Checked)
+            {
+                funcionalidades_seleccionadas.Add(item);
+            }
+            else
+            {
+                funcionalidades_seleccionadas.Remove(item);
+            }
         }
 
        

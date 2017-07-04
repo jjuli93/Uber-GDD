@@ -94,7 +94,7 @@ namespace UberFrba.Registro_Viajes
             nuevo.chofer = chofer_seleccionado.id;
             nuevo.cliente = cliente_seleccionado.id;
 
-            if (turnoComboBox.SelectedIndex == -1)
+            if (turnoComboBox.SelectedIndex >= 0)
             {
                 nuevo.turno = (turnoComboBox.SelectedItem as ObjetosFormCTRL.itemComboBox).id_item;
             }

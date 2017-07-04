@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.fnDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.habilitarCheckBox = new System.Windows.Forms.CheckBox();
             this.mailTextBox = new System.Windows.Forms.TextBox();
             this.telefonoTextBox = new System.Windows.Forms.TextBox();
@@ -47,7 +48,6 @@
             this.cancelarButton = new System.Windows.Forms.Button();
             this.guardarButton = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.fnDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
@@ -76,6 +76,14 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Modificar un chofer";
             // 
+            // fnDateTimePicker
+            // 
+            this.fnDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.fnDateTimePicker.Location = new System.Drawing.Point(138, 221);
+            this.fnDateTimePicker.Name = "fnDateTimePicker";
+            this.fnDateTimePicker.Size = new System.Drawing.Size(190, 20);
+            this.fnDateTimePicker.TabIndex = 82;
+            // 
             // habilitarCheckBox
             // 
             this.habilitarCheckBox.AutoSize = true;
@@ -99,6 +107,7 @@
             this.telefonoTextBox.Name = "telefonoTextBox";
             this.telefonoTextBox.Size = new System.Drawing.Size(145, 20);
             this.telefonoTextBox.TabIndex = 27;
+            this.telefonoTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.telefonoTextBox_KeyPress);
             // 
             // direccionTextBox
             // 
@@ -114,6 +123,7 @@
             this.dniTextBox.Name = "dniTextBox";
             this.dniTextBox.Size = new System.Drawing.Size(145, 20);
             this.dniTextBox.TabIndex = 25;
+            this.dniTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dniTextBox_KeyPress);
             // 
             // apeliidoTextBox
             // 
@@ -215,14 +225,6 @@
             // errorProvider
             // 
             this.errorProvider.ContainerControl = this;
-            // 
-            // fnDateTimePicker
-            // 
-            this.fnDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.fnDateTimePicker.Location = new System.Drawing.Point(138, 221);
-            this.fnDateTimePicker.Name = "fnDateTimePicker";
-            this.fnDateTimePicker.Size = new System.Drawing.Size(190, 20);
-            this.fnDateTimePicker.TabIndex = 82;
             // 
             // ModificarChoferForm
             // 
