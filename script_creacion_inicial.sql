@@ -884,6 +884,8 @@ returns int
 begin
 declare @retorno int
 
+/*TODO validar que no exista facturacion entre esos dias*/
+
 if((select count(*)
 	from ddg.Facturas
 	where factura_cliente = @idCliente
