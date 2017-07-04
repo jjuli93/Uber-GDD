@@ -131,6 +131,7 @@ namespace UberFrba.Controllers
             var chkList = c as CheckedListBox;
             var combo = c as ComboBox;
             var numUpDown = c as NumericUpDown;
+            var lBox = c as ListBox;
 
             if (tbox != null)
                 cumple = !this.esCampoVacio(tbox, e);
@@ -157,6 +158,17 @@ namespace UberFrba.Controllers
                 {
                     numUpDown.Focus();
                     e.SetError(numUpDown, "Ingrese un monto o cantidad");
+                }
+            }
+
+            if (lBox != null)
+            {
+                cumple = lBox.SelectedItem != null;
+
+                if (!cumple)
+                {
+                    lBox.Focus();
+                    e.SetError(lBox, "Seleccione un item");
                 }
             }
 

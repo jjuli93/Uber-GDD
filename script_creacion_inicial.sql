@@ -359,13 +359,13 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_choferes_con_mayor_rec
 	DROP PROCEDURE [DDG].sp_get_choferes_con_mayor_recaudacion
 GO
 
-create procedure [DDG].[sp_get_choferes_con_mayor_recaudacion] (@año int, @trimestre int)
+create procedure [DDG].[sp_get_choferes_con_mayor_recaudacion] (@year int, @trimestre int)
 as
 
 begin
 select top 5 c.chofer_nombre,c.chofer_apellido,c.chofer_dni, isnull(sum(r.rendicion_importe),0) as cantidad_recaudada
 from DDG.Choferes c left join DDG.Rendiciones r on c.chofer_id = r.rendicion_chofer
-where year(r.rendicion_fecha) = @año
+where year(r.rendicion_fecha) = @year
 and DDG.getTrimestre(month(r.rendicion_fecha)) = @trimestre
 group by c.chofer_apellido,c.chofer_direccion,c.chofer_dni,c.chofer_email,c.chofer_fecha_nacimiento,c.chofer_fecha_nacimiento,c.chofer_habilitado,c.chofer_id,c.chofer_nombre,c.chofer_telefono,c.chofer_usuario
 order by isnull(sum(r.rendicion_importe),0) desc
@@ -384,13 +384,13 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_choferes_con_viaje_mas
 	DROP PROCEDURE [DDG].sp_get_choferes_con_viaje_mas_largo
 GO
 
-create procedure [DDG].[sp_get_choferes_con_viaje_mas_largo] (@año int, @trimestre int)
+create procedure [DDG].[sp_get_choferes_con_viaje_mas_largo] (@year int, @trimestre int)
 as
 
 begin
 select top 5 c.chofer_nombre,c.chofer_apellido,c.chofer_dni, isnull(sum(v.viaje_cantidad_km),0) as cantidad_de_km
 from DDG.Choferes c  left join DDG.Viajes v on c.chofer_id = v.viaje_chofer
-where year(v.viaje_fecha_viaje) = @año
+where year(v.viaje_fecha_viaje) = @year
 and DDG.getTrimestre(month(v.viaje_fecha_viaje)) = @trimestre
 group by c.chofer_apellido,c.chofer_direccion,c.chofer_dni,c.chofer_email,c.chofer_fecha_nacimiento,c.chofer_fecha_nacimiento,c.chofer_habilitado,c.chofer_id,c.chofer_nombre,c.chofer_telefono,c.chofer_usuario
 order by isnull(sum(v.viaje_cantidad_km),0) desc
@@ -409,13 +409,13 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_clientes_con_mayor_con
 	DROP PROCEDURE [DDG].sp_get_clientes_con_mayor_consumo
 GO
 
-create procedure [DDG].[sp_get_clientes_con_mayor_consumo] (@año int, @trimestre int)
+create procedure [DDG].[sp_get_clientes_con_mayor_consumo] (@year int, @trimestre int)
 as
 
 begin
 select top 5 c.cliente_nombre,c.cliente_apellido,c.cliente_dni, isnull(sum(f.factura_importe),0) as importe_total
 from DDG.Clientes c  left join DDG.Facturas f on c.cliente_id = f.factura_cliente
-where year(f.factura_fecha_inicio) = @año
+where year(f.factura_fecha_inicio) = @year
 and DDG.getTrimestre(month(f.factura_fecha_inicio)) = @trimestre
 group by c.cliente_apellido,c.cliente_codigo_postal,c.cliente_direccion,c.cliente_dni,c.cliente_email,c.cliente_fecha_nacimiento,c.cliente_habilitado,c.cliente_id,c.cliente_nombre,c.cliente_telefono,c.cliente_usuario
 order by isnull(sum(f.factura_importe),0) desc
@@ -434,14 +434,14 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_clientes_mayor_uso_mis
 	DROP PROCEDURE [DDG].sp_get_clientes_mayor_uso_mismo_auto
 GO
 
-create procedure [DDG].[sp_get_clientes_mayor_uso_mismo_auto] (@año int, @trimestre int)
+create procedure [DDG].[sp_get_clientes_mayor_uso_mismo_auto] (@year int, @trimestre int)
 as
 
 begin
 select top 5 c.cliente_nombre,c.cliente_apellido,c.cliente_dni, a.auto_patente, isnull(count(a.auto_id),0) as cantidad_veces_utilizado
 from DDG.Clientes c  left join Viajes v on c.cliente_id = v.viaje_cliente
 left join DDG.Autos a on v.viaje_auto = a.auto_id
-where year(v.viaje_fecha_viaje) = @año
+where year(v.viaje_fecha_viaje) = @year
 and DDG.getTrimestre(month(v.viaje_fecha_viaje)) = @trimestre
 group by c.cliente_apellido,c.cliente_codigo_postal,c.cliente_direccion,c.cliente_dni,c.cliente_email,c.cliente_fecha_nacimiento,c.cliente_habilitado,c.cliente_id,c.cliente_nombre,c.cliente_telefono,c.cliente_usuario,a.auto_chofer,a.auto_habilitado,a.auto_id,a.auto_licencia,a.auto_modelo,a.auto_patente,a.auto_patente,a.auto_rodado
 order by isnull(count(a.auto_id),0) desc
