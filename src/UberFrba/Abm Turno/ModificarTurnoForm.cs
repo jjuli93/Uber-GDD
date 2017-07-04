@@ -70,9 +70,16 @@ namespace UberFrba.Abm_Turno
             {
                 if (MessageBox.Show("¿Está seguro de querer modificar los datos del turno?", "Modificar Turno", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
+                    update_turno();
+
                     if (turnoDAO.modificar_turno(turnoSeleccionado))
                     {
-                        MessageBox.Show("Los datos del turno han sido modificados.", "Modificar Turno", MessageBoxButtons.OK);
+                        (this.Owner as ListadoTurnosForm).refresh_table();
+                        if (MessageBox.Show("Los datos del turno han sido modificados.", "Modificar Turno", MessageBoxButtons.OK) == DialogResult.OK)
+                        {
+                            this.Owner.Show();
+                            this.Dispose();
+                        }
                     }
                     else
                     {
@@ -80,6 +87,16 @@ namespace UberFrba.Abm_Turno
                     }
                 }
             }
+        }
+
+        private void update_turno()
+        {
+            turnoSeleccionado.descripcion = descripcionTextBox.Text;
+            turnoSeleccionado.hora_inicio = beginDateTimePicker.Value;
+            turnoSeleccionado.hora_fin = endDateTimePicker.Value;
+            turnoSeleccionado.precio_base = (int)precioNumericUpDown.Value;
+            turnoSeleccionado.valor_km = (int)kmNumericUpDown.Value;
+            turnoSeleccionado.habilitado = habilitarCheckBox.Checked;
         }
     }
 }

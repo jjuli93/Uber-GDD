@@ -193,6 +193,7 @@ namespace UberFrba.Controllers
                 var calen = c as DateTimePicker;
                 var check = c as CheckBox;
                 var chkList = c as CheckedListBox;
+                var numUpDown = c as NumericUpDown;
 
                 if (tbox != null)
                 {
@@ -225,6 +226,11 @@ namespace UberFrba.Controllers
                     chkList.SelectedItems.Clear();
                     chkList.SelectedIndices.Clear();
                     this.descheckearItems(chkList);
+                }
+
+                if (numUpDown != null)
+                {
+                    numUpDown.Value = 0;
                 }
 
                 this.limpiarControles(c);

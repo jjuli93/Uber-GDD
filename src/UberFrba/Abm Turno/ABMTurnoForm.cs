@@ -78,11 +78,11 @@ namespace UberFrba.Abm_Turno
 
         private Turno crear_nuevo_turno()
         {
-            Turno nuevo = null;
+            Turno nuevo = new Turno(0);
 
             nuevo.descripcion = descripcionTextBox.Text;
             nuevo.hora_inicio = beginDateTimePicker.Value;
-            nuevo.hora_fin = beginDateTimePicker.Value;
+            nuevo.hora_fin = endDateTimePicker.Value;
             nuevo.valor_km = Convert.ToDouble(precioNumericUpDown.Value);
             nuevo.precio_base = Convert.ToDouble(kmNumericUpDown.Value);
 

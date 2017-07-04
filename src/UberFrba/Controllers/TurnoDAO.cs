@@ -186,8 +186,9 @@ namespace UberFrba.Controllers
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
+                MessageBox.Show(e.Message, "Error en Modificación de Turno");
                 result = false;
                 //throw;
             }
@@ -205,6 +206,7 @@ namespace UberFrba.Controllers
                 using (SqlCommand cmd = new SqlCommand("DDG.sp_baja_turno", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@idTurno", turno_id);
 
 
                     conn.Open();
@@ -240,12 +242,13 @@ namespace UberFrba.Controllers
                 return null;
             }
 
-            turno = new Turno(Convert.ToInt32(row.Cells["turno_habilitado"].Value));
+            turno = new Turno(Convert.ToInt32(row.Cells["turno_id"].Value));
             turno.descripcion = row.Cells["turno_descripcion"].Value.ToString();
             turno.hora_inicio = Convert.ToDateTime(row.Cells["turno_hora_inicio"].Value.ToString());
             turno.hora_fin = Convert.ToDateTime(row.Cells["turno_hora_fin"].Value.ToString());
             turno.valor_km = Convert.ToDouble(row.Cells["turno_valor_km"].Value.ToString());
             turno.precio_base = Convert.ToDouble(row.Cells["turno_precio_base"].Value.ToString());
+            turno.habilitado = Convert.ToBoolean(row.Cells["turno_habilitado"].Value);
 
             return turno;
         }

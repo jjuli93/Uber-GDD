@@ -101,7 +101,7 @@
             this.turnosDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.turnosDataGridView.Size = new System.Drawing.Size(363, 172);
             this.turnosDataGridView.TabIndex = 2;
-            this.turnosDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.turnosDataGridView_CellContentClick);
+            this.turnosDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.turnosDataGridView_CellClick);
             // 
             // descripcionTextBox
             // 

@@ -32,15 +32,6 @@ namespace UberFrba.Abm_Turno
             objController.cerrar_app_Event(sender, e);
         }
 
-        private void turnosDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                objController.habilitarContenidoPanel(turnoSeleccionadoPanel, true);
-                turno_index = e.RowIndex;
-            }
-        }
-
         private void limpiarButton_Click(object sender, EventArgs e)
         {
             limpiar_form();
@@ -67,6 +58,11 @@ namespace UberFrba.Abm_Turno
 
         private void buscarButton_Click(object sender, EventArgs e)
         {
+            buscar_turnos();
+        }
+
+        private void buscar_turnos()
+        {
             string descripcion_filtro = null;
 
             if (!string.IsNullOrEmpty(descripcionTextBox.Text))
@@ -82,18 +78,32 @@ namespace UberFrba.Abm_Turno
 
         private void verButton_Click(object sender, EventArgs e)
         {
-            var detalle = new DetalleTurnoForm(turnoDAO.obtener_turno_from_row(turnosDataGridView.Rows[turno_index]));
+            if ((turno_index >= 0) && (turno_index < turnosDataGridView.Rows.Count))
+            {
+                var detalle = new DetalleTurnoForm(turnoDAO.obtener_turno_from_row(turnosDataGridView.Rows[turno_index]));
 
-            detalle.Show(this);
-            this.Hide();
+                turno_index = -1;
+                turnosDataGridView.ClearSelection();
+                objController.habilitarContenidoPanel(turnoSeleccionadoPanel, false);
+
+                detalle.Show(this);
+                this.Hide();
+            }
         }
 
         private void modificarButton_Click(object sender, EventArgs e)
         {
-            var modificar = new ModificarTurnoForm(turnoDAO.obtener_turno_from_row(turnosDataGridView.Rows[turno_index]));
+            if ((turno_index >= 0)&&(turno_index < turnosDataGridView.Rows.Count))
+            {
+                var modificar = new ModificarTurnoForm(turnoDAO.obtener_turno_from_row(turnosDataGridView.Rows[turno_index]));
 
-            modificar.Show(this);
-            this.Hide();
+                turno_index = -1;
+                turnosDataGridView.ClearSelection();
+                objController.habilitarContenidoPanel(turnoSeleccionadoPanel, false);
+
+                modificar.Show(this);
+                this.Hide();   
+            }
         }
 
         private void eliminarButton_Click(object sender, EventArgs e)
@@ -106,6 +116,9 @@ namespace UberFrba.Abm_Turno
                 {
                     MessageBox.Show("Turno eliminado", "Baja Turno", MessageBoxButtons.OK);
                     turnosDataGridView.Rows[turno_index].Cells["turno_habilitado"].Value = 0;
+                    turnosDataGridView.ClearSelection();
+                    turno_index = -1;
+                    objController.habilitarContenidoPanel(turnoSeleccionadoPanel, false);
                 }
                 else
                 {
@@ -118,5 +131,21 @@ namespace UberFrba.Abm_Turno
             objController.habilitarContenidoPanel(turnoSeleccionadoPanel, false);
         }
 
+        private void turnosDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                objController.habilitarContenidoPanel(turnoSeleccionadoPanel, true);
+                turno_index = e.RowIndex;
+            }
+        }
+
+        public void refresh_table()
+        {
+            buscar_turnos();
+            turno_index = -1;
+            turnosDataGridView.ClearSelection();
+            objController.habilitarContenidoPanel(turnoSeleccionadoPanel, false);
+        }
     }
 }

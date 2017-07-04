@@ -89,6 +89,11 @@
             // precioNumericUpDown
             // 
             this.precioNumericUpDown.Location = new System.Drawing.Point(167, 158);
+            this.precioNumericUpDown.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.precioNumericUpDown.Name = "precioNumericUpDown";
             this.precioNumericUpDown.Size = new System.Drawing.Size(99, 20);
             this.precioNumericUpDown.TabIndex = 23;
@@ -96,6 +101,11 @@
             // kmNumericUpDown
             // 
             this.kmNumericUpDown.Location = new System.Drawing.Point(167, 126);
+            this.kmNumericUpDown.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
             this.kmNumericUpDown.Name = "kmNumericUpDown";
             this.kmNumericUpDown.Size = new System.Drawing.Size(99, 20);
             this.kmNumericUpDown.TabIndex = 22;
