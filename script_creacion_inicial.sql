@@ -7,6 +7,7 @@ create schema [DDG] authorization [gd]
 go
 
 create type listaIDs as table (id int);
+GO
 
 
 create table [DDG].Funcionalidades(
@@ -167,8 +168,8 @@ viaje_rendicion numeric(10) references [DDG].RendicionesDetalle,
 viaje_factura numeric(18) references [DDG].FacturasDetalle,
 viaje_cantidad_km numeric(5) not null,
 viaje_fecha_viaje datetime not null,
-viaje_hora_inicio time /*not null*/,
-viaje_hora_fin time /*not null*/		/*Datos en la base no tienen estos campos*/
+viaje_hora_inicio datetime /*not null*/,
+viaje_hora_fin datetime /*not null*/		/*Datos en la base no tienen estos campos*/
 )
 GO
 
@@ -802,7 +803,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='choferYaAsignado' AND type in
 DROP FUNCTION [ddg].choferYaAsignado
 GO
 
-create function [DDG].choferYaAsignado(@idchofer numeric(10,0))
+create function [DDG].choferYaAsignado(@idchofer numeric(10,0), @idAuto numeric(10))
 returns int
 begin
 declare @retorno bit
@@ -810,6 +811,7 @@ declare @retorno bit
 if	((select count(*)
 	from DDG.Autos
 	where auto_chofer = @idchofer
+	and  (@idAuto is null or(auto_id != @idAuto))
 	and auto_habilitado = 1) > 0)
 
 	set @retorno = 1
@@ -987,8 +989,6 @@ end
 GO
 
 
-
-
 --=============================================================================================================
 --TIPO		: Stored procedure
 --NOMBRE	: sp_update_cliente
@@ -1064,7 +1064,7 @@ begin
 
 begin tran
 
-if (ddg.choferYaAsignado (@idchofer)=1)
+if (ddg.choferYaAsignado (@idchofer, null)=1)
 	
 	THROW 51000, 'El chofer ya tiene un auto asignado.', 1;														
 
@@ -1101,7 +1101,7 @@ begin
 
 begin tran
 
-if (ddg.choferYaAsignado (@idchofer)=1)
+if (ddg.choferYaAsignado (@idchofer, @id)=1)
 	
 	THROW 51000, 'El chofer ya tiene un auto asignado.', 1;												
 
@@ -1243,15 +1243,16 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_viaje' AND type='p')
 	DROP PROCEDURE [DDG].sp_alta_viaje
 GO
 
-create procedure [ddg].sp_alta_viaje (@idChofer numeric(10,0), @idAuto numeric(10,0), @idTurno numeric(10,0), @idCliente numeric(10,0), @cantKM numeric(5,0), @horaIn time , @horaFin time) as
+create procedure [ddg].sp_alta_viaje (@idChofer numeric(10,0), @idAuto numeric(10,0), @idTurno numeric(10,0), @idCliente numeric(10,0), @cantKM numeric(5,0), @horaIn datetime , @horaFin datetime) as
 begin
 
 	if(@cantKM is null or @cantKM <= 0) THROW 51000, 'La cantidad de km es invalida', 1;
 
 	/*TODO chequearHorarioViaje(@idCliente, @idChofer, @horaIn, @horaFin) produce excepciones si hay horarios superpuestos de viajes con ese chofer y o cliente*/
+	/*chequear que el horario del viaje este dentro del horario del turno*/
 
-	insert into ddg.viajes(viaje_chofer, viaje_auto, viaje_turno, viaje_cliente, viaje_cantidad_km, viaje_hora_inicio, viaje_hora_fin) 
-	values (@idChofer, @idAuto, @idTurno, @idCliente, @cantKM, @horaIn , @horaFin)
+	insert into ddg.viajes(viaje_chofer, viaje_auto, viaje_turno, viaje_cliente, viaje_cantidad_km, viaje_hora_inicio, viaje_hora_fin, viaje_fecha_viaje) 
+	values (@idChofer, @idAuto, @idTurno, @idCliente, @cantKM, @horaIn , @horaFin, @horaIn)
 end
 GO
 
@@ -1681,7 +1682,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_clientes' AND type='p'
 	DROP PROCEDURE [DDG].sp_get_clientes
 GO
 
-create procedure [ddg].sp_get_clientes(@nombre varchar(250), @apellido varchar(250), @dni numeric(18,0)) as
+create procedure [ddg].sp_get_clientes(@nombre varchar(250), @apellido varchar(250), @dni numeric(18,0), @habilitado bit) as
 begin
 
 select cliente_id,cliente_nombre,cliente_apellido,cliente_codigo_postal,cliente_direccion,cliente_dni,cliente_email,cliente_fecha_nacimiento,cliente_telefono,cliente_habilitado
@@ -1689,6 +1690,7 @@ from ddg.Clientes
 where (@apellido is null or (cliente_apellido like CONCAT('%',@apellido,'%')))
 and   (@nombre is null or   (cliente_nombre like CONCAT('%',@nombre,'%')))
 and	  (@dni is null or (cliente_dni = @dni))
+and   (@habilitado is null or (cliente_habilitado = @habilitado))
 
 OPTION (RECOMPILE)
 end
@@ -1725,7 +1727,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_choferes' AND type='p'
 	DROP PROCEDURE [DDG].sp_get_choferes
 GO
 
-create procedure [ddg].sp_get_choferes(@nombre varchar(250), @apellido varchar(250), @dni numeric(18,0)) as
+create procedure [ddg].sp_get_choferes(@nombre varchar(250), @apellido varchar(250), @dni numeric(18,0), @habilitado bit) as
 begin
 
 select chofer_id,chofer_nombre,chofer_apellido,chofer_direccion,chofer_dni,chofer_email,chofer_fecha_nacimiento,chofer_telefono,chofer_habilitado
@@ -1733,6 +1735,7 @@ from ddg.Choferes
 where (@apellido is null or (chofer_apellido like CONCAT('%',@apellido,'%')))
 and   (@nombre is null or   (chofer_nombre like CONCAT('%',@nombre,'%')))
 and	  (@dni is null or (chofer_dni = @dni))
+and	  (@habilitado is null or (chofer_habilitado = @habilitado))
 
 OPTION (RECOMPILE)
 end
@@ -1825,7 +1828,7 @@ begin
 
 select *
 from ddg.Turnos
-where (@descripcion is null or (@descripcion = turno_descripcion))
+where (@descripcion is null or (turno_descripcion like CONCAT('%',@descripcion,'%')))
 
 OPTION(RECOMPILE)
 end
@@ -1833,7 +1836,7 @@ go
 
 --=============================================================================================================
 --TIPO		: Stored procedure	
---NOMBRE	: sp_get_automovilDetalles								//--TODO faltan los turnos																			                       
+--NOMBRE	: sp_get_automovilDetalles																									                       
 --=============================================================================================================
 IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_automovilDetalles' AND type='p')
 	DROP PROCEDURE [DDG].sp_get_automovilDetalles
