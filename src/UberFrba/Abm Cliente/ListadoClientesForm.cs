@@ -121,6 +121,7 @@ namespace UberFrba.Abm_Cliente
                 index_cliente_selecccionado = -1;
                 clientesDataGridView.ClearSelection();
                 objController.habilitarContenidoPanel(clienteSeleccionadoPanel, false);
+                cancelarButton.Enabled = true;
             }
 
         }
@@ -166,9 +167,15 @@ namespace UberFrba.Abm_Cliente
             clientesDataGridView.ClearSelection();
 
             objController.habilitarContenidoPanel(clienteSeleccionadoPanel, false);
+            cancelarButton.Enabled = true;
         }
 
         private void buscarButton_Click(object sender, EventArgs e)
+        {
+            buscar_clientes();
+        }
+
+        private void buscar_clientes()
         {
             string nombre_filtro = null;
             string apellido_filtro = null;
@@ -183,7 +190,13 @@ namespace UberFrba.Abm_Cliente
             if (!string.IsNullOrEmpty(dniFilterTB.Text))
                 dni_filtro = dniFilterTB.Text;
 
-            DataTable resultados = ClienteDAO.Instance.get_clientes(nombre_filtro, apellido_filtro, dni_filtro);
+
+            DataTable resultados = null;
+
+            if (fromABM)
+                resultados = ClienteDAO.Instance.get_clientes(nombre_filtro, apellido_filtro, dni_filtro, "NO");
+            else
+                resultados = ClienteDAO.Instance.get_clientes(nombre_filtro, apellido_filtro, dni_filtro, "SI");
 
             if (resultados == null)
             {
@@ -209,10 +222,17 @@ namespace UberFrba.Abm_Cliente
 
         private void cleanTableButton_Click(object sender, EventArgs e)
         {
+            limpiar_tabla();
+        }
+
+        private void limpiar_tabla()
+        {
             clientesDataGridView.ClearSelection();
-            (clientesDataGridView.DataSource as DataTable).Clear(); ;
             index_cliente_selecccionado = -1;
             clientesDataGridView.DataSource = null;
+
+            objController.habilitarContenidoPanel(clienteSeleccionadoPanel, false);
+            cancelarButton.Enabled = true;
         }
 
         private void clientesDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -231,6 +251,13 @@ namespace UberFrba.Abm_Cliente
                 seleccionarButton.Enabled = true;
                 cancelarButton.Enabled = true;
             }
+        }
+
+        public void refresh_table()
+        {
+            limpiar_tabla();
+            buscar_clientes();
+            index_cliente_selecccionado = -1;
         }
         
     }

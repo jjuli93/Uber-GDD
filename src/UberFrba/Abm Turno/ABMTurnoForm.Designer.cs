@@ -88,6 +88,7 @@
             // 
             // precioNumericUpDown
             // 
+            this.precioNumericUpDown.DecimalPlaces = 2;
             this.precioNumericUpDown.Location = new System.Drawing.Point(167, 158);
             this.precioNumericUpDown.Maximum = new decimal(new int[] {
             1000000,
@@ -100,6 +101,7 @@
             // 
             // kmNumericUpDown
             // 
+            this.kmNumericUpDown.DecimalPlaces = 2;
             this.kmNumericUpDown.Location = new System.Drawing.Point(167, 126);
             this.kmNumericUpDown.Maximum = new decimal(new int[] {
             10000000,

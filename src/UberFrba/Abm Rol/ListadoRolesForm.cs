@@ -86,6 +86,9 @@ namespace UberFrba.Abm_Rol
         {
             this.rolesDataGridView.Refresh();
             this.rolesDataGridView.DataSource = RolDAO.Instance.get_roles();
+            rolesDataGridView.ClearSelection();
+            index_rol_seleccionado = -1;
+            objController.habilitarContenidoPanel(rolSeleccionadoPanel, false);
         }
 
         private void rolesDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)

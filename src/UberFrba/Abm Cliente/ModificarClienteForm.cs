@@ -77,9 +77,11 @@ namespace UberFrba.Abm_Cliente
             {
                 if (MessageBox.Show("¿Está seguro de querer modificar los datos del cliente?", "Modificar Cliente", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
+                    update_cliente();
                     if (ClienteDAO.Instance.modificar_cliente(client_selected))
                     {
                         MessageBox.Show("Los datos del cliente han sido modificados.", "Modificar Cliente", MessageBoxButtons.OK);
+                        (this.Owner as ListadoClientesForm).refresh_table();
                     }
                     else
                     {
@@ -87,6 +89,22 @@ namespace UberFrba.Abm_Cliente
                     }
                 }
             }
+        }
+
+        private void update_cliente()
+        {
+            if(client_selected == null)
+                return;
+
+            client_selected.nombre = nombreTextBox.Text;
+            client_selected.apellido = apellidoTextBox.Text;
+            client_selected.direccion = dirTextBox.Text;
+            client_selected.dni = Convert.ToUInt32(dniTextBox.Text);
+            client_selected.codigoPostal = Convert.ToInt32(cpTextBox.Text);
+            client_selected.telefono = Convert.ToUInt32(telTextBox.Text);
+            client_selected.fecha_nacimiento = fnDateTimePicker.Value;
+            client_selected.mail = mailTextBox.Text;
+            client_selected.habilitado = habilitarCheckBox.Checked;
         }
 
         private void telTextBox_KeyPress(object sender, KeyPressEventArgs e)

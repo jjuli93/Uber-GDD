@@ -138,7 +138,7 @@ namespace UberFrba.Controllers
 
             if (chkList != null)
             {
-                cumple = chkList.SelectedItems.Count > 0;
+                cumple = chkList.CheckedItems.Count > 0;
 
                 if (!cumple)
                 {

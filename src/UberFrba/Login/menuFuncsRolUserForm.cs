@@ -17,20 +17,25 @@ namespace UberFrba.Login
         private Funcionalidad funcionalidadSeleccionada = null;
         public Usuario userLogged;
         public Rol rolSelected;
-        public SeleccionRolUserForm formAnterior;
         private ObjetosFormCTRL objController;
 
-        public menuFuncsRolUserForm(SeleccionRolUserForm _form, Usuario _user, Rol _rol)
+        public menuFuncsRolUserForm(Usuario _user, Rol _rol, bool from_login)
         {
             InitializeComponent();
             this.CenterToScreen();
             objController = ObjetosFormCTRL.Instance;
-            this.formAnterior = _form;
             this.userLogged = _user;
             this.rolSelected = _rol;
             this.fillListBox();
             this.AcceptButton = this.seleccionarButton;
             this.FormClosing += menuFuncsRolUserForm_FormClosing;
+
+            if (from_login)
+            {
+                volverButton.Visible = false;
+                volverButton.Enabled = false;
+            }
+                
         }
 
         private void menuFuncsRolUserForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -40,6 +45,8 @@ namespace UberFrba.Login
 
         private void fillListBox()
         {
+            rolSelected.funcionalidades.Clear();
+
             rolSelected.funcionalidades.AddRange(FuncionalidadDAO.Instance.get_funcionalidades_by_Rol(rolSelected.id));
 
             foreach (Funcionalidad func in rolSelected.funcionalidades)
@@ -54,6 +61,9 @@ namespace UberFrba.Login
          */
         private void funcionalidadesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (funcionalidadesListBox.SelectedItem == null)
+                return;
+
             ObjetosFormCTRL.itemListBox funcSelected = this.funcionalidadesListBox.SelectedItem as ObjetosFormCTRL.itemListBox;
 
             foreach (Funcionalidad item in this.rolSelected.funcionalidades)
@@ -73,10 +83,10 @@ namespace UberFrba.Login
 
         private void volverButton_Click(object sender, EventArgs e)
         {
-            funcionalidadesListBox.ClearSelected();
-            funcionalidadesListBox.Items.Clear();
-            rolSelected.funcionalidades.Clear();
-            this.formAnterior.Show();
+            //funcionalidadesListBox.ClearSelected();
+            //funcionalidadesListBox.Items.Clear();
+            //rolSelected.funcionalidades.Clear();
+            this.Owner.Show();
             this.Dispose();
         }
 

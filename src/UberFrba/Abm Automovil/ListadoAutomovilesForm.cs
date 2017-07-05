@@ -89,6 +89,11 @@ namespace UberFrba.Abm_Automovil
 
         private void buscarButton_Click(object sender, EventArgs e)
         {
+            buscar_autos();
+        }
+
+        private void buscar_autos()
+        {
             ObjetosFormCTRL.itemComboBox marca = null;
             ObjetosFormCTRL.itemComboBox modelo = null;
             string patente = null;
@@ -173,6 +178,14 @@ namespace UberFrba.Abm_Automovil
 
             if (id_auto > 0)
                 objController.habilitarContenidoPanel(autoSelectedPanelBtns, true);
+        }
+
+        public void refresh_table()
+        {
+            buscar_autos();   
+            AutomovilSeleccionado = -1;
+            autosDataGridView.ClearSelection();
+            objController.habilitarContenidoPanel(autoSelectedPanelBtns, false);
         }
 
     }

@@ -134,7 +134,7 @@ namespace UberFrba.Controllers
             return chofer;
         }
 
-        public DataTable get_choferes(string nombre, string apellido, string dni)
+        public DataTable get_choferes(string nombre, string apellido, string dni, string habilitados)
         {
             DataTable choferes = null;
 
@@ -166,6 +166,11 @@ namespace UberFrba.Controllers
                     }
                     else
                         cmd.Parameters.AddWithValue("@dni", DBNull.Value);
+
+                    if (habilitados == "SI")
+                        cmd.Parameters.AddWithValue("@habilitado", 1);
+                    else
+                        cmd.Parameters.AddWithValue("@habilitado", DBNull.Value);
 
                     conn.Open();
                     SqlDataReader lector = cmd.ExecuteReader();

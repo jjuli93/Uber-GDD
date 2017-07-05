@@ -73,6 +73,38 @@ namespace UberFrba.Login
             }
         }
 
+        private void ingresar_usuario()
+        {
+            Usuario user = LoginDAO.Instance.get_usuario_logueado();
+
+            if (user == null)
+                return;
+
+            int cantidad_roles = user.roles.Count;
+
+            if (cantidad_roles <= 0)
+            {
+                MessageBox.Show("No se han encontrado roles asignados al usuario", "Ingreso de Usuario", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                Form form = null;
+
+                if (cantidad_roles == 1) 
+                {
+                    var rol = (Rol)user.roles[0];
+                    form = new menuFuncsRolUserForm(user, rol, true);
+                }
+                else 
+                {
+                    form = new SeleccionRolUserForm(user);
+                }
+
+                form.Show(this);
+                this.Hide();
+            }
+        }
+
         private string passwordToEncript()
         {
             UTF8Encoding encoderHash = new UTF8Encoding();

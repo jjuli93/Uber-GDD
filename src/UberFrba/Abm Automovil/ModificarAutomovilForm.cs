@@ -106,8 +106,14 @@ namespace UberFrba.Abm_Automovil
             {
                 if (MessageBox.Show("¿Está seguro de querer guardar los cambios realizados?", "Modificación Automóvil", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                 {
+                    update_automovil();
                     actualizar_turnos_checkeados();
-                    if (!autoDAO.modificacion_automovil(automovilSeleccionado))
+                    if (autoDAO.modificacion_automovil(automovilSeleccionado))
+                    {
+                        MessageBox.Show("Automovil modificado", "Cambios en Automovil", MessageBoxButtons.OK);
+                        (this.Owner as ListadoAutomovilesForm).refresh_table();
+                    }
+                    else
                     {
                         MessageBox.Show("[Error] No se han podido guardar los cambios realizados", "Error en Modificación Automovil", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -117,6 +123,9 @@ namespace UberFrba.Abm_Automovil
 
         private void actualizar_turnos_checkeados()
         {
+            if (automovilSeleccionado == null)
+                return;
+
             ObjetosFormCTRL.itemListBox item = null;
             int pos = -1;
 
@@ -179,6 +188,26 @@ namespace UberFrba.Abm_Automovil
 
             automovilSeleccionado.idmodelo = modelo.id_item;
             automovilSeleccionado.modelo = modelo.nombre_item;
+        }
+
+        private void update_automovil()
+        {
+            if (automovilSeleccionado == null)
+                return;
+
+            automovilSeleccionado.patente = patenteTextBox.Text;
+            automovilSeleccionado.licencia = Convert.ToInt32(licenciaTextBox.Text);
+            automovilSeleccionado.rodado = rodadoTextBox.Text;
+            automovilSeleccionado.habilitado = habilitarCheckBox.Checked;
+        }
+
+        public void setChoferSeleccionado(Chofer _chofer)
+        {
+            if (_chofer != null)
+            {
+                chofer_seleccionado = _chofer;
+                nombreChoferTB.Text = chofer_seleccionado.nombre + " " + chofer_seleccionado.apellido;
+            }
         }
     }
 }

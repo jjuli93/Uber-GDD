@@ -65,8 +65,8 @@ namespace UberFrba.Login
         {
             if ((userLogged != null) && (rolSelected != null))
             {
-                menuFuncsRolUserForm menuFuncionalidades = new menuFuncsRolUserForm(this, userLogged, rolSelected);
-                menuFuncionalidades.Show();
+                menuFuncsRolUserForm menuFuncionalidades = new menuFuncsRolUserForm(userLogged, rolSelected, false);
+                menuFuncionalidades.Show(this);
                 this.Hide();
             }
         }

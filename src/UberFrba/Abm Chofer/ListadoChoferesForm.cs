@@ -18,6 +18,7 @@ namespace UberFrba.Abm_Chofer
         private Form formAnterior;
         private ObjetosFormCTRL objController;
         private int chofer_index = -1;
+        private bool fromABM;
 
         public ListadoChoferesForm(Form _formAnterior, bool _fromABM)
         {
@@ -26,6 +27,7 @@ namespace UberFrba.Abm_Chofer
             formAnterior = _formAnterior;
             objController = ObjetosFormCTRL.Instance;
             this.FormClosing += ListadoChoferesForm_FormClosing;
+            fromABM = _fromABM;
 
             if (!_fromABM)
             {
@@ -143,6 +145,11 @@ namespace UberFrba.Abm_Chofer
 
         private void buscarButton_Click(object sender, EventArgs e)
         {
+            buscar_choferes();
+        }
+
+        private void buscar_choferes()
+        {
             string nombre_filtro = null;
             string apellido_filtro = null;
             string dni_filtro = null;
@@ -156,7 +163,12 @@ namespace UberFrba.Abm_Chofer
             if (!string.IsNullOrEmpty(dniTextBox.Text))
                 dni_filtro = dniTextBox.Text;
 
-            DataTable resultados = ChoferDAO.Instance.get_choferes(nombre_filtro, apellido_filtro, dni_filtro);
+            DataTable resultados = null;
+
+            if (fromABM)
+                resultados = ChoferDAO.Instance.get_choferes(nombre_filtro, apellido_filtro, dni_filtro, "NO");
+            else
+                resultados = ChoferDAO.Instance.get_choferes(nombre_filtro, apellido_filtro, dni_filtro, "SI");
 
             if (resultados != null)
                 choferesDataGridView.DataSource = resultados;
@@ -173,6 +185,12 @@ namespace UberFrba.Abm_Chofer
             }
         }
 
-        
+        public void refresh_table()
+        {
+            buscar_choferes();
+            chofer_index = -1;
+            choferesDataGridView.ClearSelection();
+            habilitar_botones(false);
+        }
     }
 }
