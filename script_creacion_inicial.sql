@@ -454,6 +454,36 @@ end
 GO
 
 
+	--=============================================================================================================
+--TIPO		: Funcion
+--NOMBRE	: existeAutoConMismaPatente                                  
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='existeRolConMismoNombre' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
+DROP FUNCTION [ddg].existeRolConMismoNombre
+GO
+
+create function [DDG].existeRolConMismoNombre(@nombre varchar(255), @idRol numeric(10))
+returns int
+begin
+declare @retorno bit
+
+if	((select count(*)
+	from DDG.Roles
+	where rol_nombre = @nombre
+	and  (@idRol is null or(rol_ID != @idRol))) > 0)
+
+	set @retorno = 1
+
+else
+	set @retorno = 0
+
+return @retorno
+
+end
+GO
+
+
 
 													/*Triggers*/
 
@@ -497,7 +527,7 @@ begin
 
 begin tran
 
-if(existeRolConMismoNombre( @nombre, null) = 1) THROW 51000, 'Ya existe un Rol con el nombre ingresado.', 1;	
+if(ddg.existeRolConMismoNombre( @nombre, null) = 1) THROW 51000, 'Ya existe un Rol con el nombre ingresado.', 1;	
 
 insert into DDG.Roles (rol_nombre, rol_habilitado)
 values(@nombre, @habilitado)
@@ -547,7 +577,7 @@ begin
 
 begin tran
 
-if(existeRolConMismoNombre( @nombre, @id) = 1) THROW 51000, 'Ya existe un Rol con el nombre ingresado.', 1;
+if(ddg.existeRolConMismoNombre( @nombre, @id) = 1) THROW 51000, 'Ya existe un Rol con el nombre ingresado.', 1;
 
 update DDG.Roles
 set rol_nombre = @nombre, rol_habilitado = @habilitado
@@ -863,35 +893,6 @@ return @retorno
 end
 GO
 
-
---=============================================================================================================
---TIPO		: Funcion
---NOMBRE	: existeAutoConMismaPatente                                  
---=============================================================================================================
-
-IF EXISTS (SELECT name FROM sysobjects WHERE name='existeRolConMismoNombre' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
-DROP FUNCTION [ddg].existeRolConMismoNombre
-GO
-
-create function [DDG].existeRolConMismoNombre(@nombre varchar(50), @idRol numeric(10))
-returns int
-begin
-declare @retorno bit
-
-if	((select count(*)
-	from DDG.Roles
-	where rol_nombre = @nombre
-	and  (@idRol is null or(rol_ID != @idRol))) > 0)
-
-	set @retorno = 1
-
-else
-	set @retorno = 0
-
-return @retorno
-
-end
-GO
 
 
 --=============================================================================================================
