@@ -79,16 +79,28 @@
             // 
             // precioNumericUpDown
             // 
+            this.precioNumericUpDown.DecimalPlaces = 2;
             this.precioNumericUpDown.Enabled = false;
             this.precioNumericUpDown.Location = new System.Drawing.Point(159, 161);
+            this.precioNumericUpDown.Maximum = new decimal(new int[] {
+            100000000,
+            0,
+            0,
+            0});
             this.precioNumericUpDown.Name = "precioNumericUpDown";
             this.precioNumericUpDown.Size = new System.Drawing.Size(99, 20);
             this.precioNumericUpDown.TabIndex = 33;
             // 
             // kmNumericUpDown
             // 
+            this.kmNumericUpDown.DecimalPlaces = 2;
             this.kmNumericUpDown.Enabled = false;
             this.kmNumericUpDown.Location = new System.Drawing.Point(159, 129);
+            this.kmNumericUpDown.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.kmNumericUpDown.Name = "kmNumericUpDown";
             this.kmNumericUpDown.Size = new System.Drawing.Size(99, 20);
             this.kmNumericUpDown.TabIndex = 32;

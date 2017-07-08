@@ -155,7 +155,7 @@ namespace UberFrba.Controllers
             }
             catch (SqlException e)
             {
-                MessageBox.Show(e.Message, "Error en Alta de Turno");
+                MessageBox.Show(e.Message, "Error en Alta de Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 result = false;
                 //throw;
             }
@@ -188,7 +188,7 @@ namespace UberFrba.Controllers
             }
             catch (SqlException e)
             {
-                MessageBox.Show(e.Message, "Error en Modificación de Turno");
+                MessageBox.Show(e.Message, "Error en Modificación de Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 result = false;
                 //throw;
             }
@@ -276,6 +276,9 @@ namespace UberFrba.Controllers
                             Turno nuevo = new Turno(Convert.ToInt32(lector["turno_id"]));
 
                             nuevo.descripcion = lector["turno_descripcion"].ToString();
+
+                            nuevo.hora_inicio += (TimeSpan)lector["turno_hora_inicio"];
+                            nuevo.hora_fin += (TimeSpan)lector["turno_hora_fin"];
 
                             turnos.Add(nuevo);
                         }

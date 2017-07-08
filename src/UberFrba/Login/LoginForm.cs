@@ -15,8 +15,6 @@ namespace UberFrba.Login
 {
     public partial class LoginForm : Form
     {
-        private int CANTIDAD_MAX_INTENTOS = 3;
-        private int intentosFallidos = 0;
         private List<Control> camposObligatorios;
         ObjetosFormCTRL objController;
 
@@ -55,19 +53,19 @@ namespace UberFrba.Login
                             return;
                         break;
                     case -2: //  pass incorrecta
-                        CANTIDAD_MAX_INTENTOS--;
-                        if (MessageBox.Show("Usuario o contraseña incorrectos, le quedan " + CANTIDAD_MAX_INTENTOS.ToString() + ".", "Error en los datos ingresados", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
+                        if (MessageBox.Show("Usuario o contraseña incorrectos.", "Error en los datos ingresados", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
                             return;
                         break;
                     case -3: //  user bloqueado
                         if (MessageBox.Show("El usuario " + _username + " se ha bloqueado.", "Se ha quedado sin intentos de login", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
+                        {
+                            userTextBox.Text = "";
+                            passTextBox.Text = "";
                             return;
+                        }
                         break;
                     default: //  login correcto
-                        var dao = LoginDAO.Instance;
-                        SeleccionRolUserForm form = new SeleccionRolUserForm(dao.get_usuario_logueado());
-                        form.Show();
-                        this.Hide();
+                        ingresar_usuario();
                         break;
                 }
             }

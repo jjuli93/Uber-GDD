@@ -126,6 +126,7 @@ namespace UberFrba.Controllers
         private bool campo_cumple(Control c, ErrorProvider e)
         {
             bool cumple = true;
+            bool es_chklist = false;
 
             var tbox = c as TextBox;
             var chkList = c as CheckedListBox;
@@ -139,6 +140,7 @@ namespace UberFrba.Controllers
             if (chkList != null)
             {
                 cumple = chkList.CheckedItems.Count > 0;
+                es_chklist = true;
 
                 if (!cumple)
                 {
@@ -161,7 +163,7 @@ namespace UberFrba.Controllers
                 }
             }
 
-            if (lBox != null)
+            if ((lBox != null) && (!es_chklist))
             {
                 cumple = lBox.SelectedItem != null;
 
@@ -274,20 +276,6 @@ namespace UberFrba.Controllers
             }
         }
 
-        public void form_Closing(object sender, EventArgs e)
-        {
-            /*
-             * DICOTOMIA: 
-             * Al hacer click de "X" cierro la app o 
-             * solo la ventana actual?
-             */
-
-            Application.Exit();
-            //or
-            //Form form = (Form)sender;
-            //form.Close();
-        }
-
         public bool direccion_vacia(TextBox tb, ErrorProvider err)
         {
             bool resp = false;
@@ -318,11 +306,15 @@ namespace UberFrba.Controllers
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                if (MessageBox.Show("¿Está ud. seguro de querer salir de UberFRBA?", "Salir de UberFRBA", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                var msg = MessageBox.Show("¿Está ud. seguro de querer salir de UberFRBA?", "Salir de UberFRBA", MessageBoxButtons.YesNo);
+
+                if (msg == DialogResult.Yes)
                 {
-                    //Environment.Exit(0);
-                    Application.Exit();
-                }    
+                    Environment.Exit(0);
+                    //Application.Exit();
+                }
+                else
+                    e.Cancel = (msg == DialogResult.No);
             }
         }
 

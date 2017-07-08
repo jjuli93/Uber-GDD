@@ -52,9 +52,9 @@ namespace UberFrba.Controllers
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
-                //MessageBox.Show(e.Message, "Error en Alta de Turno");
+                MessageBox.Show(e.Message, "Error en Alta de Viaje", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 result = false;
                 //throw;
             }

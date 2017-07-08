@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Data.Sql;
 using System.Data;
 using UberFrba.Modelo;
+using System.Windows.Forms;
 
 namespace UberFrba.Controllers
 {
@@ -48,7 +49,6 @@ namespace UberFrba.Controllers
             }
             catch (SqlException)
             {
-                
                 //throw;
             }
 
@@ -89,8 +89,9 @@ namespace UberFrba.Controllers
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
+                MessageBox.Show(e.Message, "Error en Modificación Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 result = false;
                 //throw;
             }
@@ -157,8 +158,9 @@ namespace UberFrba.Controllers
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
+                MessageBox.Show(e.Message, "Error en Alta Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 result = false;
                 //throw;
             }

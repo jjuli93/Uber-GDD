@@ -137,6 +137,7 @@ namespace UberFrba.Registro_Viajes
             if (auto_seleccionado != null)
             {
                 List<Turno> turnos = TurnoDAO.Instance.get_turnos_automovil(auto_seleccionado.id);
+                auto_seleccionado.turnos = turnos;
 
                 foreach (var item in turnos)
                 {
@@ -166,5 +167,6 @@ namespace UberFrba.Registro_Viajes
                 && (chofer_seleccionado != null) 
                 && (auto_seleccionado != null);
         }
+
     }
 }

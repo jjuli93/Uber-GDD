@@ -339,6 +339,7 @@
             // 
             // kmNumericUpDown
             // 
+            this.kmNumericUpDown.DecimalPlaces = 2;
             this.kmNumericUpDown.Location = new System.Drawing.Point(215, 170);
             this.kmNumericUpDown.Maximum = new decimal(new int[] {
             10000,

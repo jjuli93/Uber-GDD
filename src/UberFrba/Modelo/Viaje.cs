@@ -17,7 +17,7 @@ namespace UberFrba.Modelo
         public int chofer { get; set; }
         public int automovil { get; set; }
         public int turno { get; set; }
-        public int km_viaje { get; set; }
+        public double km_viaje { get; set; }
         public DateTime inicio_date { get; set; }
         public DateTime fin_date { get; set; }
         public int cliente { get; set; }

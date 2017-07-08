@@ -114,6 +114,15 @@ namespace UberFrba.Rendicion_Viajes
 
         private void set_turnos_chofer()
         {
+            try
+            {
+                turnoComboBox.Items.Clear();
+            }
+            catch (NullReferenceException)
+            {
+                //throw;
+            }
+
             Automovil auto_chofer = AutomovilDAO.Instance.get_automovil_chofer(chofer_seleccionado.id);
 
             if (auto_chofer == null)

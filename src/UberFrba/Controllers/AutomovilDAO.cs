@@ -66,7 +66,7 @@ namespace UberFrba.Controllers
                     lector.Close();
                 }
             }
-            catch (SqlException e)
+            catch (SqlException)
             {
                 
                 //throw;
@@ -161,7 +161,7 @@ namespace UberFrba.Controllers
             }
             catch (SqlException e)
             {
-                MessageBox.Show(e.Message, "Error en alta automovil");
+                MessageBox.Show(e.Message, "Error en alta automovil", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 result = false;
                 //throw;
             }
@@ -209,8 +209,9 @@ namespace UberFrba.Controllers
                     table.Dispose();
                 }
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
+                MessageBox.Show(e.Message, "Error en modificación automovil", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 result = false;
                 //throw;
             }

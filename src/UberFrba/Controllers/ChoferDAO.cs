@@ -50,8 +50,9 @@ namespace UberFrba.Controllers
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
+                MessageBox.Show(e.Message, "Error en Alta de Chofer", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 result = false;
                 //throw;
             }
@@ -84,8 +85,9 @@ namespace UberFrba.Controllers
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
+                MessageBox.Show(e.Message, "Error en Modificación de Chofer", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 result = false;
                 //throw;
             }
@@ -218,7 +220,7 @@ namespace UberFrba.Controllers
             }
             catch (SqlException e)
             {
-                MessageBox.Show(e.Message, "Error en alta rendición");
+                MessageBox.Show(e.Message, "Error en alta rendición", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 id_rendicion = -1;   
                 //throw;
             }

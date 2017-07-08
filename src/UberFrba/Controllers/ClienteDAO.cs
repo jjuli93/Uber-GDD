@@ -8,6 +8,7 @@ using System.Data;
 using UberFrba.Modelo;
 using UberFrba.Controllers;
 using System.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace UberFrba.Controllers
 {
@@ -56,8 +57,9 @@ namespace UberFrba.Controllers
                     cmd.ExecuteNonQuery();                    
                 }
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
+                MessageBox.Show(e.Message, "Error en Alta de Cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 result = false;
                 //throw;
             }
@@ -94,8 +96,9 @@ namespace UberFrba.Controllers
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
+                MessageBox.Show(e.Message, "Error en Modificación de Cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 result = false;
                 //throw;
             }
@@ -209,19 +212,6 @@ namespace UberFrba.Controllers
             return clientes;
         }
 
-        /*
-           * Creo que lo mejor es hacer lo siguiente:
-           * 
-           * 1) llamar esta funcion, que realice la facturacion (sp_alta_factura) 
-           *      y que devuelva el id de factura
-           *      
-           * 2) luego llamar otra funcion (ej: obtenerImporte(id_factura)) 
-           *      -> (sp_calcular_importe @id_factura) -> devuelve el importe
-           *      
-           * 3) finalmente llamar obtenerViajes donde tambien le paso el id_factura
-           *      -> (sp_get_viajes_facturados @id_factura)
-           */
-
         public int realizarFacturacion(int id_cliente, DateTime hora_inicio, DateTime hora_fin)
         {
             int id_factura = 0;
@@ -231,7 +221,6 @@ namespace UberFrba.Controllers
                 using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
                 using (SqlCommand cmd = new SqlCommand("DDG.sp_alta_factura", conn))
                 {
-
                     //[DDG].sp_alta_factura (@idCliente numeric(10,0), @fechaDesde date, @fechaHasta date, @retorno int output) as
 
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -246,8 +235,9 @@ namespace UberFrba.Controllers
                     id_factura = (int)cmd.Parameters["@retorno"].Value;
                 }
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
+                MessageBox.Show(e.Message, "Error en Facturación Cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 id_factura = -1;
                 //throw;
             }

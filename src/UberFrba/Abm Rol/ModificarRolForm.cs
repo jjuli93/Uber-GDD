@@ -62,13 +62,16 @@ namespace UberFrba.Abm_Rol
 
         private void guardarButton_Click(object sender, EventArgs e)
         {
-            if (objController.cumpleCamposObligatorios(new List<Control>() { nombreTextBox, chkListBoxFuncs }, errorProvider))
+            var campos = new List<Control>() { nombreTextBox, chkListBoxFuncs };
+
+            if (objController.cumpleCamposObligatorios(campos, errorProvider))
             {
                 if (MessageBox.Show(string.Format("¿Está seguro de querer modificar el rol {0}?", rolSeleccionado.nombre), "Modificar Rol", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     if (RolDAO.Instance.modificar_rol(rolSeleccionado))
                     {
-                        MessageBox.Show(string.Format("Se ha modificado el rol {0}?", rolSeleccionado.nombre), "Rol modificado", MessageBoxButtons.OK);
+                        MessageBox.Show(string.Format("Se ha modificado el rol {0}", rolSeleccionado.nombre), "Rol modificado", MessageBoxButtons.OK);
+                        objController.borrarMensajeDeError(campos, errorProvider);
                         var listado = (ListadoRolesForm)this.Owner;
                         listado.reloadTable();
                     }
