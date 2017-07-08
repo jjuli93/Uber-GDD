@@ -392,12 +392,11 @@ create procedure [DDG].[sp_get_choferes_con_viaje_mas_largo] (@year int, @trimes
 as
 
 begin
-select top 5 c.chofer_nombre,c.chofer_apellido,c.chofer_dni, isnull(sum(v.viaje_cantidad_km),0) as cantidad_de_km
+select top 5 c.chofer_nombre,c.chofer_apellido,c.chofer_dni, v.viaje_cantidad_km as cantidad_de_km
 from DDG.Choferes c  left join DDG.Viajes v on c.chofer_id = v.viaje_chofer
 where year(v.viaje_fecha_viaje) = @year
 and DDG.getTrimestre(month(v.viaje_fecha_viaje)) = @trimestre
-group by c.chofer_apellido,c.chofer_direccion,c.chofer_dni,c.chofer_email,c.chofer_fecha_nacimiento,c.chofer_fecha_nacimiento,c.chofer_habilitado,c.chofer_id,c.chofer_nombre,c.chofer_telefono,c.chofer_usuario
-order by isnull(sum(v.viaje_cantidad_km),0) desc
+order by v.viaje_cantidad_km desc
 end
 
 GO
@@ -1453,12 +1452,12 @@ declare @idRendicionDetalle int
 
 	if(ddg.ExisteRendicion(@idChofer, @idTurno, @fecha) = 1) THROW 51000, 'Ya se realizó la rendicion solicitada', 1;	
 
-	insert into ddg.rendiciones (rendicion_importe, rendicion_fecha, rendicion_chofer, rendicion_turno, rendicion_porcentaje)
+	insert into ddg.rendiciones (rendicion_importe, rendicion_fecha, rendicion_chofer, rendicion_turno, rendicion_porcentaje, rendicion_numero)
 		values( (isnull((select sum([DDG].calcularImporteViaje(viaje_id))
 					from [ddg].viajes
 					where viaje_chofer = @idchofer
 					and viaje_fecha_viaje = @fecha
-					and viaje_turno = @idTurno),0) * (select top 1 porcentaje_valor from [ddg].Porcentajes order by porcentaje_id desc)) , @fecha, @idchofer, @idTurno,  (select max(porcentaje_id) from DDG.Porcentajes))
+					and viaje_turno = @idTurno),0) * (select top 1 porcentaje_valor from [ddg].Porcentajes order by porcentaje_id desc)) , @fecha, @idchofer, @idTurno,  (select max(porcentaje_id) from DDG.Porcentajes), (select max(rendicion_numero) + 1 from DDG.Rendiciones))
 	
 	set @idRendicion = ((select rendicion_id from DDG.Rendiciones where rendicion_chofer= @idChofer and rendicion_fecha = @fecha))
 
@@ -1960,7 +1959,7 @@ where (@apellido is null or (chofer_apellido like CONCAT('%',@apellido,'%')))
 and   (@nombre is null or   (chofer_nombre like CONCAT('%',@nombre,'%')))
 and	  (@dni is null or (chofer_dni = @dni))
 and	  (@habilitado is null or (chofer_habilitado = @habilitado))
-and	  (@conAutohabilitado is null or (exists(select * from ddg.Autos where auto_chofer = chofer_id)))
+and	  (@conAutohabilitado is null or (exists(select * from ddg.Autos where auto_chofer = chofer_id and auto_habilitado = 1)))
 
 OPTION (RECOMPILE)
 end
