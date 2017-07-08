@@ -166,7 +166,7 @@ viaje_turno numeric(10) not null references [DDG].Turnos,
 viaje_cliente numeric(10) not null references [DDG].Clientes,
 viaje_rendicion numeric(10) references [DDG].RendicionesDetalle,
 viaje_factura numeric(18) references [DDG].FacturasDetalle,
-viaje_cantidad_km numeric(5) not null,
+viaje_cantidad_km numeric(5,2) not null,
 viaje_fecha_viaje datetime not null,
 viaje_hora_inicio datetime /*not null*/,
 viaje_hora_fin datetime /*not null*/		/*Datos en la base no tienen estos campos*/
@@ -331,8 +331,8 @@ select distinct f.factura_id
 from [DDG].Facturas f
 
 					/*Viajes*/
-insert into DDG.Viajes (viaje_auto, viaje_chofer, viaje_cliente, viaje_rendicion, viaje_turno, viaje_cantidad_km, viaje_fecha_viaje, viaje_factura)
-select distinct  a.auto_id, ch.chofer_id, cl.cliente_id, rd.rendicionDetalle_rendicion, t.turno_id, m.Viaje_Cant_Kilometros, m.Viaje_Fecha, fd.facturaDetalle_factura
+insert into DDG.Viajes (viaje_auto, viaje_chofer, viaje_cliente, viaje_rendicion, viaje_turno, viaje_cantidad_km, viaje_fecha_viaje, viaje_factura, viaje_hora_inicio)
+select distinct  a.auto_id, ch.chofer_id, cl.cliente_id, rd.rendicionDetalle_rendicion, t.turno_id, m.Viaje_Cant_Kilometros, m.Viaje_Fecha, fd.facturaDetalle_factura, m.Viaje_Fecha
 from ddg.Autos a, DDG.Choferes ch, DDG.Clientes cl, DDG.Rendiciones r, DDG.Turnos t, gd_esquema.Maestra m, gd_esquema.Maestra m2, DDG.Facturas f, DDG.FacturasDetalle fd, DDG.RendicionesDetalle rd
 where m.Viaje_Cant_Kilometros is not null
 and m.Auto_Patente = a.auto_patente
@@ -497,6 +497,8 @@ begin
 
 begin tran
 
+if(existeRolConMismoNombre( @nombre, null) = 1) THROW 51000, 'Ya existe un Rol con el nombre ingresado.', 1;	
+
 insert into DDG.Roles (rol_nombre, rol_habilitado)
 values(@nombre, @habilitado)
 
@@ -544,6 +546,8 @@ as
 begin
 
 begin tran
+
+if(existeRolConMismoNombre( @nombre, @id) = 1) THROW 51000, 'Ya existe un Rol con el nombre ingresado.', 1;
 
 update DDG.Roles
 set rol_nombre = @nombre, rol_habilitado = @habilitado
@@ -797,6 +801,7 @@ end
 GO
 
 
+
 --=============================================================================================================
 --TIPO		: Funcion
 --NOMBRE	: choferYaAsignado
@@ -807,7 +812,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='choferYaAsignado' AND type in
 DROP FUNCTION [ddg].choferYaAsignado
 GO
 
-create function [DDG].choferYaAsignado(@idchofer numeric(10,0), @idAuto numeric(10))
+create function [DDG].choferYaAsignado(@idchofer varchar(10), @idAuto numeric(10))
 returns int
 begin
 declare @retorno bit
@@ -827,6 +832,67 @@ return @retorno
 
 end
 GO
+
+
+--=============================================================================================================
+--TIPO		: Funcion
+--NOMBRE	: existeAutoConMismaPatente                                  
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='existeAutoConMismaPatente' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
+DROP FUNCTION [ddg].existeAutoConMismaPatente
+GO
+
+create function [DDG].existeAutoConMismaPatente(@patente numeric(10,0), @idAuto numeric(10))
+returns int
+begin
+declare @retorno bit
+
+if	((select count(*)
+	from DDG.Autos
+	where auto_patente = @patente
+	and  (@idAuto is null or(auto_id != @idAuto))) > 0)
+
+	set @retorno = 1
+
+else
+	set @retorno = 0
+
+return @retorno
+
+end
+GO
+
+
+--=============================================================================================================
+--TIPO		: Funcion
+--NOMBRE	: existeAutoConMismaPatente                                  
+--=============================================================================================================
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name='existeRolConMismoNombre' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
+DROP FUNCTION [ddg].existeRolConMismoNombre
+GO
+
+create function [DDG].existeRolConMismoNombre(@nombre varchar(50), @idRol numeric(10))
+returns int
+begin
+declare @retorno bit
+
+if	((select count(*)
+	from DDG.Roles
+	where rol_nombre = @nombre
+	and  (@idRol is null or(rol_ID != @idRol))) > 0)
+
+	set @retorno = 1
+
+else
+	set @retorno = 0
+
+return @retorno
+
+end
+GO
+
 
 --=============================================================================================================
 --TIPO		: Funcion
@@ -1072,7 +1138,10 @@ begin tran
 
 if (ddg.choferYaAsignado (@idchofer, null)=1)
 	
-	THROW 51000, 'El chofer ya tiene un auto asignado.', 1;														
+	THROW 51000, 'El chofer ya tiene un auto asignado.', 1;		
+	
+if(ddg.existeAutoConMismaPatente(@patente, null) = 1)		
+	THROW 51000, 'Ya existe un auto con la misma patente', 1;										
 
 else
 	insert into DDG.Autos(auto_chofer,auto_modelo,auto_patente,auto_licencia,auto_rodado)
@@ -1107,11 +1176,12 @@ begin
 
 begin tran
 
-if (ddg.choferYaAsignado (@idchofer, @id)=1)
-	
+if (ddg.choferYaAsignado (@idchofer, @id)=1)	
 	THROW 51000, 'El chofer ya tiene un auto asignado.', 1;												
 
-else
+if(ddg.existeAutoConMismaPatente(@patente, @id) = 1)		
+	THROW 51000, 'Ya existe un auto con la misma patente', 1;	
+
 
 	update 	ddg.autos
 	set 	auto_chofer = @idchofer,
@@ -1336,9 +1406,9 @@ begin
 
 	if(@cantKM is null or @cantKM <= 0) THROW 51000, 'La cantidad de km es invalida', 1;
 
+	if((select count(*) from ddg.Turnos where turno_id = @idTurno and (cast(@horaIn as time(0)) between turno_hora_inicio and turno_hora_fin)) < 1 ) THROW 51000, 'El horario de inicio del viaje no pertenece al turno seleccionado', 1;
+
 	exec sp_chequearHorarioViaje @idCliente, @idChofer, @horaIn, @horaFin    /*produce excepciones si hay horarios superpuestos de viajes con ese chofer y o cliente*/
-	
-	/*chequear que el horario del viaje este dentro del horario del turno en la App*/
 
 	insert into ddg.viajes(viaje_chofer, viaje_auto, viaje_turno, viaje_cliente, viaje_cantidad_km, viaje_hora_inicio, viaje_hora_fin, viaje_fecha_viaje) 
 	values (@idChofer, @idAuto, @idTurno, @idCliente, @cantKM, @horaIn , @horaFin, @horaIn)
@@ -1383,11 +1453,11 @@ declare @idRendicionDetalle int
 	if(ddg.ExisteRendicion(@idChofer, @idTurno, @fecha) = 1) THROW 51000, 'Ya se realizó la rendicion solicitada', 1;	
 
 	insert into ddg.rendiciones (rendicion_importe, rendicion_fecha, rendicion_chofer, rendicion_turno, rendicion_porcentaje)
-		values( ((select sum([DDG].calcularImporteViaje(viaje_id))
+		values( (isnull((select sum([DDG].calcularImporteViaje(viaje_id))
 					from [ddg].viajes
 					where viaje_chofer = @idchofer
 					and viaje_fecha_viaje = @fecha
-					and viaje_turno = @idTurno) * (select top 1 porcentaje_valor from [ddg].Porcentajes order by porcentaje_id desc)) , @fecha, @idchofer, @idTurno,  (select max(porcentaje_id) from DDG.Porcentajes))
+					and viaje_turno = @idTurno),0) * (select top 1 porcentaje_valor from [ddg].Porcentajes order by porcentaje_id desc)) , @fecha, @idchofer, @idTurno,  (select max(porcentaje_id) from DDG.Porcentajes))
 	
 	set @idRendicion = ((select rendicion_id from DDG.Rendiciones where rendicion_chofer= @idChofer and rendicion_fecha = @fecha))
 
@@ -1734,7 +1804,7 @@ GO
 
 create procedure [DDG].sp_get_automovilHabilitado_chofer(@idChofer numeric(10,0)) as
 begin
-	select *
+	select top 1 *
 	from ddg.autos
 	where auto_chofer = @idChofer
 	and auto_habilitado = 1
@@ -1771,10 +1841,12 @@ GO
 create procedure [ddg].sp_get_viajes_rendicion(@idRendicion numeric(10,0)) as
 begin
 
-select v.*, (ddg.calcularimporteViaje(v.viaje_id) * (select top 1 porcentaje_valor from [ddg].Porcentajes order by porcentaje_id desc)) as montoChofer
-from ddg.Viajes v, ddg.RendicionesDetalle rd
+select concat(cl.cliente_nombre, ' ', cl.cliente_apellido) as nombreCliente, concat(ch.chofer_nombre, ' ', ch.chofer_apellido) as nombreChofer, v.viaje_cantidad_km, v.viaje_hora_inicio, v.viaje_hora_fin, (ddg.calcularimporteViaje(v.viaje_id) * (select top 1 porcentaje_valor from [ddg].Porcentajes order by porcentaje_id desc)) as montoChofer
+from ddg.Viajes v, ddg.RendicionesDetalle rd, ddg.Clientes cl, ddg.Choferes ch 
 where rd.rendicionDetalle_rendicion = @idRendicion
 and v.viaje_rendicion = rd.rendicionDetalle_id
+and v.viaje_cliente = cl.cliente_id
+and v.viaje_chofer = ch.chofer_id
 
 end
 GO
@@ -1792,10 +1864,12 @@ GO
 create procedure [ddg].sp_get_viajes_factura(@idFactura numeric(10,0)) as
 begin
 
-select v.*, ddg.calcularimporteViaje(v.viaje_id)
-from ddg.Viajes v, ddg.FacturasDetalle fd
+select concat(cl.cliente_nombre, ' ', cl.cliente_apellido) as nombreCliente, concat(ch.chofer_nombre, ' ', ch.chofer_apellido) as nombreChofer, v.viaje_cantidad_km, v.viaje_hora_inicio, v.viaje_hora_fin, ddg.calcularimporteViaje(v.viaje_id) as importe
+from ddg.Viajes v, ddg.FacturasDetalle fd, ddg.Clientes cl, ddg.Choferes ch 
 where fd.facturaDetalle_factura = @idFactura
 and v.viaje_factura = fd.facturaDetalle_id
+and v.viaje_cliente = cl.cliente_id
+and v.viaje_chofer = ch.chofer_id
 
 end
 GO
@@ -1876,7 +1950,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_get_choferes' AND type='p'
 	DROP PROCEDURE [DDG].sp_get_choferes
 GO
 
-create procedure [ddg].sp_get_choferes(@nombre varchar(250), @apellido varchar(250), @dni numeric(18,0), @habilitado bit) as
+create procedure [ddg].sp_get_choferes(@nombre varchar(250), @apellido varchar(250), @dni numeric(18,0), @habilitado bit, @conAutohabilitado bit) as
 begin
 
 select chofer_id,chofer_nombre,chofer_apellido,chofer_direccion,chofer_dni,chofer_email,chofer_fecha_nacimiento,chofer_telefono,chofer_habilitado
@@ -1885,6 +1959,7 @@ where (@apellido is null or (chofer_apellido like CONCAT('%',@apellido,'%')))
 and   (@nombre is null or   (chofer_nombre like CONCAT('%',@nombre,'%')))
 and	  (@dni is null or (chofer_dni = @dni))
 and	  (@habilitado is null or (chofer_habilitado = @habilitado))
+and	  (@conAutohabilitado is null or (exists(select * from ddg.Autos where auto_chofer = chofer_id)))
 
 OPTION (RECOMPILE)
 end

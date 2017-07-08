@@ -83,6 +83,9 @@ DROP FUNCTION [ddg].turno_horario_valido
 DROP FUNCTION [ddg].horario_superpuesto_viaje_cliente
 DROP FUNCTION [ddg].horario_superpuesto_viaje_chofer
 DROP FUNCTION [ddg].horario_superpuesto
+DROP FUNCTION [ddg].existeAutoConMismaPatente
+DROP FUNCTION [ddg].existeRolConMismoNombre
+
 
 
 -- Eliminacion de tablas
