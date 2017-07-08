@@ -18,7 +18,6 @@ namespace UberFrba.Facturacion
     {
         private menuFuncsRolUserForm formAnterior;
         private ObjetosFormCTRL objController;
-        private int id_cliente;
         private ClienteDAO clienteDAO;
         private List<Control> camposObligatorios;
         private Cliente cliente_seleccionado = null;
@@ -29,7 +28,6 @@ namespace UberFrba.Facturacion
             CenterToScreen();
             formAnterior = _parent;
 
-            id_cliente = -1;
             objController = ObjetosFormCTRL.Instance;
             clienteDAO = ClienteDAO.Instance;
             camposObligatorios = new List<Control>() { beginDateTimePicker, endDateTimePicker, datosClienteTB };
@@ -60,20 +58,20 @@ namespace UberFrba.Facturacion
         {
             if (cumple_campos())
             {
-                var importe = clienteDAO.realizarFacturacion(id_cliente, beginDateTimePicker.Value, endDateTimePicker.Value);
+                var id_factura = clienteDAO.realizarFacturacion(cliente_seleccionado.id, beginDateTimePicker.Value, endDateTimePicker.Value);
 
-                if (importe == -1)
+                if (id_factura < 0)
                 {
                     MessageBox.Show("Ha ocurrido un error al intentar facturar los viajes realizados por el cliente", "Error en Facturación Clientes", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                    if (importe == 0)
-                        MessageBox.Show("No se han encontrado viajes realizados por el cliente", "Facturación Clientes", MessageBoxButtons.OK);
+                    if (id_factura == 0)
+                        MessageBox.Show("No se ha podido facturar al cliente", "Facturación Clientes", MessageBoxButtons.OK);
                     else
                     {
-                        importeTextBox.Text = " $ " + importe.ToString();
-                        viajesDataGridView.DataSource = clienteDAO.obtenerViajes(id_cliente);
+                        set_importe(id_factura);
+                        set_viajes(id_factura);
                     }
                 }
             }
@@ -85,6 +83,26 @@ namespace UberFrba.Facturacion
                     return;
                 }
             }
+        }
+
+        private void set_viajes(int id_factura)
+        {
+            DataTable viajes = clienteDAO.obtenerViajes(id_factura);
+
+            if (viajes != null)
+                viajesDataGridView.DataSource = viajes;
+        }
+
+        private void set_importe(int id_factura)
+        {
+            double importe = clienteDAO.obtener_importe(id_factura);
+
+            if (importe < 0)
+            {
+                //TODO (on importe == -1) -> handlear cuando sucede un error ;
+            }
+
+            importeTextBox.Text = importe.ToString();
         }
 
         private void cerrarSesionLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

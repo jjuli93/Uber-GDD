@@ -68,7 +68,7 @@ namespace UberFrba.Controllers
             }
             catch (SqlException e)
             {
-                System.Console.Out.Write(e.Message);
+                
                 //throw;
             }
 

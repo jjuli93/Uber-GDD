@@ -1401,9 +1401,11 @@ declare @idRendicionDetalle int
 	where viaje_chofer = @idChofer and viaje_fecha_viaje = @fecha and viaje_turno = @idTurno
 
 	set @retorno = @idRendicion
-	return @retorno
+	
 
 commit
+
+return @retorno
 
 end
 GO
@@ -1428,10 +1430,10 @@ declare @idDetalleFactura int
 	if(ddg.ExisteFacturacion(@idCliente, @fechaDesde, @fechaHasta) = 1) THROW 51000, 'Ya se realizó la facturación solicitada', 1;
 	
 	insert into ddg.Facturas(factura_importe, factura_cliente, factura_fecha_fin, factura_fecha_inicio, factura_numero)
-		values( ((select sum([DDG].calcularImporteViaje(viaje_id))
+		values( isnull(((select sum([DDG].calcularImporteViaje(viaje_id))
 					from [ddg].viajes
 					where viaje_cliente = @idCliente
-					and viaje_fecha_viaje between @fechaDesde and @fechaHasta)) , @idCliente, @fechaHasta, @fechaDesde,  (select max(factura_numero) + 1 from DDG.Facturas))
+					and viaje_fecha_viaje between @fechaDesde and @fechaHasta)),0) , @idCliente, @fechaHasta, @fechaDesde,  (select max(factura_numero) + 1 from DDG.Facturas))
 	
 	set @idfactura = ((select factura_id from DDG.Facturas where factura_cliente = @idCliente and factura_fecha_inicio = @fechaDesde and factura_fecha_fin = @fechaHasta))
 
@@ -1445,9 +1447,10 @@ declare @idDetalleFactura int
 	where viaje_cliente = @idCliente and viaje_fecha_viaje between @fechaDesde and @fechaHasta
 
 	set @retorno = @idfactura
-	return @retorno
 
 commit
+
+return @retorno
 
 end
 GO

@@ -231,14 +231,19 @@ namespace UberFrba.Controllers
                 using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
                 using (SqlCommand cmd = new SqlCommand("DDG.sp_alta_factura", conn))
                 {
+
+                    //[DDG].sp_alta_factura (@idCliente numeric(10,0), @fechaDesde date, @fechaHasta date, @retorno int output) as
+
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id_cliente", id_cliente);
-                    SqlParameter returnParameter = cmd.Parameters.Add("@id_factura", SqlDbType.Int);
+                    cmd.Parameters.AddWithValue("@idCliente", id_cliente);
+                    cmd.Parameters.Add("@fechaDesde", SqlDbType.Date).Value = hora_inicio;
+                    cmd.Parameters.Add("@fechaHasta", SqlDbType.Date).Value = hora_fin;
+                    SqlParameter returnParameter = cmd.Parameters.Add("@retorno", SqlDbType.Int);
                     returnParameter.Direction = ParameterDirection.Output;
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
-                    id_factura = (int)cmd.Parameters["@id_factura"].Value;
+                    id_factura = (int)cmd.Parameters["@retorno"].Value;
                 }
             }
             catch (SqlException)
@@ -250,23 +255,31 @@ namespace UberFrba.Controllers
             return id_factura;
         }
 
-        public int obtener_importe(int id_factura)
+        public double obtener_importe(int id_factura)
         {
-            int importe = 0;
+            double importe = 0;
 
             try
             {
                 using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
-                using (SqlCommand cmd = new SqlCommand("DDG.sp_get_importe", conn))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_get_importe_factura", conn))
                 {
+                    //[ddg].sp_get_importe_factura (@idFactura numeric(10,0)) as
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id_factura", id_factura);
-                    SqlParameter returnParameter = cmd.Parameters.Add("@importe", SqlDbType.Int);
-                    returnParameter.Direction = ParameterDirection.Output;
+                    cmd.Parameters.AddWithValue("@idFactura", id_factura);
 
                     conn.Open();
-                    cmd.ExecuteNonQuery();
-                    importe = (int)cmd.Parameters["@importe"].Value;
+                    SqlDataReader lector = cmd.ExecuteReader();
+
+                    if (lector.HasRows)
+                    {
+                        if (lector.Read())
+                        {
+                            importe = Convert.ToDouble(lector["factura_importe"]);
+                        }
+                    }
+
+                    lector.Close();
                 }
             }
             catch (SqlException)
@@ -285,14 +298,17 @@ namespace UberFrba.Controllers
             try
             {
                 using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
-                using (SqlCommand cmd = new SqlCommand("DDG.sp_", conn))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_get_viajes_factura", conn))
                 {
+                    //[ddg].sp_get_viajes_factura(@idFactura numeric(10,0)) as
                     cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@idFactura", id_factura);
                     
                     conn.Open();
                     SqlDataReader lector = cmd.ExecuteReader();
 
-                    viajes.Load(lector);
+                    if (lector.HasRows)
+                        viajes.Load(lector);
 
                     lector.Close();
                 }

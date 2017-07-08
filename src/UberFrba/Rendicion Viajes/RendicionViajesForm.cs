@@ -20,6 +20,7 @@ namespace UberFrba.Rendicion_Viajes
         private ObjetosFormCTRL objController;
         private List<Control> camposObligatorios;
         private Chofer chofer_seleccionado;
+        private int turno_seleccionado;
 
         public RendicionViajesForm(menuFuncsRolUserForm _parent)
         {
@@ -54,13 +55,20 @@ namespace UberFrba.Rendicion_Viajes
 
         private void realizarPagoBtn_Click(object sender, EventArgs e)
         {
+            int id_rendicion = 0;
+
             if (objController.cumpleCamposObligatorios(camposObligatorios, errorProvider))
             {
-                //magia.....
-                if (MessageBox.Show("Rendición exitosa.", "Rendición de viajes", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
+                id_rendicion = ChoferDAO.Instance.realizar_rendicion(chofer_seleccionado.id, fechaDateTimePicker.Value, turno_seleccionado);
+
+                if (id_rendicion > 0)
                 {
-                    objController.limpiarControles(this);
-                    return;
+                    set_importe_rendicion(id_rendicion);
+                    set_viajes_rendicion(id_rendicion);
+                }
+                else
+                {
+                    MessageBox.Show("No se ha podido realizar la rendicion al chofer seleccionado", "Rendición de viajes", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -71,6 +79,21 @@ namespace UberFrba.Rendicion_Viajes
                     return;
                 }
             }
+        }
+
+        private void set_viajes_rendicion(int id_rendicion)
+        {
+            DataTable viajes = ChoferDAO.Instance.get_viajes_chofer(id_rendicion);
+
+            if (viajes != null)
+                viajesDataGridView.DataSource = viajes;
+        }
+
+        private void set_importe_rendicion(int id_rendicion)
+        {
+            int importe = ChoferDAO.Instance.get_importe_rendicion(id_rendicion);
+
+            importeTextBox.Text = "$ " + importe.ToString();
         }
 
         private void cerrarSesionLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -101,6 +124,16 @@ namespace UberFrba.Rendicion_Viajes
             foreach (var item in turnos)
             {
                 turnoComboBox.Items.Add(new ObjetosFormCTRL.itemComboBox(item.descripcion, item.id));
+            }
+        }
+
+        private void turnoComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ObjetosFormCTRL.itemComboBox turno = (ObjetosFormCTRL.itemComboBox)turnoComboBox.SelectedItem;
+
+            if ((turno != null) && (turnoComboBox.SelectedIndex >= 0))
+            {
+                turno_seleccionado = turno.id_item;
             }
         }
     }

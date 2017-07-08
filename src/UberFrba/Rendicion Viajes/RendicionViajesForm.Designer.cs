@@ -147,6 +147,7 @@
             this.turnoComboBox.Name = "turnoComboBox";
             this.turnoComboBox.Size = new System.Drawing.Size(121, 21);
             this.turnoComboBox.TabIndex = 35;
+            this.turnoComboBox.SelectedIndexChanged += new System.EventHandler(this.turnoComboBox_SelectedIndexChanged);
             // 
             // label4
             // 

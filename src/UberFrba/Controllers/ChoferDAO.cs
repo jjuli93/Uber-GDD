@@ -8,6 +8,7 @@ using System.Data;
 using UberFrba.Modelo;
 using UberFrba.Controllers;
 using System.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace UberFrba.Controllers
 {
@@ -190,5 +191,108 @@ namespace UberFrba.Controllers
             return choferes;
         }
 
+        public int realizar_rendicion(int id_chofer, DateTime fecha, int id_turno)
+        {
+            int id_rendicion = 0;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_alta_rendicion", conn))
+                {
+
+                    //[ddg].sp_alta_rendicion (@idChofer numeric(10,0), @fecha date, @idTurno numeric(10,0),  @retorno int output) as
+
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@idChofer", id_chofer);
+                    cmd.Parameters.Add("@fecha", SqlDbType.Date).Value = fecha;
+                    cmd.Parameters.AddWithValue("@idTurno", id_turno);
+
+                    SqlParameter returnParameter = cmd.Parameters.Add("@retorno", SqlDbType.Int);
+                    returnParameter.Direction = ParameterDirection.Output;
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    id_rendicion = (int)cmd.Parameters["@retorno"].Value;
+                }
+            }
+            catch (SqlException e)
+            {
+                MessageBox.Show(e.Message, "Error en alta rendición");
+                id_rendicion = -1;   
+                //throw;
+            }
+
+            return id_rendicion;
+        }
+
+        public int get_importe_rendicion(int id_rendicion)
+        {
+            int importe = 0;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_get_importe_rendicion", conn))
+                {
+                    //[DDG].sp_get_importe_rendicion (@idRendicion numeric(10,0)) as
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@idFactura", id_rendicion);
+                    SqlDataReader lector = cmd.ExecuteReader();
+
+                    if (lector.HasRows)
+                    {
+                        if (lector.Read())
+                        {
+                            importe = Convert.ToInt32(lector["rendicion_importe"]);
+                        }
+                    }
+
+                    lector.Close();
+                }
+            }
+            catch (SqlException)
+            {
+                importe = 1;
+                //throw;
+            }
+
+            return importe;
+        }
+
+        public DataTable get_viajes_chofer(int id_rendicion)
+        {
+            DataTable viajes = null;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_get_viajes_factura", conn))
+                {
+                    //[ddg].sp_get_viajes_rendicion(@idRendicion numeric(10,0)) as
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@idRendicion", id_rendicion);
+
+                    conn.Open();
+                    SqlDataReader lector = cmd.ExecuteReader();
+
+                    if (lector.HasRows)
+                    {
+                        viajes = new DataTable();
+                        viajes.Load(lector);
+                    }
+                     
+
+                    lector.Close();
+                }
+            }
+            catch (SqlException)
+            {
+                
+                //throw;
+            }
+
+            return viajes;
+        }
     }
 }
