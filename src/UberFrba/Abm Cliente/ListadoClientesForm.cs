@@ -259,6 +259,11 @@ namespace UberFrba.Abm_Cliente
             buscar_clientes();
             index_cliente_selecccionado = -1;
         }
+
+        private void dniFilterTB_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            objController.only_numbers(e);
+        }
         
     }
 }

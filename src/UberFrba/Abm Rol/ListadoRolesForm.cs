@@ -93,11 +93,18 @@ namespace UberFrba.Abm_Rol
 
         private void rolesDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (rolesDataGridView.Rows[e.RowIndex].Cells[0] != null)
+            try
             {
-                objController.habilitarContenidoPanel(this.rolSeleccionadoPanel, true);
+                if (rolesDataGridView.Rows[e.RowIndex].Cells[0] != null)
+                {
+                    objController.habilitarContenidoPanel(this.rolSeleccionadoPanel, true);
 
-                index_rol_seleccionado = e.RowIndex;
+                    index_rol_seleccionado = e.RowIndex;
+                }
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                //throw;
             }
         }
     }

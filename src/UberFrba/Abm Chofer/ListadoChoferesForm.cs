@@ -166,9 +166,26 @@ namespace UberFrba.Abm_Chofer
             DataTable resultados = null;
 
             if (fromABM)
-                resultados = ChoferDAO.Instance.get_choferes(nombre_filtro, apellido_filtro, dni_filtro, "NO");
+                resultados = ChoferDAO.Instance.get_choferes(nombre_filtro, apellido_filtro, dni_filtro, "NO", "NO");
             else
-                resultados = ChoferDAO.Instance.get_choferes(nombre_filtro, apellido_filtro, dni_filtro, "SI");
+            {
+                var formAuto = this.Owner as UberFrba.Abm_Automovil.ABMAutomovilForm;
+                var formAutoMod = this.Owner as UberFrba.Abm_Automovil.ModificarAutomovilForm;
+                var formREND = this.Owner as UberFrba.Rendicion_Viajes.RendicionViajesForm;
+                var formREG = this.Owner as UberFrba.Registro_Viajes.RegistroViajeForm;
+
+                if (formAuto != null)
+                    resultados = ChoferDAO.Instance.get_choferes(nombre_filtro, apellido_filtro, dni_filtro, "SI", "NO");
+
+                if (formAutoMod != null)
+                    resultados = ChoferDAO.Instance.get_choferes(nombre_filtro, apellido_filtro, dni_filtro, "SI", "NO");
+
+                if (formREND != null)
+                    resultados = ChoferDAO.Instance.get_choferes(nombre_filtro, apellido_filtro, dni_filtro, "SI", "NO");
+
+                if (formREG != null)
+                    resultados = ChoferDAO.Instance.get_choferes(nombre_filtro, apellido_filtro, dni_filtro, "SI", "SI");
+            }
 
             if (resultados != null)
                 choferesDataGridView.DataSource = resultados;
@@ -191,6 +208,11 @@ namespace UberFrba.Abm_Chofer
             chofer_index = -1;
             choferesDataGridView.ClearSelection();
             habilitar_botones(false);
+        }
+
+        private void dniTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            objController.only_numbers(e);
         }
     }
 }

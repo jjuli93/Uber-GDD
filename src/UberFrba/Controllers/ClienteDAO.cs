@@ -179,9 +179,9 @@ namespace UberFrba.Controllers
 
                     if (dni != null)
                     {
-                        UInt32 dni_num = 0;
+                        Int32 dni_num = 0;
 
-                        if (UInt32.TryParse(dni, out dni_num))
+                        if (Int32.TryParse(dni, out dni_num))
                             cmd.Parameters.AddWithValue("@dni", dni_num);
                         else
                             cmd.Parameters.AddWithValue("@dni", DBNull.Value);

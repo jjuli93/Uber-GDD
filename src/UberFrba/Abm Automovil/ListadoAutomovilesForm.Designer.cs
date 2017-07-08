@@ -82,6 +82,7 @@
             this.choferTextBox.Name = "choferTextBox";
             this.choferTextBox.Size = new System.Drawing.Size(189, 20);
             this.choferTextBox.TabIndex = 7;
+            this.choferTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.choferTextBox_KeyPress);
             // 
             // label3
             // 

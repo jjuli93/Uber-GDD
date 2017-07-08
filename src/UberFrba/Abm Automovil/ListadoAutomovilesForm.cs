@@ -173,11 +173,21 @@ namespace UberFrba.Abm_Automovil
         private void autosDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             AutomovilSeleccionado = e.RowIndex;
+            int id_auto = -1;
 
-            int id_auto = Convert.ToInt32(autosDataGridView.Rows[e.RowIndex].Cells["auto_id"].Value);
+            try
+            {
+                id_auto = Convert.ToInt32(autosDataGridView.Rows[e.RowIndex].Cells["auto_id"].Value);
 
-            if (id_auto > 0)
-                objController.habilitarContenidoPanel(autoSelectedPanelBtns, true);
+                if (id_auto > 0)
+                    objController.habilitarContenidoPanel(autoSelectedPanelBtns, true);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                
+                //throw;
+            }
+
         }
 
         public void refresh_table()
@@ -186,6 +196,11 @@ namespace UberFrba.Abm_Automovil
             AutomovilSeleccionado = -1;
             autosDataGridView.ClearSelection();
             objController.habilitarContenidoPanel(autoSelectedPanelBtns, false);
+        }
+
+        private void choferTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            objController.only_numbers(e);
         }
 
     }

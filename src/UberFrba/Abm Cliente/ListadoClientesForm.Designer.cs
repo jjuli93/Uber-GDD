@@ -84,6 +84,7 @@
             this.dniFilterTB.Name = "dniFilterTB";
             this.dniFilterTB.Size = new System.Drawing.Size(224, 20);
             this.dniFilterTB.TabIndex = 5;
+            this.dniFilterTB.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dniFilterTB_KeyPress);
             // 
             // buscarButton
             // 
