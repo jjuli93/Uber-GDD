@@ -6,7 +6,7 @@ go
 create schema [DDG] authorization [gd]
 go
 
-create type listaIDs as table (id int);
+create type ddg.listaIDs as table (id int);
 GO
 
 
@@ -166,7 +166,7 @@ viaje_turno numeric(10) not null references [DDG].Turnos,
 viaje_cliente numeric(10) not null references [DDG].Clientes,
 viaje_rendicion numeric(10) references [DDG].RendicionesDetalle,
 viaje_factura numeric(18) references [DDG].FacturasDetalle,
-viaje_cantidad_km numeric(5,2) not null,
+viaje_cantidad_km numeric(18,2) not null,
 viaje_fecha_viaje datetime not null,
 viaje_hora_inicio datetime /*not null*/,
 viaje_hora_fin datetime /*not null*/		/*Datos en la base no tienen estos campos*/
@@ -520,7 +520,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_rol' AND type='p')
 	DROP PROCEDURE [DDG].sp_alta_rol
 GO
 
-create procedure [DDG].sp_alta_rol (@nombre varchar(255), @habilitado  bit, @listaFuncionalidades listaIDs readonly)
+create procedure [DDG].sp_alta_rol (@nombre varchar(255), @habilitado  bit, @listaFuncionalidades ddg.listaIDs readonly)
 as
 begin
 
@@ -571,7 +571,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_rol' AND type='p')
 	DROP PROCEDURE [DDG].sp_update_rol
 GO											
 
-create procedure [DDG].sp_update_rol (@id numeric(10,0), @nombre varchar(255), @habilitado bit, @listaFuncionalidades listaIDs readonly)	
+create procedure [DDG].sp_update_rol (@id numeric(10,0), @nombre varchar(255), @habilitado bit, @listaFuncionalidades ddg.listaIDs readonly)	
 as
 begin
 
@@ -935,13 +935,12 @@ declare @retorno int
 if((select count(*)
 	from ddg.Rendiciones
 	where rendicion_chofer = @idChofer
-	and rendicion_fecha = @fecha
+	and cast (rendicion_fecha as datetime) = @fecha
 	and rendicion_turno = @idTurno) > 0) set @retorno = 1 else set @retorno = 0
 
 return @retorno
 end
 GO
-
 
 --=============================================================================================================
 --TIPO		: Funcion
@@ -1140,7 +1139,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_automovil' AND type='
 	DROP PROCEDURE [DDG].sp_alta_automovil
 GO
 
-create procedure [DDG].sp_alta_automovil (@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10), @listaTurnos listaIDs readonly)
+create procedure [DDG].sp_alta_automovil (@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10), @listaTurnos ddg.listaIDs readonly)
 as
 begin
 
@@ -1182,7 +1181,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_automovil' AND type
 	DROP PROCEDURE [DDG].sp_update_automovil
 GO
 
-create procedure [DDG].sp_update_automovil (@id numeric(10,0),@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10),@habilitado numeric(1,0), @listaTurnos listaIDs readonly ) as
+create procedure [DDG].sp_update_automovil (@id numeric(10,0),@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10),@habilitado numeric(1,0), @listaTurnos ddg.listaIDs readonly ) as
 begin
 
 set xact_abort on
@@ -1418,14 +1417,14 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_viaje' AND type='p')
 	DROP PROCEDURE [DDG].sp_alta_viaje
 GO
 
-create procedure [ddg].sp_alta_viaje (@idChofer numeric(10,0), @idAuto numeric(10,0), @idTurno numeric(10,0), @idCliente numeric(10,0), @cantKM numeric(5,0), @horaIn datetime , @horaFin datetime) as
+create procedure [ddg].sp_alta_viaje (@idChofer numeric(10), @idAuto numeric(10), @idTurno numeric(10), @idCliente numeric(10), @cantKM float, @horaIn datetime , @horaFin datetime) as
 begin
 
 	if(@cantKM is null or @cantKM <= 0) THROW 51000, 'La cantidad de km es invalida', 1;
 
 	if((select count(*) from ddg.Turnos where turno_id = @idTurno and (cast(@horaIn as time(0)) between turno_hora_inicio and turno_hora_fin)) < 1 ) THROW 51000, 'El horario de inicio del viaje no pertenece al turno seleccionado', 1;
 
-	exec sp_chequearHorarioViaje @idCliente, @idChofer, @horaIn, @horaFin    /*produce excepciones si hay horarios superpuestos de viajes con ese chofer y o cliente*/
+	exec ddg.sp_chequearHorarioViaje @idCliente, @idChofer, @horaIn, @horaFin    /*produce excepciones si hay horarios superpuestos de viajes con ese chofer y o cliente*/
 
 	insert into ddg.viajes(viaje_chofer, viaje_auto, viaje_turno, viaje_cliente, viaje_cantidad_km, viaje_hora_inicio, viaje_hora_fin, viaje_fecha_viaje) 
 	values (@idChofer, @idAuto, @idTurno, @idCliente, @cantKM, @horaIn , @horaFin, @horaIn)
@@ -1474,10 +1473,10 @@ declare @idRendicionDetalle int
 		values( (isnull((select sum([DDG].calcularImporteViaje(viaje_id))
 					from [ddg].viajes
 					where viaje_chofer = @idchofer
-					and viaje_fecha_viaje = @fecha
+					and cast(viaje_fecha_viaje as date) = @fecha
 					and viaje_turno = @idTurno),0) * (select top 1 porcentaje_valor from [ddg].Porcentajes order by porcentaje_id desc)) , @fecha, @idchofer, @idTurno,  (select max(porcentaje_id) from DDG.Porcentajes), (select max(rendicion_numero) + 1 from DDG.Rendiciones))
 	
-	set @idRendicion = ((select rendicion_id from DDG.Rendiciones where rendicion_chofer= @idChofer and rendicion_fecha = @fecha))
+	set @idRendicion = scope_identity()
 
 	insert into DDG.RendicionesDetalle (rendicionDetalle_rendicion)
 	values (@idRendicion)
@@ -1486,7 +1485,7 @@ declare @idRendicionDetalle int
 
 	update DDG.Viajes
 	set viaje_rendicion = @idRendicionDetalle
-	where viaje_chofer = @idChofer and viaje_fecha_viaje = @fecha and viaje_turno = @idTurno
+	where viaje_chofer = @idChofer and cast(viaje_fecha_viaje as date) = @fecha and viaje_turno = @idTurno
 
 	set @retorno = @idRendicion
 	
@@ -1522,7 +1521,7 @@ declare @idDetalleFactura int
 		values( isnull(((select sum([DDG].calcularImporteViaje(viaje_id))
 					from [ddg].viajes
 					where viaje_cliente = @idCliente
-					and viaje_fecha_viaje between @fechaDesde and @fechaHasta)),0) , @idCliente, @fechaHasta, @fechaDesde,  (select max(factura_numero) + 1 from DDG.Facturas))
+					and cast(viaje_fecha_viaje as date) between @fechaDesde and @fechaHasta)),0) , @idCliente, @fechaHasta, @fechaDesde,  (select max(factura_numero) + 1 from DDG.Facturas))
 	
 	set @idfactura = ((select factura_id from DDG.Facturas where factura_cliente = @idCliente and factura_fecha_inicio = @fechaDesde and factura_fecha_fin = @fechaHasta))
 
@@ -1533,7 +1532,7 @@ declare @idDetalleFactura int
 
 	update DDG.Viajes
 	set viaje_factura = @idDetalleFactura
-	where viaje_cliente = @idCliente and viaje_fecha_viaje between @fechaDesde and @fechaHasta
+	where viaje_cliente = @idCliente and cast(viaje_fecha_viaje as date) between @fechaDesde and @fechaHasta
 
 	set @retorno = @idfactura
 
@@ -1860,7 +1859,7 @@ GO
 create procedure [ddg].sp_get_viajes_rendicion(@idRendicion numeric(10,0)) as
 begin
 
-select concat(cl.cliente_nombre, ' ', cl.cliente_apellido) as nombreCliente, concat(ch.chofer_nombre, ' ', ch.chofer_apellido) as nombreChofer, v.viaje_cantidad_km, v.viaje_hora_inicio, v.viaje_hora_fin, (ddg.calcularimporteViaje(v.viaje_id) * (select top 1 porcentaje_valor from [ddg].Porcentajes order by porcentaje_id desc)) as montoChofer
+select concat(cl.cliente_nombre, ' ', cl.cliente_apellido) as Nombre_Cliente, v.viaje_cantidad_km as Cantidad_KM, v.viaje_hora_inicio as Horario_Inicio, v.viaje_hora_fin as Horario_Fin, (ddg.calcularimporteViaje(v.viaje_id) * (select top 1 porcentaje_valor from [ddg].Porcentajes order by porcentaje_id desc)) as Monto
 from ddg.Viajes v, ddg.RendicionesDetalle rd, ddg.Clientes cl, ddg.Choferes ch 
 where rd.rendicionDetalle_rendicion = @idRendicion
 and v.viaje_rendicion = rd.rendicionDetalle_id
@@ -1883,7 +1882,7 @@ GO
 create procedure [ddg].sp_get_viajes_factura(@idFactura numeric(10,0)) as
 begin
 
-select concat(cl.cliente_nombre, ' ', cl.cliente_apellido) as nombreCliente, concat(ch.chofer_nombre, ' ', ch.chofer_apellido) as nombreChofer, v.viaje_cantidad_km, v.viaje_hora_inicio, v.viaje_hora_fin, ddg.calcularimporteViaje(v.viaje_id) as importe
+select concat(ch.chofer_nombre, ' ', ch.chofer_apellido) as Nombre_Chofer, v.viaje_cantidad_km as Cantidad_KM, v.viaje_hora_inicio as Horario_Inicio, v.viaje_hora_fin as Horario_Fin, ddg.calcularimporteViaje(v.viaje_id) as importe
 from ddg.Viajes v, ddg.FacturasDetalle fd, ddg.Clientes cl, ddg.Choferes ch 
 where fd.facturaDetalle_factura = @idFactura
 and v.viaje_factura = fd.facturaDetalle_id

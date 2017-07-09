@@ -148,7 +148,7 @@ namespace UberFrba.Controllers
                     }
 
                     var plist = new SqlParameter("@listaTurnos", SqlDbType.Structured);
-                    plist.TypeName = "listaIDs";
+                    plist.TypeName = "ddg.listaIDs";
                     plist.Value = table;
 
                     cmd.Parameters.Add(plist);
@@ -198,7 +198,7 @@ namespace UberFrba.Controllers
                     }
 
                     var plist = new SqlParameter("@listaTurnos", SqlDbType.Structured);
-                    plist.TypeName = "listaIDs";
+                    plist.TypeName = "ddg.listaIDs";
                     plist.Value = table;
 
                     cmd.Parameters.Add(plist);

@@ -111,7 +111,7 @@ drop table [DDG].Funcionalidades
 
 
 --tipos
-drop type listaIDs
+drop type ddg.listaIDs
 
 -- Eliminacion del schema
 
