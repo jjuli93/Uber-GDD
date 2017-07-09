@@ -134,24 +134,24 @@ namespace UberFrba.Controllers
 
         public Cliente obtener_cliente_from_row(System.Windows.Forms.DataGridViewRow row)
         {
-            Cliente cliente = new Cliente(Convert.ToInt32(row.Cells["cliente_id"].Value));
+            Cliente cliente = new Cliente(Convert.ToInt32(row.Cells["ID"].Value));
 
-            cliente.nombre = row.Cells["cliente_nombre"].Value.ToString();
-            cliente.apellido = row.Cells["cliente_apellido"].Value.ToString();
-            cliente.fecha_nacimiento = Convert.ToDateTime(row.Cells["cliente_fecha_nacimiento"].Value);
-            cliente.dni = Convert.ToUInt32(row.Cells["cliente_dni"].Value);
-            cliente.direccion = row.Cells["cliente_direccion"].Value.ToString();
+            cliente.nombre = row.Cells["Nombre"].Value.ToString();
+            cliente.apellido = row.Cells["Apellido"].Value.ToString();
+            cliente.fecha_nacimiento = Convert.ToDateTime(row.Cells["Fecha_Nacimiento"].Value);
+            cliente.dni = Convert.ToUInt32(row.Cells["DNI"].Value);
+            cliente.direccion = row.Cells["Direccion"].Value.ToString();
 
-            var cod_post = row.Cells["cliente_codigo_postal"].Value.ToString();
+            var cod_post = row.Cells["Codigo_Postal"].Value.ToString();
 
             if (string.IsNullOrEmpty(cod_post))
                 cliente.codigoPostal = 0;
             else
                 cliente.codigoPostal = Convert.ToInt32(cod_post);
 
-            cliente.telefono = Convert.ToUInt32(row.Cells["cliente_telefono"].Value);
-            cliente.mail = row.Cells["cliente_email"].Value.ToString();
-            cliente.habilitado = Convert.ToBoolean(row.Cells["cliente_habilitado"].Value);
+            cliente.telefono = Convert.ToUInt32(row.Cells["Telefono"].Value);
+            cliente.mail = row.Cells["Email"].Value.ToString();
+            cliente.habilitado = Convert.ToBoolean(row.Cells["Habilitado"].Value);
 
             return cliente;
         }

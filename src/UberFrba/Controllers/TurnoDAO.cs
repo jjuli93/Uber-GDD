@@ -242,13 +242,13 @@ namespace UberFrba.Controllers
                 return null;
             }
 
-            turno = new Turno(Convert.ToInt32(row.Cells["turno_id"].Value));
-            turno.descripcion = row.Cells["turno_descripcion"].Value.ToString();
-            turno.hora_inicio = Convert.ToDateTime(row.Cells["turno_hora_inicio"].Value.ToString());
-            turno.hora_fin = Convert.ToDateTime(row.Cells["turno_hora_fin"].Value.ToString());
-            turno.valor_km = Convert.ToDouble(row.Cells["turno_valor_km"].Value.ToString());
-            turno.precio_base = Convert.ToDouble(row.Cells["turno_precio_base"].Value.ToString());
-            turno.habilitado = Convert.ToBoolean(row.Cells["turno_habilitado"].Value);
+            turno = new Turno(Convert.ToInt32(row.Cells["ID"].Value));
+            turno.descripcion = row.Cells["Descripcion"].Value.ToString();
+            turno.hora_inicio = Convert.ToDateTime(row.Cells["Hora_Inicio"].Value.ToString());
+            turno.hora_fin = Convert.ToDateTime(row.Cells["Hora_Fin"].Value.ToString());
+            turno.valor_km = Convert.ToDouble(row.Cells["Valor_KM"].Value.ToString());
+            turno.precio_base = Convert.ToDouble(row.Cells["Precio_Base"].Value.ToString());
+            turno.habilitado = Convert.ToBoolean(row.Cells["Habilitado"].Value);
 
             return turno;
         }

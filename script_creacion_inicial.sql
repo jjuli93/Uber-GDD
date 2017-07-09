@@ -367,7 +367,7 @@ create procedure [DDG].[sp_get_choferes_con_mayor_recaudacion] (@year int, @trim
 as
 
 begin
-select top 5 c.chofer_nombre,c.chofer_apellido,c.chofer_dni, isnull(sum(r.rendicion_importe),0) as cantidad_recaudada
+select top 5 isnull(sum(r.rendicion_importe),0) as Monto, c.chofer_nombre as Nombre,c.chofer_apellido as Apellido,c.chofer_dni as DNI
 from DDG.Choferes c left join DDG.Rendiciones r on c.chofer_id = r.rendicion_chofer
 where year(r.rendicion_fecha) = @year
 and DDG.getTrimestre(month(r.rendicion_fecha)) = @trimestre
@@ -392,7 +392,7 @@ create procedure [DDG].[sp_get_choferes_con_viaje_mas_largo] (@year int, @trimes
 as
 
 begin
-select top 5 c.chofer_nombre,c.chofer_apellido,c.chofer_dni, v.viaje_cantidad_km as cantidad_de_km
+select top 5  v.viaje_cantidad_km as KM,  c.chofer_nombre as Nombre ,c.chofer_apellido as Apellido ,c.chofer_dni as DNI
 from DDG.Choferes c  left join DDG.Viajes v on c.chofer_id = v.viaje_chofer
 where year(v.viaje_fecha_viaje) = @year
 and DDG.getTrimestre(month(v.viaje_fecha_viaje)) = @trimestre
@@ -416,7 +416,7 @@ create procedure [DDG].[sp_get_clientes_con_mayor_consumo] (@year int, @trimestr
 as
 
 begin
-select top 5 c.cliente_nombre,c.cliente_apellido,c.cliente_dni, isnull(sum(f.factura_importe),0) as importe_total
+select top 5  isnull(sum(f.factura_importe),0) as Consumo, c.cliente_nombre as Nombre ,c.cliente_apellido as Apellido ,c.cliente_dni as DNI
 from DDG.Clientes c  left join DDG.Facturas f on c.cliente_id = f.factura_cliente
 where year(f.factura_fecha_inicio) = @year
 and DDG.getTrimestre(month(f.factura_fecha_inicio)) = @trimestre
@@ -441,7 +441,7 @@ create procedure [DDG].[sp_get_clientes_mayor_uso_mismo_auto] (@year int, @trime
 as
 
 begin
-select top 5 c.cliente_nombre,c.cliente_apellido,c.cliente_dni, a.auto_patente, isnull(count(a.auto_id),0) as cantidad_veces_utilizado
+select top 5 isnull(count(a.auto_id),0) as Cantidad, a.auto_patente as Auto, c.cliente_nombre as Nombre,c.cliente_apellido as Apellido ,c.cliente_dni as DNI
 from DDG.Clientes c  left join Viajes v on c.cliente_id = v.viaje_cliente
 left join DDG.Autos a on v.viaje_auto = a.auto_id
 where year(v.viaje_fecha_viaje) = @year
@@ -627,7 +627,7 @@ create procedure [DDG].sp_get_roles
 as
 begin
 
-select * 
+select rol_ID as ID, rol_nombre as Descripcion, rol_habilitado as Habilitado
 from Roles
 
 end
@@ -1908,7 +1908,7 @@ GO
 create procedure [ddg].sp_get_clientes(@nombre varchar(250), @apellido varchar(250), @dni numeric(18,0), @habilitado bit) as
 begin
 
-select cliente_id,cliente_nombre,cliente_apellido,cliente_codigo_postal,cliente_direccion,cliente_dni,cliente_email,cliente_fecha_nacimiento,cliente_telefono,cliente_habilitado
+select cliente_id as ID,cliente_nombre as Nombre ,cliente_apellido as Apellido ,cliente_codigo_postal as Codigo_Postal,cliente_direccion as Direccion ,cliente_dni as DNI,cliente_email as Email,cliente_fecha_nacimiento as Fecha_Nacimiento ,cliente_telefono as Telefono,cliente_habilitado as Habilitado
 from ddg.Clientes
 where (@apellido is null or (cliente_apellido like CONCAT('%',@apellido,'%')))
 and   (@nombre is null or   (cliente_nombre like CONCAT('%',@nombre,'%')))
@@ -1953,7 +1953,7 @@ GO
 create procedure [ddg].sp_get_choferes(@nombre varchar(250), @apellido varchar(250), @dni numeric(18,0), @habilitado bit, @conAutohabilitado bit) as
 begin
 
-select chofer_id,chofer_nombre,chofer_apellido,chofer_direccion,chofer_dni,chofer_email,chofer_fecha_nacimiento,chofer_telefono,chofer_habilitado
+select chofer_id as ID,chofer_nombre as Nombre ,chofer_apellido as Apellido ,chofer_direccion as Direccion,chofer_dni as DNI,chofer_email as Email,chofer_fecha_nacimiento as Fecha_Nacimiento,chofer_telefono as Telefono,chofer_habilitado as Habilitado
 from ddg.Choferes
 where (@apellido is null or (chofer_apellido like CONCAT('%',@apellido,'%')))
 and   (@nombre is null or   (chofer_nombre like CONCAT('%',@nombre,'%')))
@@ -1999,13 +1999,13 @@ GO
 create procedure [ddg].sp_get_automoviles(@idMarca numeric(10,0), @idmodelo varchar(250), @patente varchar(10), @dniChofer numeric(10,0)) as
 begin
 
-select a.auto_id,a.auto_chofer,a.auto_licencia,a.auto_patente,a.auto_rodado,m.modelo_descripcion, ma.marca_descripcion, a.auto_habilitado
+select a.auto_id as ID,concat(c.chofer_nombre, ' ', c.chofer_apellido) as Chofer ,a.auto_licencia as Licencia,a.auto_patente as Patente,a.auto_rodado as Rodado,m.modelo_descripcion as Modelo, ma.marca_descripcion as Marca, a.auto_habilitado as Habilitado
 from DDG.Autos a, ddg.Modelos m, ddg.Marcas ma, Choferes c
 where a.auto_modelo = m.modelo_id
 and a.auto_chofer = c.chofer_id
 and (@idMarca is null or (@idMarca = m.modelo_marca))
 and (@idmodelo is null or (@idmodelo = a.auto_modelo))
-and (@patente is null or (@patente = auto_patente))
+and (@patente is null or (auto_patente like CONCAT('%',@patente,'%')))
 and (@dniChofer is null or (@dniChofer = c.chofer_dni))
 and m.modelo_marca = ma.marca_id
 
@@ -2050,7 +2050,7 @@ GO
 create procedure [ddg].sp_get_turnos(@descripcion varchar(255)) as
 begin
 
-select *
+select turno_id as ID, turno_descripcion as Descripcion, turno_hora_inicio as Hora_Inicio, turno_hora_fin as Hora_Fin, turno_precio_base as Precio_Base, turno_valor_km as Valor_KM, turno_habilitado as Habilitado
 from ddg.Turnos
 where (@descripcion is null or (turno_descripcion like CONCAT('%',@descripcion,'%')))
 

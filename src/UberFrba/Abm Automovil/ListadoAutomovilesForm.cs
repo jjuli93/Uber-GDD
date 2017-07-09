@@ -51,7 +51,7 @@ namespace UberFrba.Abm_Automovil
                 return;
             }
 
-            int id = Convert.ToInt32(row.Cells["auto_id"].Value);
+            int id = Convert.ToInt32(row.Cells["ID"].Value);
 
             var auto = autoDAO.obtener_auto_from_row(id);
 
@@ -75,7 +75,7 @@ namespace UberFrba.Abm_Automovil
                 return;
             }
 
-            int id = Convert.ToInt32(row.Cells["auto_id"].Value);
+            int id = Convert.ToInt32(row.Cells["ID"].Value);
 
             var auto = autoDAO.obtener_auto_from_row(id);
 
@@ -177,7 +177,7 @@ namespace UberFrba.Abm_Automovil
 
             try
             {
-                id_auto = Convert.ToInt32(autosDataGridView.Rows[e.RowIndex].Cells["auto_id"].Value);
+                id_auto = Convert.ToInt32(autosDataGridView.Rows[e.RowIndex].Cells["ID"].Value);
 
                 if (id_auto > 0)
                     objController.habilitarContenidoPanel(autoSelectedPanelBtns, true);

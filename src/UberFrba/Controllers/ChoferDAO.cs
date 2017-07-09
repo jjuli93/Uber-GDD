@@ -123,16 +123,16 @@ namespace UberFrba.Controllers
 
         public Chofer obtener_cliente_from_row(System.Windows.Forms.DataGridViewRow row)
         {
-            Chofer chofer = new Chofer(Convert.ToInt32(row.Cells["chofer_id"].Value));
+            Chofer chofer = new Chofer(Convert.ToInt32(row.Cells["ID"].Value));
 
-            chofer.nombre = row.Cells["chofer_nombre"].Value.ToString();
-            chofer.apellido = row.Cells["chofer_apellido"].Value.ToString();
-            chofer.fecha_nacimiento = Convert.ToDateTime(row.Cells["chofer_fecha_nacimiento"].Value);
-            chofer.dni = Convert.ToUInt32(row.Cells["chofer_dni"].Value);
-            chofer.direccion = row.Cells["chofer_direccion"].Value.ToString();
-            chofer.telefono = Convert.ToUInt32(row.Cells["chofer_telefono"].Value);
-            chofer.mail = row.Cells["chofer_email"].Value.ToString();
-            chofer.habilitado = Convert.ToBoolean(row.Cells["chofer_habilitado"].Value);
+            chofer.nombre = row.Cells["Nombre"].Value.ToString();
+            chofer.apellido = row.Cells["Apellido"].Value.ToString();
+            chofer.fecha_nacimiento = Convert.ToDateTime(row.Cells["Fecha_Nacimiento"].Value);
+            chofer.dni = Convert.ToUInt32(row.Cells["DNI"].Value);
+            chofer.direccion = row.Cells["Direccion"].Value.ToString();
+            chofer.telefono = Convert.ToUInt32(row.Cells["Telefono"].Value);
+            chofer.mail = row.Cells["Email"].Value.ToString();
+            chofer.habilitado = Convert.ToBoolean(row.Cells["Habilitado"].Value);
 
             return chofer;
         }
