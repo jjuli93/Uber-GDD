@@ -51,7 +51,7 @@ cliente_usuario numeric(10) unique not null references [DDG].Usuarios,
 cliente_nombre varchar(250) not null,
 cliente_apellido varchar(250) not null,
 cliente_fecha_nacimiento date not null,
-cliente_dni numeric(18)  not null,
+cliente_dni numeric(18) unique  not null,
 cliente_direccion varchar(250) not null,
 cliente_codigo_postal numeric  /*not null*/,		/*saco el not null porque en la base de datos ningun cliente tiene cod postal)*/
 cliente_telefono numeric(18) unique not null,
@@ -66,7 +66,7 @@ chofer_usuario numeric(10) unique not null references [DDG].Usuarios,
 chofer_nombre varchar(250) not null,
 chofer_apellido varchar(250) not null,
 chofer_fecha_nacimiento date not null,
-chofer_dni numeric(18) not null,
+chofer_dni numeric(18) unique not null,
 chofer_direccion varchar(250) not null,
 chofer_telefono numeric(18) not null,
 chofer_email varchar(250),
@@ -524,6 +524,7 @@ create procedure [DDG].sp_alta_rol (@nombre varchar(255), @habilitado  bit, @lis
 as
 begin
 
+set xact_abort on
 begin tran
 
 if(ddg.existeRolConMismoNombre( @nombre, null) = 1) THROW 51000, 'Ya existe un Rol con el nombre ingresado.', 1;	
@@ -574,6 +575,7 @@ create procedure [DDG].sp_update_rol (@id numeric(10,0), @nombre varchar(255), @
 as
 begin
 
+set xact_abort on
 begin tran
 
 if(ddg.existeRolConMismoNombre( @nombre, @id) = 1) THROW 51000, 'Ya existe un Rol con el nombre ingresado.', 1;
@@ -1005,6 +1007,7 @@ create procedure [DDG].sp_alta_usuario (@username varchar(255), @contrasenia var
 as
 begin
 
+set xact_abort on
 begin tran
 
 insert into DDG.Usuarios (usuario_username, usuario_password)
@@ -1039,11 +1042,14 @@ create procedure [DDG].sp_alta_cliente (@nombre varchar(250), @apellido varchar(
 as
 begin
 
+set xact_abort on
 begin tran
 
 	declare @noPuedoCrearUsuario int
 	set @noPuedoCrearUsuario = ddg.existeClienteConMismoTelefono(null,@telefono)
 	if(@noPuedoCrearUsuario = 1) THROW 51000, 'Ya existe un cliente con el numero de telefono ingresado.', 1;	
+
+	if((select count(*) from ddg.Clientes where cliente_dni = @dni) > 0) THROW 51000, 'Ya existe un cliente con el numero de DNI ingresado.', 1;
 
 	declare @usuario varchar(255)
 	declare @contraseña varchar(255)
@@ -1070,14 +1076,17 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_cliente' AND type='
 	DROP PROCEDURE [DDG].sp_update_cliente
 GO
 
-create procedure [DDG].sp_update_cliente (@nombre varchar(250),  @apellido varchar(250), @fechaNacimiento date, @direccion varchar(250), @codPostal numeric, @telefono numeric(18,0),  @email varchar(250), @habilitado numeric(1,0), @idcliente numeric(10,0)) as
+create procedure [DDG].sp_update_cliente (@nombre varchar(250),  @apellido varchar(250), @DNI numeric(18), @fechaNacimiento date, @direccion varchar(250), @codPostal numeric, @telefono numeric(18,0),  @email varchar(250), @habilitado numeric(1,0), @idcliente numeric(10,0)) as
 begin
 
+set xact_abort on
 begin tran
 
 declare @noPuedoCrearUsuario int
 	set @noPuedoCrearUsuario = ddg.existeClienteConMismoTelefono(@idcliente,@telefono)
 	if(@noPuedoCrearUsuario = 1) THROW 51000, 'Ya existe un cliente con el numero de telefono ingresado.', 1;	
+
+if((select count(*) from ddg.Clientes where cliente_dni = @dni and @idcliente != cliente_id) > 0) THROW 51000, 'Ya existe un cliente con el numero de DNI ingresado.', 1;
 
 update ddg.Clientes
 set cliente_nombre = @nombre,
@@ -1087,6 +1096,7 @@ cliente_direccion = @direccion,
 cliente_codigo_postal = @codPostal,
 cliente_telefono = @telefono,
 cliente_email = @email,
+cliente_dni = @DNI,
 cliente_habilitado = @habilitado
 where cliente_id = @idcliente
 
@@ -1134,6 +1144,7 @@ create procedure [DDG].sp_alta_automovil (@idchofer numeric(10,0),@idmodelo nume
 as
 begin
 
+set xact_abort on
 begin tran
 
 if (ddg.choferYaAsignado (@idchofer, null)=1)
@@ -1174,6 +1185,7 @@ GO
 create procedure [DDG].sp_update_automovil (@id numeric(10,0),@idchofer numeric(10,0),@idmodelo numeric(10,0),@patente varchar(10),@licencia varchar(10),@rodado varchar(10),@habilitado numeric(1,0), @listaTurnos listaIDs readonly ) as
 begin
 
+set xact_abort on
 begin tran
 
 if (ddg.choferYaAsignado (@idchofer, @id)=1)	
@@ -1245,6 +1257,9 @@ create procedure [DDG].sp_alta_chofer (@nombre varchar(250), @apellido varchar(2
 as
 begin
 
+if((select count(*) from ddg.Choferes where chofer_dni = @dni) > 0) THROW 51000, 'Ya existe un chofer con el numero de DNI ingresado.', 1;
+
+set xact_abort on
 begin tran
 
 	declare @usuario varchar(255)
@@ -1275,6 +1290,8 @@ GO
 create procedure [DDG].sp_update_chofer (@nombre varchar(250), @apellido varchar(250), @fechanac date, @dni numeric(10,0), @direccion varchar(250), @telefono numeric(18,0), @email varchar(250), @habilitado numeric(1,0), @idChofer numeric(10,0))
 as
 begin
+
+if((select count(*) from ddg.Choferes where chofer_dni = @dni and chofer_id != @idChofer) > 0) THROW 51000, 'Ya existe un chofer con el numero de DNI ingresado.', 1;
 
 update ddg.Choferes
 set chofer_nombre = @nombre,
@@ -1445,6 +1462,7 @@ GO
 create procedure [ddg].sp_alta_rendicion (@idChofer numeric(10,0), @fecha date, @idTurno numeric(10,0),  @retorno int output) as
 begin
 
+set xact_abort on
 begin tran
 
 declare @idRendicion int
@@ -1492,6 +1510,7 @@ GO
 create procedure [DDG].sp_alta_factura (@idCliente numeric(10,0), @fechaDesde date, @fechaHasta date, @retorno int output) as
 begin
 
+set xact_abort on
 begin tran
 
 declare @idfactura int
