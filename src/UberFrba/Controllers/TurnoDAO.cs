@@ -143,8 +143,8 @@ namespace UberFrba.Controllers
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.AddWithValue("@horaInicio", nuevo.hora_inicio.ToLongTimeString());
-                    cmd.Parameters.AddWithValue("@horaFin", nuevo.hora_fin.ToLongTimeString());
+                    cmd.Parameters.AddWithValue("@horaInicio", nuevo.hora_inicio.TimeOfDay);
+                    cmd.Parameters.AddWithValue("@horaFin", nuevo.hora_fin.TimeOfDay);
                     cmd.Parameters.Add("@descripcion", SqlDbType.VarChar).Value = nuevo.descripcion;
                     cmd.Parameters.AddWithValue("@valorKM", nuevo.valor_km);
                     cmd.Parameters.AddWithValue("@precioBase", nuevo.precio_base);

@@ -93,6 +93,12 @@ namespace UberFrba.Abm_Rol
 
         private void rolesDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0)
+            {
+                objController.habilitarContenidoPanel(this.rolSeleccionadoPanel, false);
+                return;
+            }
+
             try
             {
                 if (rolesDataGridView.Rows[e.RowIndex].Cells[0] != null)

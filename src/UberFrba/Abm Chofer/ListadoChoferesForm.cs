@@ -81,8 +81,8 @@ namespace UberFrba.Abm_Chofer
         private void verButtonSelected_Click(object sender, EventArgs e)
         {
             DetalleChoferForm detalle_form = new DetalleChoferForm(ChoferDAO.Instance.obtener_cliente_from_row(choferesDataGridView.Rows[chofer_index]));
-            this.Hide();
             detalle_form.Show(this);
+            //this.Hide();
         }
         //-->End metodos abm exterior
 
@@ -195,7 +195,7 @@ namespace UberFrba.Abm_Chofer
 
         private void choferesDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (choferesDataGridView.SelectedRows[0].Cells[0].Value != null)
+            if (choferesDataGridView.SelectedRows[0].Cells[0].Value != null && e.RowIndex >= 0)
             {
                 habilitar_botones(true);
                 chofer_index = e.RowIndex;

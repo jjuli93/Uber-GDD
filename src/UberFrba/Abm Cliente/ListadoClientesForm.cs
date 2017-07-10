@@ -237,6 +237,13 @@ namespace UberFrba.Abm_Cliente
 
         private void clientesDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0)
+            {
+                objController.habilitarContenidoPanel(this.clienteSeleccionadoPanel, false);
+                cancelarButton.Enabled = true;
+                return;
+            }
+
             index_cliente_selecccionado = e.RowIndex;
 
             verButton.Enabled = true;

@@ -41,7 +41,18 @@ namespace UberFrba.Abm_Automovil
 
         private void verButton_Click(object sender, EventArgs e)
         {
-            var row = autosDataGridView.Rows[AutomovilSeleccionado];
+            DataGridViewRow row = null;
+
+            try
+            {
+                row = autosDataGridView.Rows[AutomovilSeleccionado];
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                objController.habilitarContenidoPanel(autoSelectedPanelBtns, false);
+                return;
+                //throw;
+            }
 
             if (row.Cells[0].Value == null) 
             {
@@ -65,7 +76,18 @@ namespace UberFrba.Abm_Automovil
 
         private void modificarButton_Click(object sender, EventArgs e)
         {
-            var row = autosDataGridView.Rows[AutomovilSeleccionado];
+            DataGridViewRow row = null;
+
+            try
+            {
+                 row = autosDataGridView.Rows[AutomovilSeleccionado];
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                objController.habilitarContenidoPanel(autoSelectedPanelBtns, false);
+                return;
+                //throw;
+            }
 
             if (row.Cells[0].Value == null)
             {
@@ -146,7 +168,18 @@ namespace UberFrba.Abm_Automovil
 
         private void eliminarButton_Click(object sender, EventArgs e)
         {
-            var row = autosDataGridView.Rows[AutomovilSeleccionado];
+            DataGridViewRow row = null;
+
+            try
+            {
+                row = autosDataGridView.Rows[AutomovilSeleccionado];
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                objController.habilitarContenidoPanel(autoSelectedPanelBtns, false);
+                return;
+                //throw;
+            }
 
             if (row.Cells[0].Value == null)
             {
@@ -177,6 +210,13 @@ namespace UberFrba.Abm_Automovil
         {
             AutomovilSeleccionado = e.RowIndex;
             int id_auto = -1;
+
+            if (e.RowIndex < 0)
+            {
+                objController.habilitarContenidoPanel(autoSelectedPanelBtns, false);
+                return;
+            }
+            
 
             try
             {

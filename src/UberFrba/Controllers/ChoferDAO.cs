@@ -245,6 +245,8 @@ namespace UberFrba.Controllers
                     //[DDG].sp_get_importe_rendicion (@idRendicion numeric(10,0)) as
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@idFactura", id_rendicion);
+
+                    conn.Open();
                     SqlDataReader lector = cmd.ExecuteReader();
 
                     if (lector.HasRows)

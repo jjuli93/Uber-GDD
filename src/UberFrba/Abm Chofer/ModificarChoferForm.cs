@@ -71,6 +71,8 @@ namespace UberFrba.Abm_Chofer
                     if (choferDAO.modificar_chofer(chofer_seleccionado))
                     {
                         MessageBox.Show("Los datos del chofer han sido modificados.", "Modificar Chofer", MessageBoxButtons.OK);
+                        var father = this.Owner as ListadoChoferesForm;
+                        father.refresh_table();
                     }
                     else
                     {
