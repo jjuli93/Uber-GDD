@@ -122,7 +122,7 @@ namespace UberFrba.Abm_Chofer
                 if (ChoferDAO.Instance.eliminar_chofer(id))
                 {
                     MessageBox.Show("Chofer eliminado", "Baja Chofer", MessageBoxButtons.OK);
-                    choferesDataGridView.Rows[chofer_index].Cells["chofer_habilitado"].Value = 0;
+                    choferesDataGridView.Rows[chofer_index].Cells["Habilitado"].Value = 0;
                 }
                 else
                 {
