@@ -68,6 +68,7 @@ namespace UberFrba.Abm_Rol
             {
                 if (MessageBox.Show(string.Format("¿Está seguro de querer modificar el rol {0}?", rolSeleccionado.nombre), "Modificar Rol", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
+                    update_funcionalidades();
                     if (RolDAO.Instance.modificar_rol(rolSeleccionado))
                     {
                         MessageBox.Show(string.Format("Se ha modificado el rol {0}", rolSeleccionado.nombre), "Rol modificado", MessageBoxButtons.OK);
@@ -77,7 +78,7 @@ namespace UberFrba.Abm_Rol
                     }
                     else
                     {
-                        MessageBox.Show(string.Format("No se ha podido modificar el rol {0}?", rolSeleccionado.nombre), "Error en Modificar Rol", MessageBoxButtons.OK);
+                        MessageBox.Show(string.Format("No se ha podido modificar el rol {0}", rolSeleccionado.nombre), "Error en Modificar Rol", MessageBoxButtons.OK);
                     }
                 }
             }
@@ -93,31 +94,44 @@ namespace UberFrba.Abm_Rol
             rolSeleccionado.habilitado = habilitarCheckBox.Checked;
         }
 
-        private void chkListBoxFuncs_ItemCheck(object sender, ItemCheckEventArgs e)
+        //private void chkListBoxFuncs_ItemCheck(object sender, ItemCheckEventArgs e)
+        //{
+        //    var item = (ObjetosFormCTRL.itemListBox)chkListBoxFuncs.Items[e.Index];
+
+        //    if (e.NewValue == CheckState.Checked)
+        //    {
+        //        //se agrega una nueva funcionalidad
+        //        if (rolSeleccionado.funcionalidades.All(f => f.id != item.id_item))
+        //        {
+        //            Funcionalidad nueva = new Funcionalidad(item.id_item);
+        //            nueva.descripcion = item.nombre_item;
+        //            nueva.habilitada = true;
+
+        //            rolSeleccionado.funcionalidades.Add(nueva);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        //se elimina una funcionalidad
+        //        Funcionalidad fun = rolSeleccionado.funcionalidades.Find(f => f.id == item.id_item);
+
+        //        if (fun != null)
+        //        {
+        //            rolSeleccionado.funcionalidades.Remove(fun);
+        //        }
+        //    }
+        //}
+
+        private void update_funcionalidades()
         {
-            var item = (ObjetosFormCTRL.itemListBox)chkListBoxFuncs.Items[e.Index];
+            var funcs_checkeadas = chkListBoxFuncs.CheckedItems;
+            rolSeleccionado.funcionalidades.Clear();
 
-            if (e.NewValue == CheckState.Checked)
+            foreach (ObjetosFormCTRL.itemListBox item in funcs_checkeadas)
             {
-                //se agrega una nueva funcionalidad
-                if (rolSeleccionado.funcionalidades.All(f => f.id != item.id_item))
-                {
-                    Funcionalidad nueva = new Funcionalidad(item.id_item);
-                    nueva.descripcion = item.nombre_item;
-                    nueva.habilitada = true;
-
-                    rolSeleccionado.funcionalidades.Add(nueva);
-                }
-            }
-            else
-            {
-                //se elimina una funcionalidad
-                Funcionalidad fun = rolSeleccionado.funcionalidades.Find(f => f.id == item.id_item);
-
-                if (fun != null)
-                {
-                    rolSeleccionado.funcionalidades.Remove(fun);
-                }
+                var nuevo = new Funcionalidad(item.id_item);
+                nuevo.descripcion = item.nombre_item;
+                rolSeleccionado.funcionalidades.Add(nuevo);
             }
         }
 

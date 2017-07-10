@@ -12,6 +12,7 @@ namespace UberFrba.Modelo
         {
             this.id = _id;
             this.patente = _patente;
+            this.habilitado = true;
         }
 
         public int id { get; private set; }

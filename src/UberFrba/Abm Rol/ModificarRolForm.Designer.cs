@@ -105,7 +105,7 @@
             this.chkListBoxFuncs.Name = "chkListBoxFuncs";
             this.chkListBoxFuncs.Size = new System.Drawing.Size(280, 94);
             this.chkListBoxFuncs.TabIndex = 13;
-            this.chkListBoxFuncs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chkListBoxFuncs_ItemCheck);
+            //this.chkListBoxFuncs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chkListBoxFuncs_ItemCheck);
             // 
             // nombreTextBox
             // 

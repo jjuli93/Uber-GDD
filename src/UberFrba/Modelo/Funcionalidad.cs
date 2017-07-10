@@ -13,6 +13,7 @@ namespace UberFrba.Modelo
         public Funcionalidad(int _id)
         {
             this.id = _id;
+            habilitada = true;
         }
 
         public int id { get; private set; }

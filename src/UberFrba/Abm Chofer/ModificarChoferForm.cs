@@ -67,6 +67,7 @@ namespace UberFrba.Abm_Chofer
             {
                 if (MessageBox.Show("¿Está seguro de querer modificar los datos del chofer?", "Modificar Chofer", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
+                    update_chofer();
                     if (choferDAO.modificar_chofer(chofer_seleccionado))
                     {
                         MessageBox.Show("Los datos del chofer han sido modificados.", "Modificar Chofer", MessageBoxButtons.OK);
@@ -87,6 +88,21 @@ namespace UberFrba.Abm_Chofer
         private void telefonoTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             objController.only_numbers(e);
+        }
+
+        private void update_chofer()
+        {
+            if (chofer_seleccionado == null)
+                return;
+
+            chofer_seleccionado.nombre = nombreTextBox.Text;
+            chofer_seleccionado.apellido = apeliidoTextBox.Text;
+            chofer_seleccionado.dni = Convert.ToUInt32(dniTextBox.Text);
+            chofer_seleccionado.fecha_nacimiento = fnDateTimePicker.Value;
+            chofer_seleccionado.habilitado = habilitarCheckBox.Checked;
+            chofer_seleccionado.telefono = Convert.ToUInt32(telefonoTextBox.Text);
+            chofer_seleccionado.direccion = direccionTextBox.Text;
+            chofer_seleccionado.mail = mailTextBox.Text;
         }
     }
 }

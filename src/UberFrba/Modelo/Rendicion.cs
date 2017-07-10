@@ -11,12 +11,14 @@ namespace UberFrba.Modelo
         public Rendicion(int _id)
         {
             this.id = _id;
+            this.habitado = true;
         }
 
         public int id { get; private set; }
         public DateTime fecha { get; set; }
         public int chofer { get; set; }
         public int turno { get; set; }
+        public bool habitado { get; set; }
 
 
         public float calcular_importe()
