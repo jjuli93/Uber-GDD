@@ -115,7 +115,7 @@ namespace UberFrba.Abm_Turno
                 if (turnoDAO.baja_turno(id))
                 {
                     MessageBox.Show("Turno eliminado", "Baja Turno", MessageBoxButtons.OK);
-                    turnosDataGridView.Rows[turno_index].Cells["turno_habilitado"].Value = 0;
+                    turnosDataGridView.Rows[turno_index].Cells["Habilitado"].Value = 0;
                     turnosDataGridView.ClearSelection();
                     turno_index = -1;
                     objController.habilitarContenidoPanel(turnoSeleccionadoPanel, false);

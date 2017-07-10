@@ -175,8 +175,8 @@ namespace UberFrba.Controllers
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.AddWithValue("@idTurno", modificado.id);
-                    cmd.Parameters.AddWithValue("@horaInicio", modificado.hora_inicio.ToLongTimeString());
-                    cmd.Parameters.AddWithValue("@horaFin", modificado.hora_fin.ToLongTimeString());
+                    cmd.Parameters.AddWithValue("@horaInicio", modificado.hora_inicio.TimeOfDay);
+                    cmd.Parameters.AddWithValue("@horaFin", modificado.hora_fin.TimeOfDay);
                     cmd.Parameters.Add("@descripcion", SqlDbType.VarChar).Value = modificado.descripcion;
                     cmd.Parameters.AddWithValue("@valorKM", modificado.valor_km);
                     cmd.Parameters.AddWithValue("@precioBase", modificado.precio_base);

@@ -94,8 +94,8 @@ namespace UberFrba.Abm_Turno
             turnoSeleccionado.descripcion = descripcionTextBox.Text;
             turnoSeleccionado.hora_inicio = beginDateTimePicker.Value;
             turnoSeleccionado.hora_fin = endDateTimePicker.Value;
-            turnoSeleccionado.precio_base = (int)precioNumericUpDown.Value;
-            turnoSeleccionado.valor_km = (int)kmNumericUpDown.Value;
+            turnoSeleccionado.precio_base = (float)precioNumericUpDown.Value;
+            turnoSeleccionado.valor_km = (float)kmNumericUpDown.Value;
             turnoSeleccionado.habilitado = habilitarCheckBox.Checked;
         }
     }
