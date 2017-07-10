@@ -1009,8 +1009,11 @@ begin
 set xact_abort on
 begin tran
 
+if((select count(*) from ddg.Usuarios where usuario_username = @username) = 0)		--Solo agrego el usuario si no existe
+begin
 insert into DDG.Usuarios (usuario_username, usuario_password)
 values(@username, HASHBYTES('SHA2_256',cast(@contrasenia as varchar(16))))
+end
 
 insert into ddg.UsuariosXRoles (usuarioXRol_usuario, usuarioXRol_rol)
 select usuario_ID, @idRol
