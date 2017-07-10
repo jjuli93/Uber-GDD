@@ -68,6 +68,10 @@ namespace UberFrba.Registro_Viajes
                     if (MessageBox.Show("Registro exitoso.", "Registro de viaje", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
                     {
                         objController.limpiarControles(this);
+                        turnoComboBox.Items.Clear();
+                        chofer_seleccionado = null;
+                        auto_seleccionado = null;
+                        cliente_seleccionado = null;
                         return;
                     }
                 }
@@ -78,12 +82,10 @@ namespace UberFrba.Registro_Viajes
             }
             else
             {
-                if (MessageBox.Show("Por favor ingrese todos los datos obligatorios", "Campos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Stop) == DialogResult.OK)
-                {
-                    objController.borrarMensajeDeError(camposObligatorios, errorProvider);
-                    return;
-                }
+                MessageBox.Show("Por favor ingrese todos los datos obligatorios", "Campos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
+
+            objController.borrarMensajeDeError(camposObligatorios, errorProvider);
         }
 
         private Viaje get_new_viaje()
