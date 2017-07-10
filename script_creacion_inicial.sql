@@ -500,11 +500,14 @@ create trigger [DDG].tr_baja_rol on [DDG].Roles for update
 as
 begin
 if UPDATE(rol_habilitado)
+begin
 	delete from [DDG].UsuariosXRoles
 	where usuarioXRol_rol in (select i.rol_ID
 							  from inserted i
 							  where i.rol_habilitado = 0)
 end
+end
+GO
 
 													/* Stored procedures*/
 	/*ABM ROL*/
@@ -516,7 +519,7 @@ end
 --NOMBRE	: sp_alta_rol						
 --OBJETIVO  : dar de alta un rol                                 
 --=============================================================================================================
-IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_rol' AND type='p')
+IF  EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_rol' AND type='p')
 	DROP PROCEDURE [DDG].sp_alta_rol
 GO
 
