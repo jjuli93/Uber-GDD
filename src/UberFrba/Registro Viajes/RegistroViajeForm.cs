@@ -101,7 +101,7 @@ namespace UberFrba.Registro_Viajes
             else
                 return null;
 
-            nuevo.km_viaje = (double)kmNumericUpDown.Value;
+            nuevo.km_viaje = (float)kmNumericUpDown.Value;
             nuevo.inicio_date = beginDateTimePicker.Value;
             nuevo.fin_date = endDateTimePicker.Value;
 
