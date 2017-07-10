@@ -455,7 +455,7 @@ GO
 
 	--=============================================================================================================
 --TIPO		: Funcion
---NOMBRE	: existeAutoConMismaPatente                                  
+--NOMBRE	: existeRolConMismoNombre                                  
 --=============================================================================================================
 
 IF EXISTS (SELECT name FROM sysobjects WHERE name='existeRolConMismoNombre' AND type in ( N'FN', N'IF', N'TF', N'FS', N'FT' ))
@@ -843,7 +843,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='choferYaAsignado' AND type in
 DROP FUNCTION [ddg].choferYaAsignado
 GO
 
-create function [DDG].choferYaAsignado(@idchofer varchar(10), @idAuto numeric(10))
+create function [DDG].choferYaAsignado(@idchofer numeric(10), @idAuto numeric(10))
 returns int
 begin
 declare @retorno bit
@@ -874,7 +874,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='existeAutoConMismaPatente' AN
 DROP FUNCTION [ddg].existeAutoConMismaPatente
 GO
 
-create function [DDG].existeAutoConMismaPatente(@patente numeric(10,0), @idAuto numeric(10))
+create function [DDG].existeAutoConMismaPatente(@patente varchar(10), @idAuto numeric(10))
 returns int
 begin
 declare @retorno bit
