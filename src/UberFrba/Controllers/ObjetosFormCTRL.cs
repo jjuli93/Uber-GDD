@@ -310,8 +310,8 @@ namespace UberFrba.Controllers
 
                 if (msg == DialogResult.Yes)
                 {
-                    Environment.Exit(0);
-                    //Application.Exit();
+                    //Environment.Exit(0);
+                    Application.Exit();
                 }
                 else
                     e.Cancel = (msg == DialogResult.No);

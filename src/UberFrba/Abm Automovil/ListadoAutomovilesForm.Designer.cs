@@ -70,6 +70,7 @@
             // 
             // modeloComboBox
             // 
+            this.modeloComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.modeloComboBox.FormattingEnabled = true;
             this.modeloComboBox.Location = new System.Drawing.Point(228, 25);
             this.modeloComboBox.Name = "modeloComboBox";
@@ -102,6 +103,7 @@
             // 
             // marcaComboBox
             // 
+            this.marcaComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.marcaComboBox.FormattingEnabled = true;
             this.marcaComboBox.Location = new System.Drawing.Point(56, 25);
             this.marcaComboBox.Name = "marcaComboBox";

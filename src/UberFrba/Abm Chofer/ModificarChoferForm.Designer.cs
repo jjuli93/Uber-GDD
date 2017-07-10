@@ -104,6 +104,7 @@
             // telefonoTextBox
             // 
             this.telefonoTextBox.Location = new System.Drawing.Point(90, 157);
+            this.telefonoTextBox.MaxLength = 12;
             this.telefonoTextBox.Name = "telefonoTextBox";
             this.telefonoTextBox.Size = new System.Drawing.Size(145, 20);
             this.telefonoTextBox.TabIndex = 27;
@@ -111,7 +112,7 @@
             // 
             // direccionTextBox
             // 
-            this.direccionTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.direccionTextBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.direccionTextBox.Location = new System.Drawing.Point(130, 124);
             this.direccionTextBox.Name = "direccionTextBox";
             this.direccionTextBox.Size = new System.Drawing.Size(198, 20);
@@ -120,6 +121,7 @@
             // dniTextBox
             // 
             this.dniTextBox.Location = new System.Drawing.Point(90, 92);
+            this.dniTextBox.MaxLength = 10;
             this.dniTextBox.Name = "dniTextBox";
             this.dniTextBox.Size = new System.Drawing.Size(145, 20);
             this.dniTextBox.TabIndex = 25;

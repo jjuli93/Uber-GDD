@@ -81,6 +81,7 @@
             // dniFilterTB
             // 
             this.dniFilterTB.Location = new System.Drawing.Point(107, 87);
+            this.dniFilterTB.MaxLength = 10;
             this.dniFilterTB.Name = "dniFilterTB";
             this.dniFilterTB.Size = new System.Drawing.Size(224, 20);
             this.dniFilterTB.TabIndex = 5;

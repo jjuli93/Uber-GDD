@@ -82,11 +82,11 @@
             // 
             this.label15.AutoSize = true;
             this.label15.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label15.Font = new System.Drawing.Font("Dutch801 XBd BT", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label15.ForeColor = System.Drawing.Color.Red;
             this.label15.Location = new System.Drawing.Point(26, 372);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(132, 14);
+            this.label15.Size = new System.Drawing.Size(119, 13);
             this.label15.TabIndex = 40;
             this.label15.Text = "[*] : campos obligatorios";
             // 
@@ -132,16 +132,17 @@
             // 
             this.label12.AutoSize = true;
             this.label12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label12.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.ForeColor = System.Drawing.Color.Red;
             this.label12.Location = new System.Drawing.Point(225, 130);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(17, 20);
+            this.label12.Size = new System.Drawing.Size(15, 20);
             this.label12.TabIndex = 36;
             this.label12.Text = "*";
             // 
             // turnoComboBox
             // 
+            this.turnoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.turnoComboBox.FormattingEnabled = true;
             this.turnoComboBox.Location = new System.Drawing.Point(88, 129);
             this.turnoComboBox.Name = "turnoComboBox";
@@ -162,11 +163,11 @@
             // 
             this.label3.AutoSize = true;
             this.label3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label3.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.Red;
             this.label3.Location = new System.Drawing.Point(331, 27);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(17, 20);
+            this.label3.Size = new System.Drawing.Size(15, 20);
             this.label3.TabIndex = 33;
             this.label3.Text = "*";
             // 
@@ -174,11 +175,11 @@
             // 
             this.label14.AutoSize = true;
             this.label14.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label14.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.ForeColor = System.Drawing.Color.Red;
             this.label14.Location = new System.Drawing.Point(331, 93);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(17, 20);
+            this.label14.Size = new System.Drawing.Size(15, 20);
             this.label14.TabIndex = 32;
             this.label14.Text = "*";
             // 

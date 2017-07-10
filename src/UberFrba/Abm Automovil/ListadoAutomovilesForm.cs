@@ -135,6 +135,9 @@ namespace UberFrba.Abm_Automovil
 
         private void marcaComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (marcaComboBox.SelectedIndex < 0)
+                return;
+
             var marca_index = (ObjetosFormCTRL.itemComboBox)marcaComboBox.SelectedItem;
 
             modeloComboBox.Items.Clear();

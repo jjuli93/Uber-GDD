@@ -110,6 +110,11 @@ namespace UberFrba.Abm_Rol
             }
         }
 
+        private void cerrarSesionLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            objController.cerrar_sesion();
+        }
+
        
     }
 }

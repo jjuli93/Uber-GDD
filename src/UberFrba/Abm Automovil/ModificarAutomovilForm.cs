@@ -174,12 +174,19 @@ namespace UberFrba.Abm_Automovil
 
         private void marcaComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (marcaComboBox.SelectedIndex < 0)
+                return;
+
+            modeloComboBox.Items.Clear();
+
             var marca = (ObjetosFormCTRL.itemComboBox)marcaComboBox.SelectedItem;
 
             autoDAO.setModelos(modeloComboBox, marca.id_item);
 
             automovilSeleccionado.marca = marca.nombre_item;
             automovilSeleccionado.idmarca = marca.id_item;
+
+            modeloComboBox.SelectedIndex = -1;
         }
 
         private void modeloComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -208,6 +215,11 @@ namespace UberFrba.Abm_Automovil
                 chofer_seleccionado = _chofer;
                 nombreChoferTB.Text = chofer_seleccionado.nombre + " " + chofer_seleccionado.apellido;
             }
+        }
+
+        private void licenciaTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            objController.only_numbers(e);
         }
     }
 }

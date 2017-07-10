@@ -183,9 +183,12 @@ namespace UberFrba.Controllers
                     cmd.Parameters.AddWithValue("@id", modificado.id);
                     cmd.Parameters.AddWithValue("@idchofer", modificado.chofer_id);
                     cmd.Parameters.AddWithValue("@idmodelo", modificado.idmodelo);
-                    cmd.Parameters.Add("@patente", SqlDbType.VarChar).Value = modificado.patente;
-                    cmd.Parameters.Add("@licencia", SqlDbType.VarChar).Value = modificado.licencia.ToString();
-                    cmd.Parameters.Add("@rodado", SqlDbType.VarChar).Value = modificado.rodado;
+                    cmd.Parameters.AddWithValue("@patente", modificado.patente);
+                    cmd.Parameters.AddWithValue("@licencia", modificado.licencia.ToString());
+                    cmd.Parameters.AddWithValue("@rodado", modificado.rodado);
+                    //cmd.Parameters.Add("@patente", SqlDbType.VarChar).Value = modificado.patente;
+                    //cmd.Parameters.Add("@licencia", SqlDbType.VarChar).Value = Convert.ToString(modificado.licencia);
+                    //cmd.Parameters.Add("@rodado", SqlDbType.VarChar).Value = modificado.rodado;
                     cmd.Parameters.AddWithValue("@habilitado", Convert.ToInt32(modificado.habilitado));
 
                     var table = new DataTable();

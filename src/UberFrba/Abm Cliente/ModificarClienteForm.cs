@@ -38,9 +38,6 @@ namespace UberFrba.Abm_Cliente
                 }
             }
 
-            dniTextBox.MaxLength = 8;
-            telTextBox.MaxLength = 12;
-
             this.FormClosing += ModificarClienteForm_FormClosing;
         }
 

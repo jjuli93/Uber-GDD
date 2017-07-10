@@ -86,7 +86,7 @@ namespace UberFrba.Abm_Chofer
                 {
                     if (ChoferDAO.Instance.crear_chofer(nuevo))
                     {
-                        MessageBox.Show("Cliente creado");
+                        MessageBox.Show("Chofer creado", "Alta Chofer", MessageBoxButtons.OK);
                         limpiar_form();
                     }
                     else

@@ -81,6 +81,7 @@
             // 
             // trimestreComboBox
             // 
+            this.trimestreComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.trimestreComboBox.FormattingEnabled = true;
             this.trimestreComboBox.Location = new System.Drawing.Point(138, 53);
             this.trimestreComboBox.Name = "trimestreComboBox";

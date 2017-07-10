@@ -130,6 +130,7 @@
             this.choferesDataGridView.Location = new System.Drawing.Point(12, 121);
             this.choferesDataGridView.MultiSelect = false;
             this.choferesDataGridView.Name = "choferesDataGridView";
+            this.choferesDataGridView.ReadOnly = true;
             this.choferesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.choferesDataGridView.Size = new System.Drawing.Size(362, 172);
             this.choferesDataGridView.TabIndex = 8;
@@ -158,6 +159,7 @@
             // dniTextBox
             // 
             this.dniTextBox.Location = new System.Drawing.Point(91, 83);
+            this.dniTextBox.MaxLength = 10;
             this.dniTextBox.Name = "dniTextBox";
             this.dniTextBox.Size = new System.Drawing.Size(190, 20);
             this.dniTextBox.TabIndex = 5;

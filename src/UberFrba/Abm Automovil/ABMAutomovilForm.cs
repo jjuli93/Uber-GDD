@@ -115,8 +115,8 @@ namespace UberFrba.Abm_Automovil
         {
             auto.turnos = new List<Turno>();
 
-            //auto.turnos.AddRange(turnos_seleccionados);
-            auto.turnos.Add(new Turno(2));
+            auto.turnos.AddRange(turnos_seleccionados);
+            //auto.turnos.Add(new Turno(2));
         }
 
         private void cancelarButton_Click(object sender, EventArgs e)

@@ -74,6 +74,7 @@
             // 
             // modeloComboBox
             // 
+            this.modeloComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.modeloComboBox.FormattingEnabled = true;
             this.modeloComboBox.Location = new System.Drawing.Point(109, 65);
             this.modeloComboBox.Name = "modeloComboBox";
@@ -92,6 +93,7 @@
             // rodadoTextBox
             // 
             this.rodadoTextBox.Location = new System.Drawing.Point(409, 160);
+            this.rodadoTextBox.MaxLength = 10;
             this.rodadoTextBox.Name = "rodadoTextBox";
             this.rodadoTextBox.Size = new System.Drawing.Size(190, 20);
             this.rodadoTextBox.TabIndex = 30;
@@ -99,9 +101,11 @@
             // licenciaTextBox
             // 
             this.licenciaTextBox.Location = new System.Drawing.Point(417, 124);
+            this.licenciaTextBox.MaxLength = 10;
             this.licenciaTextBox.Name = "licenciaTextBox";
             this.licenciaTextBox.Size = new System.Drawing.Size(182, 20);
             this.licenciaTextBox.TabIndex = 29;
+            this.licenciaTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.licenciaTextBox_KeyPress);
             // 
             // label13
             // 
@@ -181,12 +185,14 @@
             // patenteTextBox
             // 
             this.patenteTextBox.Location = new System.Drawing.Point(122, 113);
+            this.patenteTextBox.MaxLength = 10;
             this.patenteTextBox.Name = "patenteTextBox";
             this.patenteTextBox.Size = new System.Drawing.Size(190, 20);
             this.patenteTextBox.TabIndex = 18;
             // 
             // marcaComboBox
             // 
+            this.marcaComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.marcaComboBox.FormattingEnabled = true;
             this.marcaComboBox.Location = new System.Drawing.Point(122, 42);
             this.marcaComboBox.Name = "marcaComboBox";

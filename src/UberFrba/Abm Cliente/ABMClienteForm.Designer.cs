@@ -281,6 +281,7 @@
             // telTextBox
             // 
             this.telTextBox.Location = new System.Drawing.Point(155, 173);
+            this.telTextBox.MaxLength = 12;
             this.telTextBox.Name = "telTextBox";
             this.telTextBox.Size = new System.Drawing.Size(195, 20);
             this.telTextBox.TabIndex = 56;
@@ -337,6 +338,7 @@
             // dniTextBox
             // 
             this.dniTextBox.Location = new System.Drawing.Point(155, 98);
+            this.dniTextBox.MaxLength = 10;
             this.dniTextBox.Name = "dniTextBox";
             this.dniTextBox.Size = new System.Drawing.Size(195, 20);
             this.dniTextBox.TabIndex = 54;

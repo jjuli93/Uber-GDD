@@ -82,6 +82,7 @@
             this.cerrarSesionLinkLabel.TabIndex = 3;
             this.cerrarSesionLinkLabel.TabStop = true;
             this.cerrarSesionLinkLabel.Text = "cerrar sesión";
+            this.cerrarSesionLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cerrarSesionLinkLabel_LinkClicked);
             // 
             // label3
             // 

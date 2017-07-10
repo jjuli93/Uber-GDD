@@ -143,11 +143,11 @@
             // 
             this.label15.AutoSize = true;
             this.label15.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label15.Font = new System.Drawing.Font("Dutch801 XBd BT", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label15.ForeColor = System.Drawing.Color.Red;
             this.label15.Location = new System.Drawing.Point(23, 397);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(132, 14);
+            this.label15.Size = new System.Drawing.Size(119, 13);
             this.label15.TabIndex = 29;
             this.label15.Text = "[*] : campos obligatorios";
             // 
@@ -155,11 +155,11 @@
             // 
             this.label14.AutoSize = true;
             this.label14.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label14.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.ForeColor = System.Drawing.Color.Red;
             this.label14.Location = new System.Drawing.Point(333, 59);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(17, 20);
+            this.label14.Size = new System.Drawing.Size(15, 20);
             this.label14.TabIndex = 28;
             this.label14.Text = "*";
             // 
@@ -167,11 +167,11 @@
             // 
             this.label13.AutoSize = true;
             this.label13.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label13.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.ForeColor = System.Drawing.Color.Red;
             this.label13.Location = new System.Drawing.Point(333, 95);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(17, 20);
+            this.label13.Size = new System.Drawing.Size(15, 20);
             this.label13.TabIndex = 27;
             this.label13.Text = "*";
             // 
@@ -179,11 +179,11 @@
             // 
             this.label12.AutoSize = true;
             this.label12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label12.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.ForeColor = System.Drawing.Color.Red;
             this.label12.Location = new System.Drawing.Point(232, 133);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(17, 20);
+            this.label12.Size = new System.Drawing.Size(15, 20);
             this.label12.TabIndex = 26;
             this.label12.Text = "*";
             // 
@@ -191,11 +191,11 @@
             // 
             this.label10.AutoSize = true;
             this.label10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label10.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.Color.Red;
             this.label10.Location = new System.Drawing.Point(299, 170);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(17, 20);
+            this.label10.Size = new System.Drawing.Size(15, 20);
             this.label10.TabIndex = 25;
             this.label10.Text = "*";
             // 
@@ -203,11 +203,11 @@
             // 
             this.label9.AutoSize = true;
             this.label9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label9.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.Color.Red;
             this.label9.Location = new System.Drawing.Point(299, 229);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(17, 20);
+            this.label9.Size = new System.Drawing.Size(15, 20);
             this.label9.TabIndex = 24;
             this.label9.Text = "*";
             // 
@@ -215,11 +215,11 @@
             // 
             this.label8.AutoSize = true;
             this.label8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label8.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.Red;
             this.label8.Location = new System.Drawing.Point(299, 291);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(17, 20);
+            this.label8.Size = new System.Drawing.Size(15, 20);
             this.label8.TabIndex = 23;
             this.label8.Text = "*";
             // 
@@ -227,11 +227,11 @@
             // 
             this.label11.AutoSize = true;
             this.label11.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label11.Font = new System.Drawing.Font("Dutch801 XBd BT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.Color.Red;
             this.label11.Location = new System.Drawing.Point(299, 328);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(17, 20);
+            this.label11.Size = new System.Drawing.Size(15, 20);
             this.label11.TabIndex = 22;
             this.label11.Text = "*";
             // 
@@ -303,7 +303,7 @@
             // 
             // endDateTimePicker
             // 
-            this.endDateTimePicker.CustomFormat = "dd/MM/yyyy    ||   hh:mm";
+            this.endDateTimePicker.CustomFormat = "dd/MM/yyyy    ||     hh:mm tt";
             this.endDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.endDateTimePicker.Location = new System.Drawing.Point(26, 291);
             this.endDateTimePicker.Name = "endDateTimePicker";
@@ -321,7 +321,7 @@
             // 
             // beginDateTimePicker
             // 
-            this.beginDateTimePicker.CustomFormat = "dd/MM/yyyy    ||   hh:mm";
+            this.beginDateTimePicker.CustomFormat = "dd/MM/yyyy    ||     hh:mm tt";
             this.beginDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.beginDateTimePicker.Location = new System.Drawing.Point(26, 229);
             this.beginDateTimePicker.Name = "beginDateTimePicker";
@@ -361,6 +361,7 @@
             // 
             // turnoComboBox
             // 
+            this.turnoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.turnoComboBox.FormattingEnabled = true;
             this.turnoComboBox.Location = new System.Drawing.Point(98, 132);
             this.turnoComboBox.Name = "turnoComboBox";
