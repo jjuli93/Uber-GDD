@@ -233,9 +233,9 @@ namespace UberFrba.Controllers
             return id_rendicion;
         }
 
-        public int get_importe_rendicion(int id_rendicion)
+        public double get_importe_rendicion(int id_rendicion)
         {
-            int importe = 0;
+            double importe = 0.0;
 
             try
             {
@@ -253,7 +253,7 @@ namespace UberFrba.Controllers
                     {
                         if (lector.Read())
                         {
-                            importe = Convert.ToInt32(lector["rendicion_importe"]);
+                            importe = Convert.ToDouble(lector["rendicion_importe"]);
                         }
                     }
 
@@ -262,7 +262,7 @@ namespace UberFrba.Controllers
             }
             catch (SqlException)
             {
-                importe = -1;
+                importe = -1.0;
                 //throw;
             }
 

@@ -31,6 +31,8 @@ namespace UberFrba.Rendicion_Viajes
             objController = ObjetosFormCTRL.Instance;
             camposObligatorios = new List<Control>() { fechaDateTimePicker, datosChoferTB, turnoComboBox };
 
+            fechaDateTimePicker.Value = Conexion.Instance.getFecha();
+
             this.FormClosing += RendicionViajesForm_FormClosing;
         }
 
@@ -55,6 +57,7 @@ namespace UberFrba.Rendicion_Viajes
 
         private void realizarPagoBtn_Click(object sender, EventArgs e)
         {
+            limpiar_form();
             int id_rendicion = 0;
 
             if (objController.cumpleCamposObligatorios(camposObligatorios, errorProvider))
@@ -155,6 +158,13 @@ namespace UberFrba.Rendicion_Viajes
             {
                 turno_seleccionado = turno.id_item;
             }
+        }
+
+        private void limpiar_form()
+        {
+            this.viajesDataGridView.Rows.Clear();
+            this.viajesDataGridView.DataSource = null;
+            importeTextBox.Text = string.Empty;
         }
     }
 }

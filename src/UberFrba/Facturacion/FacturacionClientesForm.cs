@@ -60,6 +60,8 @@ namespace UberFrba.Facturacion
 
         private void facturarButton_Click(object sender, EventArgs e)
         {
+            limpiar_form();
+
             if (cumple_campos())
             {
                 var id_factura = clienteDAO.realizarFacturacion(cliente_seleccionado.id, beginDateTimePicker.Value, endDateTimePicker.Value);
@@ -136,6 +138,13 @@ namespace UberFrba.Facturacion
         {
             return objController.cumpleCamposObligatorios(camposObligatorios, errorProvider)
                 && (cliente_seleccionado != null);
+        }
+
+        private void limpiar_form()
+        {
+            importeTextBox.Text = string.Empty;
+            viajesDataGridView.Rows.Clear();
+            viajesDataGridView.DataSource = null;
         }
 
     }
