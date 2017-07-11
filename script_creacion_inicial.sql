@@ -960,11 +960,10 @@ declare @retorno int
 
 /*TODO validar que no exista facturacion entre esos dias*/
 
-if((select count(*)
-	from ddg.Facturas
-	where factura_cliente = @idCliente
-	and factura_fecha_inicio = @fechaInicio
-	and factura_fecha_fin = @fechafin) > 0) set @retorno = 1 else set @retorno = 0
+if(    exists(select * from ddg.Facturas where @fechaInicio between factura_fecha_inicio and factura_fecha_fin and factura_cliente = @idCliente)
+	or exists(select * from ddg.Facturas where @fechafin between factura_fecha_inicio and factura_fecha_fin and factura_cliente = @idCliente)
+	or exists(select * from ddg.Facturas where @fechaInicio < factura_fecha_inicio and  @fechafin > factura_fecha_fin and factura_cliente = @idCliente)) 	
+	set @retorno = 1 else set @retorno = 0
 
 return @retorno
 end
@@ -1521,7 +1520,7 @@ begin tran
 declare @idfactura int
 declare @idDetalleFactura int
 
-	if(ddg.ExisteFacturacion(@idCliente, @fechaDesde, @fechaHasta) = 1) THROW 51000, 'Ya se realizó la facturación solicitada', 1;
+	if(ddg.ExisteFacturacion(@idCliente, @fechaDesde, @fechaHasta) = 1) THROW 51000, 'Ya existe una factura entre esas fechas', 1;
 	
 	insert into ddg.Facturas(factura_importe, factura_cliente, factura_fecha_fin, factura_fecha_inicio, factura_numero)
 		values( isnull(((select sum([DDG].calcularImporteViaje(viaje_id))
