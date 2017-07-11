@@ -128,33 +128,6 @@ namespace UberFrba.Abm_Automovil
 
             automovilSeleccionado.turnos.Clear();
 
-            //ObjetosFormCTRL.itemListBox item = null;
-            //int pos = -1;
-
-            //for (int i = 0; i < (turnosCheckedListBox.Items.Count - 1); i++)
-            //{
-            //    item = (ObjetosFormCTRL.itemListBox)turnosCheckedListBox.Items[i];
-            //    pos = esta_en_lista(item);
-
-            //    if (turnosCheckedListBox.GetItemChecked(i)) //checked
-            //    {
-            //        if (pos == -1) //ITS CHECKED BUT NOT IN THE LIST THEN ITS A NEW ONE
-            //        {
-            //            Turno nuevo = new Turno(item.id_item);
-            //            nuevo.descripcion = item.nombre_item;
-
-            //            automovilSeleccionado.turnos.Add(nuevo);
-            //        }
-            //    }
-            //    else //not checked
-            //    {
-            //        if (pos >= 0) //ITS NOT CHECKED BUT ITS IN THE LIST THEN I MUST REMOVE IT
-            //        {
-            //            automovilSeleccionado.turnos.RemoveAt(pos);
-            //        }
-            //    }
-            //}
-
             var turnosChequeados = turnosCheckedListBox.CheckedItems;
 
             foreach (ObjetosFormCTRL.itemListBox item in turnosChequeados)

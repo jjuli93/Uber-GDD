@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UberFrba.Controllers;
 
 namespace UberFrba.Modelo
 {
@@ -13,6 +14,7 @@ namespace UberFrba.Modelo
         {
             this.id = _id;
             this.habilitado = true;
+            this.fecha_nacimiento = Conexion.Instance.getFecha();
         }
 
         public int id { get; private set; }

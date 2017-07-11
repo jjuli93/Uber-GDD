@@ -105,18 +105,19 @@ namespace UberFrba.Abm_Automovil
             auto.idmodelo = modelo_seleccionado.id_item;
             auto.licencia = Convert.ToInt32(licenciaTextBox.Text);
             auto.rodado = rodadoTextBox.Text;
-
-            set_turnos_nuevo(auto);
-
-            return auto;
-        }
-
-        private void set_turnos_nuevo(Automovil auto)
-        {
             auto.turnos = new List<Turno>();
 
-            auto.turnos.AddRange(turnos_seleccionados);
-            //auto.turnos.Add(new Turno(2));
+            var turnos_seleccionados = turnosCheckedListBox.CheckedItems;
+
+            foreach (ObjetosFormCTRL.itemListBox item in turnos_seleccionados)
+            {
+                var nuevo = new Turno(item.id_item);
+                nuevo.descripcion = item.nombre_item;
+
+                auto.turnos.Add(nuevo);
+            }
+
+            return auto;
         }
 
         private void cancelarButton_Click(object sender, EventArgs e)
@@ -161,9 +162,5 @@ namespace UberFrba.Abm_Automovil
             }
         }
 
-        private void turnosCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            //TODO crear y agregar turnos seleccionados
-        }
     }
 }

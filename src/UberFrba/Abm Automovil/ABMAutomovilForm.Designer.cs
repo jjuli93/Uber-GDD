@@ -106,7 +106,6 @@
             this.turnosCheckedListBox.Name = "turnosCheckedListBox";
             this.turnosCheckedListBox.Size = new System.Drawing.Size(206, 94);
             this.turnosCheckedListBox.TabIndex = 29;
-            this.turnosCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.turnosCheckedListBox_ItemCheck);
             // 
             // limpiarButton
             // 
