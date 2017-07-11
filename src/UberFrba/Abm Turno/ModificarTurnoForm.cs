@@ -39,6 +39,8 @@ namespace UberFrba.Abm_Turno
             objController = ObjetosFormCTRL.Instance;
             turnoDAO = TurnoDAO.Instance;
             this.FormClosing += ModificarTurnoForm_FormClosing;
+            beginDateTimePicker.Value = Conexion.Instance.getFecha();
+            endDateTimePicker.Value = Conexion.Instance.getFecha();
         }
 
         private void ModificarTurnoForm_FormClosing(object sender, FormClosingEventArgs e)

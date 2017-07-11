@@ -23,6 +23,7 @@ namespace UberFrba.Abm_Cliente
             InitializeComponent();
             objController = ObjetosFormCTRL.Instance;
             clienteDAO = ClienteDAO.Instance;
+            fnDateTimePicker.Value = Conexion.Instance.getFecha();
 
             if (_cliente != null) 
             {

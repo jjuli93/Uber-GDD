@@ -85,13 +85,25 @@ namespace UberFrba.Rendicion_Viajes
         {
             DataTable viajes = ChoferDAO.Instance.get_viajes_chofer(id_rendicion);
 
+            if (viajes.Rows.Count <= 0)
+            {
+                MessageBox.Show("No se han encontrado viajes realizador por el chofer", "Alta de Rendición Chofer", MessageBoxButtons.OK);
+                return;
+            }             
+
             if (viajes != null)
                 viajesDataGridView.DataSource = viajes;
         }
 
         private void set_importe_rendicion(int id_rendicion)
         {
-            int importe = ChoferDAO.Instance.get_importe_rendicion(id_rendicion);
+            double importe = ChoferDAO.Instance.get_importe_rendicion(id_rendicion);
+
+            if (importe == -1) 
+            {
+                MessageBox.Show("Ha ocurrido un error al calcular el importe de la rendición", "Alta de Rendición Chofer", MessageBoxButtons.OK);
+                return;
+            }
 
             importeTextBox.Text = "$ " + importe.ToString();
         }

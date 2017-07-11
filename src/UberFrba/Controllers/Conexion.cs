@@ -26,12 +26,18 @@ namespace UberFrba.Controllers
         }
 
         //private static string connectionString = ConfigurationManager.AppSettings["UberFrba.Properties.Settings.GD1C2017ConnectionString"];
-        private static string connectionString = ConfigurationManager.ConnectionStrings["UberFrba.Properties.Settings.GD1C2017ConnectionString"].ConnectionString;
-
+        //private static string connectionString = ConfigurationManager.ConnectionStrings["UberFrba.Properties.Settings.GD1C2017ConnectionString"].ConnectionString;
+        private static string connectionString = ConfigurationManager.AppSettings["ConnectionString"];
+        private static DateTime fecha_default = Convert.ToDateTime(ConfigurationManager.AppSettings["current_date"]);
 
         public string getConnectionString()
         {
             return connectionString;
+        }
+
+        public DateTime getFecha()
+        {
+            return fecha_default;
         }
     }
 }

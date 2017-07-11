@@ -30,6 +30,7 @@ namespace UberFrba.Abm_Cliente
 
             dniTextBox.MaxLength = 8;
             telTextBox.MaxLength = 12;
+            fnDateTimePicker.Value = Conexion.Instance.getFecha();
 
             this.FormClosing += ABMClienteForm_FormClosing;
         }

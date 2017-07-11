@@ -28,6 +28,7 @@ namespace UberFrba.Abm_Chofer
 
             dniTextBox.MaxLength = 8;
             telefonoTextBox.MaxLength = 12;
+            fnDateTimePicker.Value = Conexion.Instance.getFecha();
 
             campos_obligatorios = new List<Control>() { nombreTextBox, apeliidoTextBox, dniTextBox, direccionTextBox, mailTextBox, telefonoTextBox, fnDateTimePicker };
 

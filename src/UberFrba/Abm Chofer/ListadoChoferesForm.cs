@@ -187,8 +187,15 @@ namespace UberFrba.Abm_Chofer
                     resultados = ChoferDAO.Instance.get_choferes(nombre_filtro, apellido_filtro, dni_filtro, "SI", "SI");
             }
 
-            if (resultados != null)
+            if (resultados != null) 
+            {
+                if (resultados.Rows.Count <= 0)
+                {
+                    MessageBox.Show("No se han encontrado choferes.", "Buscador de Choferes", MessageBoxButtons.OK);
+                }
                 choferesDataGridView.DataSource = resultados;
+            }
+            
             else
                 MessageBox.Show("Ha ocurrido un error en la busqueda de choferes", "Buscador de choferes", MessageBoxButtons.OK, MessageBoxIcon.Error); 
         }

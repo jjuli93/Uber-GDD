@@ -30,6 +30,10 @@ namespace UberFrba.Facturacion
 
             objController = ObjetosFormCTRL.Instance;
             clienteDAO = ClienteDAO.Instance;
+
+            beginDateTimePicker.Value = Conexion.Instance.getFecha();
+            endDateTimePicker.Value = Conexion.Instance.getFecha();
+
             camposObligatorios = new List<Control>() { beginDateTimePicker, endDateTimePicker, datosClienteTB };
 
             this.FormClosing += FacturacionClientesForm_FormClosing;
@@ -89,6 +93,9 @@ namespace UberFrba.Facturacion
         {
             DataTable viajes = clienteDAO.obtenerViajes(id_factura);
 
+            if (viajes.Rows.Count <= 0)
+                MessageBox.Show("No se han encontrado viajes realizados por el cliente.", "Facturación Clientes", MessageBoxButtons.OK);
+
             if (viajes != null)
                 viajesDataGridView.DataSource = viajes;
         }
@@ -99,10 +106,11 @@ namespace UberFrba.Facturacion
 
             if (importe < 0)
             {
-                //TODO (on importe == -1) -> handlear cuando sucede un error ;
+                MessageBox.Show("Ha ocurrido un error al calcular el importe de la facturación", "Facturación Clientes", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
-            importeTextBox.Text = importe.ToString();
+            importeTextBox.Text = "$ " + importe.ToString();
         }
 
         private void cerrarSesionLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

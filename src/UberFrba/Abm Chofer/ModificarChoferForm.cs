@@ -38,6 +38,7 @@ namespace UberFrba.Abm_Chofer
 
             dniTextBox.MaxLength = 8;
             telefonoTextBox.MaxLength = 12;
+            fnDateTimePicker.Value = Conexion.Instance.getFecha();
         }
 
         private void cargar_datos_form(Chofer chofer)

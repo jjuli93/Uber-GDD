@@ -262,7 +262,7 @@ namespace UberFrba.Controllers
             }
             catch (SqlException)
             {
-                importe = 1;
+                importe = -1;
                 //throw;
             }
 

@@ -31,6 +31,8 @@ namespace UberFrba.Abm_Turno
             camposObligatorios = new List<Control>() { beginDateTimePicker, endDateTimePicker, descripcionTextBox, kmNumericUpDown, precioNumericUpDown };
 
             this.FormClosing += ABMTurnoForm_FormClosing;
+            beginDateTimePicker.Value = Conexion.Instance.getFecha();
+            endDateTimePicker.Value = Conexion.Instance.getFecha();
         }
 
         private void ABMTurnoForm_FormClosing(object sender, FormClosingEventArgs e)

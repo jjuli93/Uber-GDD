@@ -31,6 +31,9 @@ namespace UberFrba.Registro_Viajes
             this.formAnterior = _parent;
 
             objController = ObjetosFormCTRL.Instance;
+            beginDateTimePicker.Value = Conexion.Instance.getFecha();
+            endDateTimePicker.Value = Conexion.Instance.getFecha();
+
             camposObligatorios = new List<Control>() { datosChoferTB, autoTextBox, turnoComboBox, kmNumericUpDown, beginDateTimePicker, endDateTimePicker, datosClienteTB };
 
             this.FormClosing += RegistroViajeForm_FormClosing;

@@ -24,7 +24,17 @@ namespace UberFrba.Abm_Rol
             this.CenterToScreen();
             objController = ObjetosFormCTRL.Instance;
             formAnterior = _formAnterior;
+
             rolesDataGridView.DataSource = RolDAO.Instance.get_roles();
+
+            if (rolesDataGridView.RowCount < 0)
+            {
+                if (MessageBox.Show("No se han encontrado roles en el sistema", "Listado de Roles", MessageBoxButtons.OK, MessageBoxIcon.Exclamation) == DialogResult.OK)
+                {
+                    this.Owner.Show();
+                    this.Dispose();
+                }
+            }
 
             this.FormClosing += ListadoRolesForm_FormClosing;
         }

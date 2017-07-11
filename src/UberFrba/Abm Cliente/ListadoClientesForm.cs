@@ -206,7 +206,7 @@ namespace UberFrba.Abm_Cliente
 
             if (resultados.Rows.Count == 0)
             {
-                MessageBox.Show("No se han encontrado clientes con los filtro aplicados", "Buscar Clientes", MessageBoxButtons.OK);
+                MessageBox.Show("No se han encontrado clientes con los filtros aplicados", "Buscar Clientes", MessageBoxButtons.OK);
                 return;
             }
 

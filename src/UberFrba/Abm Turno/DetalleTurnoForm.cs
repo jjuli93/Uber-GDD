@@ -32,6 +32,8 @@ namespace UberFrba.Abm_Turno
             }
 
             this.FormClosing += DetalleTurnoForm_FormClosing;
+            beginDateTimePicker.Value = Conexion.Instance.getFecha();
+            endDateTimePicker.Value = Conexion.Instance.getFecha();
         }
 
         private void DetalleTurnoForm_FormClosing(object sender, FormClosingEventArgs e)
