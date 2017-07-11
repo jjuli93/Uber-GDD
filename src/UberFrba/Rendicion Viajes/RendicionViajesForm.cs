@@ -162,7 +162,16 @@ namespace UberFrba.Rendicion_Viajes
 
         private void limpiar_form()
         {
-            this.viajesDataGridView.Rows.Clear();
+            try
+            {
+                viajesDataGridView.Rows.Clear();
+            }
+            catch (ArgumentException)
+            {
+
+                //throw;
+            }
+
             this.viajesDataGridView.DataSource = null;
             importeTextBox.Text = string.Empty;
         }

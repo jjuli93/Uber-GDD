@@ -143,7 +143,17 @@ namespace UberFrba.Facturacion
         private void limpiar_form()
         {
             importeTextBox.Text = string.Empty;
-            viajesDataGridView.Rows.Clear();
+
+            try
+            {
+                viajesDataGridView.Rows.Clear();
+            }
+            catch (ArgumentException)
+            {
+                
+                //throw;
+            }
+            
             viajesDataGridView.DataSource = null;
         }
 
