@@ -305,7 +305,7 @@ namespace UberFrba.Controllers
             }
             catch (SqlException)
             {
-                return null;
+                
                 //throw;
             }
 

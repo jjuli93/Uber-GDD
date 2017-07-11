@@ -90,9 +90,8 @@ namespace UberFrba.Rendicion_Viajes
                 MessageBox.Show("No se han encontrado viajes realizador por el chofer", "Alta de Rendición Chofer", MessageBoxButtons.OK);
                 return;
             }             
-
-            if (viajes != null)
-                viajesDataGridView.DataSource = viajes;
+            
+            viajesDataGridView.DataSource = viajes;
         }
 
         private void set_importe_rendicion(int id_rendicion)

@@ -244,7 +244,7 @@ namespace UberFrba.Controllers
                 {
                     //[DDG].sp_get_importe_rendicion (@idRendicion numeric(10,0)) as
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@idFactura", id_rendicion);
+                    cmd.Parameters.AddWithValue("@idRendicion", id_rendicion);
 
                     conn.Open();
                     SqlDataReader lector = cmd.ExecuteReader();
@@ -271,12 +271,12 @@ namespace UberFrba.Controllers
 
         public DataTable get_viajes_chofer(int id_rendicion)
         {
-            DataTable viajes = null;
+            DataTable viajes = new DataTable(); ;
 
             try
             {
                 using (SqlConnection conn = new SqlConnection(Conexion.Instance.getConnectionString()))
-                using (SqlCommand cmd = new SqlCommand("DDG.sp_get_viajes_factura", conn))
+                using (SqlCommand cmd = new SqlCommand("DDG.sp_get_viajes_rendicion", conn))
                 {
                     //[ddg].sp_get_viajes_rendicion(@idRendicion numeric(10,0)) as
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -287,7 +287,6 @@ namespace UberFrba.Controllers
 
                     if (lector.HasRows)
                     {
-                        viajes = new DataTable();
                         viajes.Load(lector);
                     }
                      

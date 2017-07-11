@@ -96,8 +96,7 @@ namespace UberFrba.Facturacion
             if (viajes.Rows.Count <= 0)
                 MessageBox.Show("No se han encontrado viajes realizados por el cliente.", "Facturación Clientes", MessageBoxButtons.OK);
 
-            if (viajes != null)
-                viajesDataGridView.DataSource = viajes;
+            viajesDataGridView.DataSource = viajes;
         }
 
         private void set_importe(int id_factura)
