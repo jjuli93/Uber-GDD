@@ -369,7 +369,7 @@ as
 begin
 select top 5 isnull(sum(r.rendicion_importe),0) as Monto, c.chofer_nombre as Nombre,c.chofer_apellido as Apellido,c.chofer_dni as DNI
 from DDG.Choferes c left join DDG.Rendiciones r on c.chofer_id = r.rendicion_chofer
-where year(r.rendicion_fecha) = @year
+and year(r.rendicion_fecha) = @year
 and DDG.getTrimestre(month(r.rendicion_fecha)) = @trimestre
 group by c.chofer_apellido,c.chofer_direccion,c.chofer_dni,c.chofer_email,c.chofer_fecha_nacimiento,c.chofer_fecha_nacimiento,c.chofer_habilitado,c.chofer_id,c.chofer_nombre,c.chofer_telefono,c.chofer_usuario
 order by isnull(sum(r.rendicion_importe),0) desc
@@ -392,9 +392,9 @@ create procedure [DDG].[sp_get_choferes_con_viaje_mas_largo] (@year int, @trimes
 as
 
 begin
-select top 5  v.viaje_cantidad_km as KM,  c.chofer_nombre as Nombre ,c.chofer_apellido as Apellido ,c.chofer_dni as DNI
+select top 5  isnull(v.viaje_cantidad_km,0) as KM,  c.chofer_nombre as Nombre ,c.chofer_apellido as Apellido ,c.chofer_dni as DNI
 from DDG.Choferes c  left join DDG.Viajes v on c.chofer_id = v.viaje_chofer
-where year(v.viaje_fecha_viaje) = @year
+and year(v.viaje_fecha_viaje) = @year
 and DDG.getTrimestre(month(v.viaje_fecha_viaje)) = @trimestre
 order by v.viaje_cantidad_km desc
 end
@@ -418,7 +418,7 @@ as
 begin
 select top 5  isnull(sum(f.factura_importe),0) as Consumo, c.cliente_nombre as Nombre ,c.cliente_apellido as Apellido ,c.cliente_dni as DNI
 from DDG.Clientes c  left join DDG.Facturas f on c.cliente_id = f.factura_cliente
-where year(f.factura_fecha_inicio) = @year
+and year(f.factura_fecha_inicio) = @year
 and DDG.getTrimestre(month(f.factura_fecha_inicio)) = @trimestre
 group by c.cliente_apellido,c.cliente_codigo_postal,c.cliente_direccion,c.cliente_dni,c.cliente_email,c.cliente_fecha_nacimiento,c.cliente_habilitado,c.cliente_id,c.cliente_nombre,c.cliente_telefono,c.cliente_usuario
 order by isnull(sum(f.factura_importe),0) desc
@@ -444,7 +444,7 @@ begin
 select top 5 isnull(count(a.auto_id),0) as Cantidad, a.auto_patente as Auto, c.cliente_nombre as Nombre,c.cliente_apellido as Apellido ,c.cliente_dni as DNI
 from DDG.Clientes c  left join Viajes v on c.cliente_id = v.viaje_cliente
 left join DDG.Autos a on v.viaje_auto = a.auto_id
-where year(v.viaje_fecha_viaje) = @year
+and year(v.viaje_fecha_viaje) = @year
 and DDG.getTrimestre(month(v.viaje_fecha_viaje)) = @trimestre
 group by c.cliente_apellido,c.cliente_codigo_postal,c.cliente_direccion,c.cliente_dni,c.cliente_email,c.cliente_fecha_nacimiento,c.cliente_habilitado,c.cliente_id,c.cliente_nombre,c.cliente_telefono,c.cliente_usuario,a.auto_chofer,a.auto_habilitado,a.auto_id,a.auto_licencia,a.auto_modelo,a.auto_patente,a.auto_patente,a.auto_rodado
 order by isnull(count(a.auto_id),0) desc
