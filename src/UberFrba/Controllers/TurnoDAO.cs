@@ -178,8 +178,10 @@ namespace UberFrba.Controllers
                     cmd.Parameters.AddWithValue("@horaInicio", modificado.hora_inicio.TimeOfDay);
                     cmd.Parameters.AddWithValue("@horaFin", modificado.hora_fin.TimeOfDay);
                     cmd.Parameters.Add("@descripcion", SqlDbType.VarChar).Value = modificado.descripcion;
-                    cmd.Parameters.AddWithValue("@valorKM", modificado.valor_km);
-                    cmd.Parameters.AddWithValue("@precioBase", modificado.precio_base);
+                    //cmd.Parameters.AddWithValue("@valorKM", modificado.valor_km);
+                    cmd.Parameters.Add("@valorKM", SqlDbType.Decimal).Value = modificado.valor_km;
+                    //cmd.Parameters.AddWithValue("@precioBase", modificado.precio_base);
+                    cmd.Parameters.Add("@precioBase", SqlDbType.Decimal).Value = modificado.precio_base;
                     cmd.Parameters.AddWithValue("@habilitado", modificado.habilitado);
 
                     conn.Open();
@@ -246,8 +248,8 @@ namespace UberFrba.Controllers
             turno.descripcion = row.Cells["Descripcion"].Value.ToString();
             turno.hora_inicio = Convert.ToDateTime(row.Cells["Hora_Inicio"].Value.ToString());
             turno.hora_fin = Convert.ToDateTime(row.Cells["Hora_Fin"].Value.ToString());
-            turno.valor_km = Convert.ToDouble(row.Cells["Valor_KM"].Value.ToString());
-            turno.precio_base = Convert.ToDouble(row.Cells["Precio_Base"].Value.ToString());
+            turno.valor_km = Convert.ToDecimal(row.Cells["Valor_KM"].Value.ToString());
+            turno.precio_base = Convert.ToDecimal(row.Cells["Precio_Base"].Value.ToString());
             turno.habilitado = Convert.ToBoolean(row.Cells["Habilitado"].Value);
 
             return turno;

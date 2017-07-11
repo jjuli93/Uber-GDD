@@ -17,6 +17,8 @@ namespace UberFrba.Abm_Turno
         public DetalleTurnoForm(Turno _turno)
         {
             InitializeComponent();
+            beginDateTimePicker.Value = Conexion.Instance.getFecha();
+            endDateTimePicker.Value = Conexion.Instance.getFecha();
 
             if (_turno != null)
             {
@@ -32,8 +34,6 @@ namespace UberFrba.Abm_Turno
             }
 
             this.FormClosing += DetalleTurnoForm_FormClosing;
-            beginDateTimePicker.Value = Conexion.Instance.getFecha();
-            endDateTimePicker.Value = Conexion.Instance.getFecha();
         }
 
         private void DetalleTurnoForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -43,8 +43,8 @@ namespace UberFrba.Abm_Turno
 
         private void cargar_datos_form(Turno _turno)
         {
-            beginDateTimePicker.Value = Convert.ToDateTime(_turno.hora_inicio);
-            endDateTimePicker.Value = Convert.ToDateTime(_turno.hora_fin);
+            beginDateTimePicker.Value = _turno.hora_inicio;
+            endDateTimePicker.Value = _turno.hora_fin;
             descripcionTextBox.Text = _turno.descripcion;
             kmNumericUpDown.Value = (decimal)_turno.valor_km; //Convert.ToDecimal(_turno.valor_km)
             precioNumericUpDown.Value = (decimal)_turno.precio_base;

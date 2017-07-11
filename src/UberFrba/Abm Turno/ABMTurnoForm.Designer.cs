@@ -91,7 +91,7 @@
             this.precioNumericUpDown.DecimalPlaces = 2;
             this.precioNumericUpDown.Location = new System.Drawing.Point(167, 158);
             this.precioNumericUpDown.Maximum = new decimal(new int[] {
-            10000,
+            9999,
             0,
             0,
             0});
@@ -104,7 +104,7 @@
             this.kmNumericUpDown.DecimalPlaces = 2;
             this.kmNumericUpDown.Location = new System.Drawing.Point(167, 126);
             this.kmNumericUpDown.Maximum = new decimal(new int[] {
-            10000000,
+            9999,
             0,
             0,
             0});

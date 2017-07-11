@@ -21,8 +21,8 @@ namespace UberFrba.Modelo
         public DateTime hora_inicio { get; set; }
         public DateTime hora_fin { get; set; }
         public string descripcion { get; set; }
-        public double valor_km { get; set; }
-        public double precio_base { get; set; }
+        public decimal valor_km { get; set; }
+        public decimal precio_base { get; set; }
         public bool habilitado { get; set; }
     }
 }
