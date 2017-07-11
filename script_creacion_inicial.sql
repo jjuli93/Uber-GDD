@@ -80,7 +80,7 @@ factura_cliente numeric(10) not null references [DDG].Clientes,
 factura_numero numeric(18) unique not null,
 factura_fecha_inicio datetime not null,
 factura_fecha_fin datetime not null,
-factura_importe decimal(7,2) not null default 0
+factura_importe decimal(15,2) not null default 0
 )
 GO
 
@@ -95,8 +95,8 @@ turno_id numeric(10) primary key identity,
 turno_hora_inicio time(0) not null,
 turno_hora_fin time(0) not null,
 turno_descripcion varchar(255),
-turno_valor_km decimal(5,2) not null,
-turno_precio_base decimal(5,2) not null,
+turno_valor_km decimal(15,2) not null,
+turno_precio_base decimal(15,2) not null,
 turno_habilitado bit not null default 1
 )
 GO
@@ -145,7 +145,7 @@ create table [DDG].Rendiciones (
 rendicion_id numeric(10) primary key identity,
 rendicion_chofer numeric(10) not null references [DDG].Choferes,
 rendicion_turno numeric(10) not null references [DDG].Turnos,
-rendicion_importe decimal(7,2) not null default 0,
+rendicion_importe decimal(15,2) not null default 0,
 rendicion_numero numeric(18) not null,
 rendicion_porcentaje numeric(10) not null references [DDG].Porcentajes,
 rendicion_fecha datetime
@@ -1617,7 +1617,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_alta_turno' AND type='p')
 	DROP PROCEDURE [DDG].sp_alta_turno
 GO
 
-create procedure [ddg].sp_alta_turno (@horaInicio time(0), @horaFin time(0), @descripcion varchar(250), @valorKM numeric(10,2), @precioBase numeric(10,2)) as
+create procedure [ddg].sp_alta_turno (@horaInicio time(0), @horaFin time(0), @descripcion varchar(250), @valorKM numeric(15,2), @precioBase numeric(15,2)) as
 begin
 	
 	exec ddg.sp_validar_datos_turno @horaInicio, @horaFin, @descripcion, null
@@ -1638,7 +1638,7 @@ IF EXISTS (SELECT name FROM sysobjects WHERE name='sp_update_turno' AND type='p'
 	DROP PROCEDURE [DDG].sp_update_turno
 GO
 
-create procedure [ddg].sp_update_turno (@idTurno numeric(10), @horaInicio time(0), @horaFin time(0), @descripcion varchar(250), @valorKM numeric(10,2), @precioBase numeric(10,2), @habilitado bit) as
+create procedure [ddg].sp_update_turno (@idTurno numeric(10), @horaInicio time(0), @horaFin time(0), @descripcion varchar(250), @valorKM numeric(15,2), @precioBase numeric(15,2), @habilitado bit) as
 begin
 	
 	exec ddg.sp_validar_datos_turno @horaInicio, @horaFin, @descripcion, @idTurno
