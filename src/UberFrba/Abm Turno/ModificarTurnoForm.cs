@@ -17,12 +17,15 @@ namespace UberFrba.Abm_Turno
         Turno turnoSeleccionado;
         ObjetosFormCTRL objController;
         TurnoDAO turnoDAO;
+        List<Control> campos;
 
         public ModificarTurnoForm(Turno _turno)
         {
             InitializeComponent();
             beginDateTimePicker.Value = Conexion.Instance.getFecha();
             endDateTimePicker.Value = Conexion.Instance.getFecha();
+
+            campos = new List<Control>() { beginDateTimePicker, endDateTimePicker, descripcionTextBox, kmNumericUpDown, precioNumericUpDown };
 
             if (_turno != null)
             {
@@ -40,6 +43,10 @@ namespace UberFrba.Abm_Turno
 
             objController = ObjetosFormCTRL.Instance;
             turnoDAO = TurnoDAO.Instance;
+
+            kmNumericUpDown.Maximum = turnoDAO.get_max_value();
+            precioNumericUpDown.Maximum = turnoDAO.get_max_value();
+
             this.FormClosing += ModificarTurnoForm_FormClosing;
         }
 
@@ -66,9 +73,9 @@ namespace UberFrba.Abm_Turno
 
         private void guardarButton_Click(object sender, EventArgs e)
         {
-            var campos = new List<Control>() { beginDateTimePicker, endDateTimePicker, descripcionTextBox, kmNumericUpDown, precioNumericUpDown };
+            objController.borrarMensajeDeError(campos, errorProvider);
 
-            if (objController.cumpleCamposObligatorios(campos, errorProvider))
+            if (cumple_campos(campos))
             {
                 if (MessageBox.Show("¿Está seguro de querer modificar los datos del turno?", "Modificar Turno", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -89,6 +96,10 @@ namespace UberFrba.Abm_Turno
                     }
                 }
             }
+            else
+            {
+                MessageBox.Show("Por favor ingrese todos los datos obligatorios", "Campos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
         }
 
         private void update_turno()
@@ -100,5 +111,28 @@ namespace UberFrba.Abm_Turno
             turnoSeleccionado.valor_km = kmNumericUpDown.Value;
             turnoSeleccionado.habilitado = habilitarCheckBox.Checked;
         }
+
+        private bool cumple_campos(List<Control> camposObligatorios)
+        {
+            if (!objController.cumpleCamposObligatorios(camposObligatorios, errorProvider))
+                return false;
+
+            if (precioNumericUpDown.Value >= precioNumericUpDown.Maximum)
+            {
+                precioNumericUpDown.Value = 0;
+                errorProvider.SetError(precioNumericUpDown, "Valor máximo permitido: " + turnoDAO.get_max_value().ToString() + ".99");
+                return false;
+            }
+
+            if (kmNumericUpDown.Value >= precioNumericUpDown.Maximum)
+            {
+                kmNumericUpDown.Value = 0;
+                errorProvider.SetError(precioNumericUpDown, "Valor máximo permitido: " + turnoDAO.get_max_value().ToString() + ".99");
+                return false;
+            }
+
+            return true;
+        }
+
     }
 }

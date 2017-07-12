@@ -298,5 +298,10 @@ namespace UberFrba.Controllers
             return turnos;
         }
 
+
+        public decimal get_max_value()
+        {
+            return 9999999999999;
+        }
     }
 }

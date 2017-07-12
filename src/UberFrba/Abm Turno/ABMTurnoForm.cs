@@ -27,6 +27,8 @@ namespace UberFrba.Abm_Turno
             formAnterior = _parent;
             objController = ObjetosFormCTRL.Instance;
             turnoDAO = TurnoDAO.Instance;
+            kmNumericUpDown.Maximum = turnoDAO.get_max_value();
+            precioNumericUpDown.Maximum = turnoDAO.get_max_value();
 
             camposObligatorios = new List<Control>() { beginDateTimePicker, endDateTimePicker, descripcionTextBox, kmNumericUpDown, precioNumericUpDown };
 
@@ -56,7 +58,9 @@ namespace UberFrba.Abm_Turno
 
         private void crearButton_Click(object sender, EventArgs e)
         {
-            if (objController.cumpleCamposObligatorios(camposObligatorios, errorProvider))
+            objController.borrarMensajeDeError(camposObligatorios, errorProvider);
+
+            if (cumple_campos())
             {
                 if (turnoDAO.crear_turno(crear_nuevo_turno()))
                 {
@@ -70,11 +74,7 @@ namespace UberFrba.Abm_Turno
             }
             else
             {
-                if (MessageBox.Show("Por favor ingrese todos los datos obligatorios", "Campos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Stop) == DialogResult.OK)
-                {
-                    objController.borrarMensajeDeError(camposObligatorios, errorProvider);
-                    return;
-                }
+                MessageBox.Show("Por favor ingrese todos los datos obligatorios", "Campos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
 
@@ -105,6 +105,28 @@ namespace UberFrba.Abm_Turno
         private void cerrarSesionLB_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             objController.cerrar_sesion();
+        }
+
+        private bool cumple_campos()
+        {
+            if (!objController.cumpleCamposObligatorios(camposObligatorios, errorProvider))
+                return false;
+
+            if (precioNumericUpDown.Value >= precioNumericUpDown.Maximum) 
+            {
+                precioNumericUpDown.Value = 0;
+                errorProvider.SetError(precioNumericUpDown, "Valor máximo permitido: " + turnoDAO.get_max_value().ToString() + ".99");
+                return false;
+            }
+
+            if (kmNumericUpDown.Value >= precioNumericUpDown.Maximum)
+            {
+                kmNumericUpDown.Value = 0;
+                errorProvider.SetError(kmNumericUpDown, "Valor máximo permitido: " + turnoDAO.get_max_value().ToString() + ".99");
+                return false;
+            }
+
+            return true;
         }
     }
 }
