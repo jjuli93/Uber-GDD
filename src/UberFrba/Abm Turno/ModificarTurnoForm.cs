@@ -24,6 +24,11 @@ namespace UberFrba.Abm_Turno
             InitializeComponent();
             beginDateTimePicker.Value = Conexion.Instance.getFecha();
             endDateTimePicker.Value = Conexion.Instance.getFecha();
+            objController = ObjetosFormCTRL.Instance;
+            turnoDAO = TurnoDAO.Instance;
+
+            kmNumericUpDown.Maximum = turnoDAO.get_max_value();
+            precioNumericUpDown.Maximum = turnoDAO.get_max_value();
 
             campos = new List<Control>() { beginDateTimePicker, endDateTimePicker, descripcionTextBox, kmNumericUpDown, precioNumericUpDown };
 
@@ -40,12 +45,6 @@ namespace UberFrba.Abm_Turno
                     this.Dispose();
                 }
             }
-
-            objController = ObjetosFormCTRL.Instance;
-            turnoDAO = TurnoDAO.Instance;
-
-            kmNumericUpDown.Maximum = turnoDAO.get_max_value();
-            precioNumericUpDown.Maximum = turnoDAO.get_max_value();
 
             this.FormClosing += ModificarTurnoForm_FormClosing;
         }
@@ -127,7 +126,7 @@ namespace UberFrba.Abm_Turno
             if (kmNumericUpDown.Value >= precioNumericUpDown.Maximum)
             {
                 kmNumericUpDown.Value = 0;
-                errorProvider.SetError(precioNumericUpDown, "Valor máximo permitido: " + turnoDAO.get_max_value().ToString() + ".99");
+                errorProvider.SetError(kmNumericUpDown, "Valor máximo permitido: " + turnoDAO.get_max_value().ToString() + ".99");
                 return false;
             }
 

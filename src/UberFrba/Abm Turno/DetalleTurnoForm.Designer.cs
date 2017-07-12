@@ -88,6 +88,7 @@
             0,
             0});
             this.precioNumericUpDown.Name = "precioNumericUpDown";
+            this.precioNumericUpDown.ReadOnly = true;
             this.precioNumericUpDown.Size = new System.Drawing.Size(99, 20);
             this.precioNumericUpDown.TabIndex = 33;
             // 
@@ -102,6 +103,7 @@
             0,
             0});
             this.kmNumericUpDown.Name = "kmNumericUpDown";
+            this.kmNumericUpDown.ReadOnly = true;
             this.kmNumericUpDown.Size = new System.Drawing.Size(99, 20);
             this.kmNumericUpDown.TabIndex = 32;
             // 
@@ -130,6 +132,7 @@
             this.descripcionTextBox.Enabled = false;
             this.descripcionTextBox.Location = new System.Drawing.Point(159, 96);
             this.descripcionTextBox.Name = "descripcionTextBox";
+            this.descripcionTextBox.ReadOnly = true;
             this.descripcionTextBox.Size = new System.Drawing.Size(211, 20);
             this.descripcionTextBox.TabIndex = 29;
             // 

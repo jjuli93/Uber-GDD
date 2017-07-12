@@ -20,6 +20,9 @@ namespace UberFrba.Abm_Turno
             beginDateTimePicker.Value = Conexion.Instance.getFecha();
             endDateTimePicker.Value = Conexion.Instance.getFecha();
 
+            kmNumericUpDown.Maximum = TurnoDAO.Instance.get_max_value();
+            precioNumericUpDown.Maximum = TurnoDAO.Instance.get_max_value();
+
             if (_turno != null)
             {
                 cargar_datos_form(_turno);
